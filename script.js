@@ -168,7 +168,7 @@ Chart.prototype = {
       .text(app.options.year);
 
     var countries = chart.svg.selectAll('.country')
-      .data(txData);
+      .data(txData, function (d) {return d.country;});
 
     countries.enter().append('circle')
       .attr('class', 'country')
@@ -179,7 +179,7 @@ Chart.prototype = {
       .attr('cy', chart.height / 2)
 
     countries
-      .sort(function (a, b) { return b.population - a.population; })
+      .sort(function (a, b) { return b.population - a.population; }) //smallest appear on top
       .transition().duration(TRANSITION_DURATION)
       .attr('r', function (d) { return chart.r(d.population); })
       .attr('cx', function (d) { return chart.x(d.total_fertility); })

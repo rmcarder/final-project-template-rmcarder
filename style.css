@@ -8,6 +8,10 @@
   padding: 1em 0 2em;
 }
 
+.state {
+	color: black;
+}
+
 #chart svg {
   display: block;
   margin: 0 auto;

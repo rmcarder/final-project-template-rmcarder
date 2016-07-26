@@ -1,29 +1,43 @@
 var app;
 
 // Declaring our constants
-var START_YEAR = 1950;
-var END_YEAR = 2015;
-var MAX_RADIUS = 50;
-var TRANSITION_DURATION = 750;
+    var colorRamp = ['#e5f5f9','#2ca25f'];
+
+    var color = d3.scaleLinear()
+      .domain([0, 6.5])
+      .range(colorRamp);
+
+  // var projection = d3.geo.equirectangular()
+    //  .scale(2000)
+      //.center([-96.03542,41.69553])
+      //.translate([width / 2, height / 2]);
+
+
+      //Will need this to center rects:
+      //squareSize = 19;
+//square
+  //  .attr("x", function(d){ return x(d) - squareSize/2;})
+    //.attr("y", function(d){return y(statusText) - squareSize/2;} )
+   // .attr("width",squareSize)
+    //.attr("height",squareSize)
+
+
 
 
 //d3.queue() enables us to load multiple data files. Following the example below, we make
 //additional .defer() calls with additional data files, and they are returned as results[1],
 // // results[2], etc., once they have all finished downloading.
  d3.queue()
-   .defer(d3.json, 'data/data.json')
+  .defer(d3.json, 'data/statebins.json')
+   .defer(d3.json, 'data/us-states.json')
    .awaitAll(function (error, results) {
      if (error) { throw error; }
-     app.initialize(results[0]);
+     app.initialize(results[0],results[1]);
    });
 
 app = {
   data: [],
   components: [],
-
-  options: {
-    year: START_YEAR
-  },
 
   initialize: function (data) {
     app.data = data;
@@ -38,19 +52,7 @@ app = {
     // app.resize() will be called anytime the page size is changed
     d3.select('window').on('resize', app.resize);
 
-    // For demo purposes, let's tick the year every 750ms
-    function incrementYear() {
-      app.options.year += 1;
-      if (app.options.year > END_YEAR) {
-        app.options.year = START_YEAR;
-      }
-
-      app.update();
-    }
-
-    setInterval(incrementYear, TRANSITION_DURATION);
-    // d3.interval(incrementYear, TRANSITION_DURATION);
-  },
+   },
 
   resize: function () {
     app.components.forEach(function (c) { if (c.resize) { c.resize(); }});
@@ -61,130 +63,108 @@ app = {
   }
 }
 
+var margin = {
+    left: 75,
+    right: 50,
+    top: 50,
+    bottom: 75
+};
+
+
+var width = 625 - margin.left - margin.right;
+var height = 625 - margin.top - margin.bottom;
+
+
+
 function Chart(selector) {
+
   var chart = this;
 
-  // SVG and MARGINS
-
   var margin = {
-    top: 15, right: 15, bottom: 40, left: 45
+    left: 75,
+    right: 50,
+    top: 50,
+    bottom: 75
   };
 
-  chart.width = 600 - margin.left - margin.right;
-  chart.height = 400 - margin.top - margin.bottom;
 
-  chart.svg = d3.select(selector)
+chart.width = 600 - margin.left - margin.right;
+chart.height = 600 - margin.top - margin.bottom;
+
+chart.svg = d3.select(selector)
     .append('svg')
     .attr('width', chart.width + margin.left + margin.right)
     .attr('height', chart.height + margin.top + margin.bottom)
     .append('g')
     .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+    
+//Scales - Hopefully 
 
-  // SCALES
+// SCALES
 
   chart.x = d3.scaleLinear()
-    .domain([0, d3.max(app.data, function (d) { return d.total_fertility; })])
+    .domain([d3.min(app.data, function (d) { return d.lon; }),0])
     .range([0, chart.width])
     .nice();
 
   chart.y = d3.scaleLinear()
-    .domain([0, d3.max(app.data, function (d) { return d.life_expectancy; })])
+    .domain([0, d3.max(app.data, function (d) { return d.lat; })])
     .range([chart.height, 0])
     .nice();
 
-  chart.r = d3.scaleSqrt()
-    .domain([0, d3.max(app.data, function (d) { return d.population; })])
-    .range([0, MAX_RADIUS]);
-
-  chart.color = d3.scaleOrdinal(d3.schemeCategory10);
-
-  // AXES
-
-  var xAxis = d3.axisBottom()
-    .scale(chart.x);
-
-  var yAxis = d3.axisLeft()
-    .scale(chart.y);
-
-  chart.svg.append('g')
-    .attr('class', 'x axis')
-    .attr('transform', 'translate(0,' + chart.height + ')')
-    .call(xAxis)
-    .append('text')
-    .attr('y', 30)
-    .attr('x', chart.width)
-    .style('text-anchor', 'end')
-    .style('fill', '#000')
-    .style('font-weight', 'bold')
-    .text('Fertility (births per woman)');
-
-  chart.svg.append('g')
-    .attr('class', 'y axis')
-    .call(yAxis)
-    .append('text')
-    .attr('transform', 'rotate(-90)')
-    .attr('dy', '.71em')
-    .attr('y', -35)
-    .attr('x', 0)
-    .style('text-anchor', 'end')
-    .style('fill', '#000')
-    .style('font-weight', 'bold')
-    .text('Life expectancy (years)');
-
-  // YEAR LABEL
-
-  chart.svg.append('text')
-    .attr('class', 'year')
-    .attr('x', chart.width / 2)
-    .attr('y', chart.height / 2)
-    .attr('dy', '.35em')
-    .style('text-anchor', 'middle')
-    .style('font-size', '230px')
-    .style('font-weight', 'bold')
-    .style('opacity', 0.2)
-    .text(app.options.year);
+  chart.sidelength = d3.scaleSqrt()
+    .domain([0, d3.max(app.data, function (d) { return d.pop; })])
+    .range([0, 25]);
 
   chart.update();
 }
-
+    // Data merge:
+ 
 Chart.prototype = {
   update: function () {
     var chart = this;
 
-    // TRANSFORM DATA
+    // Interrupt ongoing transitions:  
 
-    var txData = app.data.filter(function (d) { return d.year === app.options.year; });
+    chart.colorScale = d3.scaleLinear()
+        .domain([0,100])
+        .range(["#d73027","#4575b4"]);
 
-    // UPDATE CHART ELEMENTS
+    // Create a projection with geoAlbersUSA
+    // Many more geographic projections available here:
+    // https://github.com/d3/d3/blob/master/API.md#projections
 
-    var t = d3.transition().duration(TRANSITION_DURATION);
+    // First create a map projection and specify some options:
+    //var projection = d3.geoAlbersUsa()
+      // .translate([width/2, height/2])// Places the map in the center of the SVG
+       //.scale([width * 1.5]); // Scales the size of the map
 
-    var yearText = d3.selectAll('.year')
-      .transition().delay(TRANSITION_DURATION / 2)
-      .text(app.options.year);
+    // Then pass this projection to d3.geoPath() - which is analagous to d3.line()
+    //var projectionPath = d3.geoPath().projection(projection);
 
-    var countries = chart.svg.selectAll('.country')
-      .data(txData, function (d) {return d.country;});
+    // Now we have this projection path that we can give to the "d" attribute of a new path:
+   
+    // Statebin
+    var states = chart.svg.selectAll('.state')
+      .data(app.data);
 
+      console.log(app.data)
 
-      //new countries
-    countries.enter().append('circle')
-      .attr('class', 'country')
-      .style('fill', function (d) { return chart.color(d.continent); })
-      .style('opacity', 0.75)
-      .attr('r', 0)
-      .attr('cx', chart.width / 2)
-      .attr('cy', chart.height / 2)
-      .merge(countries)  //takes place of gap between new(enter) and previously there parts of update pattern
-      .sort(function (a, b) { return b.population - a.population; }) //smallest appear on top
-      .transition(t)
-      .attr('r', function (d) { return chart.r(d.population); })
-      .attr('cx', function (d) { return chart.x(d.total_fertility); })
-      .attr('cy', function (d) { return chart.y(d.life_expectancy); });
+    states.enter().append('rect')
+       .attr('opacity',0)
+      .transition().duration(250)
+      .attr('opacity',1)
+      .attr('class','state')
+      .attr('x', function (d) { return chart.x(d.lon); })
+      .attr('y', function (d) { return chart.y(d.lat); })
+      .attr('width', function (d) { return chart.sidelength(d.pop); })
+      .attr('height', function (d) { return chart.sidelength(d.pop); });
 
-    countries.exit()
-      .transition(t)
-      .attr('r', 0)
-      .remove();
-  }
+    states.exit().transition().duration(1000).delay(150).style("opacity", 0).remove();
+
+    }
 }
+
+
+
+

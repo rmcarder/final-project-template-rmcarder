@@ -70,12 +70,6 @@ var margin = {
     bottom: 75
 };
 
-
-var width = 625 - margin.left - margin.right;
-var height = 625 - margin.top - margin.bottom;
-
-
-
 function Chart(selector) {
 
   var chart = this;
@@ -88,8 +82,8 @@ function Chart(selector) {
   };
 
 
-chart.width = 600 - margin.left - margin.right;
-chart.height = 600 - margin.top - margin.bottom;
+chart.width = 800 - margin.left - margin.right;
+chart.height = 500 - margin.top - margin.bottom;
 
 chart.svg = d3.select(selector)
     .append('svg')
@@ -103,18 +97,18 @@ chart.svg = d3.select(selector)
 // SCALES
 
   chart.x = d3.scaleLinear()
-    .domain([d3.min(app.data, function (d) { return d.lon; }),0])
+    .domain([d3.min(app.data, function (d) { return d.lon; }),d3.max(app.data, function (d) { return d.lon; })])
     .range([0, chart.width])
     .nice();
 
   chart.y = d3.scaleLinear()
-    .domain([0, d3.max(app.data, function (d) { return d.lat; })])
+    .domain([d3.min(app.data, function (d) { return d.lat; }),d3.max(app.data, function (d) { return d.lat; })])
     .range([chart.height, 0])
     .nice();
 
   chart.sidelength = d3.scaleSqrt()
-    .domain([0, d3.max(app.data, function (d) { return d.pop; })])
-    .range([0, 25]);
+    .domain([d3.min(app.data, function (d) { return d.pop; }), d3.max(app.data, function (d) { return d.pop; })])
+    .range([25, 60]);
 
   chart.update();
 }
@@ -127,7 +121,7 @@ Chart.prototype = {
     // Interrupt ongoing transitions:  
 
     chart.colorScale = d3.scaleLinear()
-        .domain([0,100])
+        .domain([d3.min(app.data, function (d) { return d.pop; }), d3.max(app.data, function (d) { return d.pop; })])
         .range(["#d73027","#4575b4"]);
 
     // Create a projection with geoAlbersUSA
@@ -151,14 +145,21 @@ Chart.prototype = {
       console.log(app.data)
 
     states.enter().append('rect')
-       .attr('opacity',0)
+      .attr('opacity',0)
       .transition().duration(250)
       .attr('opacity',1)
       .attr('class','state')
       .attr('x', function (d) { return chart.x(d.lon); })
       .attr('y', function (d) { return chart.y(d.lat); })
       .attr('width', function (d) { return chart.sidelength(d.pop); })
-      .attr('height', function (d) { return chart.sidelength(d.pop); });
+      .attr('height', function (d) { return chart.sidelength(d.pop); })
+      .attr('fill',function (d) { return chart.colorScale(d.pop); }) ;
+      //.attr('width', 50)
+      //.attr('height', 50)
+
+
+
+      
 
     states.exit().transition().duration(1000).delay(150).style("opacity", 0).remove();
 

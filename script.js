@@ -30,13 +30,27 @@ var color = d3.scaleLinear()
     app.data = data;
 
     app.options = {
-        variable: false,
+        slider: false,
         };
 
     // Here we create each of the components on our page, storing them in an array
     app.components = [
       new Chart('#chart')
     ];
+
+ d3.select("#slider-white")
+      .on("click", function(){
+        if(app.options.slider==="white"){
+          app.options.slider=false;
+          app.update();
+        } else {
+          app.options.slider="white";
+          console.log(app.options);
+          d3.select('#slider')
+          .style('display','inline')
+          app.update();
+        };      
+      });
 
     // Add event listeners and the like here
        //start slider
@@ -85,6 +99,7 @@ function hue(h) {
   svg.style("background-color", d3.hsl(h, 0.8, 0.8));
   app.slice=h;
   console.log(app.slice);
+  app.update();
  }
 
     // app.resize() will be called anytime the page size is changed
@@ -180,8 +195,6 @@ Chart.prototype = {
     // Statebin
     var states = chart.svg.selectAll('.state')
       .data(app.data);
-
-      console.log(app.data)
 
     states.enter().append('rect')
       .attr('height',0)

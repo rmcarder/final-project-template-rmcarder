@@ -1,5 +1,6 @@
 var app;
 var slice = 60
+var x;
 
 
 // Declaring our constants
@@ -14,7 +15,7 @@ var color = d3.scaleLinear()
 // // results[2], etc., once they have all finished downloading.
  d3.queue()
   .defer(d3.json, 'data/statebins.json')
-   .defer(d3.json, 'data/us-states.json')
+   .defer(d3.json, 'data/county.json')
    .awaitAll(function (error, results) {
      if (error) { throw error; }
      app.initialize(results[0],results[1]);
@@ -25,10 +26,11 @@ var color = d3.scaleLinear()
     data: [],
     components: [],
     options: [],
-    slice: [],
 
   initialize: function (data) {
     app.data = data;
+
+    
 
     app.options = {
         slider: false,
@@ -49,6 +51,72 @@ var color = d3.scaleLinear()
           console.log(app.options);
           d3.select('#slider')
           .style('display','inline')
+          d3.select('#slidertext')
+          .text(function (d) {return 'All counties less than (need slider value as global variable)%'+app.options.slider+' will leave the top map and start building one below.' ;});
+          app.update();
+        };      
+      });
+
+  d3.select("#slider-black")
+      .on("click", function(){
+        if(app.options.slider==="black"){
+          app.options.slider=false;
+          app.update();
+        } else {
+          app.options.slider="black";
+          console.log(app.options);
+          d3.select('#slider')
+          .style('display','inline')
+          d3.select('#slidertext')
+          .text(function (d) {return 'All counties less than (need slider value as global variable)% '+app.options.slider+' will leave the top map and start building one below.' ;});
+          app.update();
+        };      
+      });
+
+  d3.select("#slider-hispanic")
+      .on("click", function(){
+        if(app.options.slider==="hispanic"){
+          app.options.slider=false;
+          app.update();
+        } else {
+          app.options.slider="hispanic";
+          console.log(app.options);
+          d3.select('#slider')
+          .style('display','inline')
+          d3.select('#slidertext')
+          .text(function (d) {return 'All counties less than (need slider value as global variable)% '+app.options.slider+' will leave the top map and start building one below.' ;});
+          app.update();
+        };      
+      });
+
+  d3.select("#slider-asian")
+      .on("click", function(){
+        if(app.options.slider==="asian"){
+          app.options.slider=false;
+          app.update();
+        } else {
+          app.options.slider="asian";
+          console.log(app.options);
+          d3.select('#slider')
+          .style('display','inline')
+          d3.select('#slidertext')
+          .text(function (d) {return 'All counties less than (need slider value as global variable)% '+app.options.slider+' will leave the top map and start building one below.' ;});
+          app.update();
+        };      
+      });
+
+  d3.select("#slider-income")
+      .on("click", function(){
+        if(app.options.slider==="income"){
+          app.options.slider=false;
+          app.update();
+        } else {
+          app.options.slider="income";
+          console.log(app.options);
+          d3.select('#slider')
+          .style('display','inline')
+          d3.select('#slidertext')
+          .text(function (d) {return 'All counties manking less than (need slider value as global variable) dollars a year will leave the top map and start building one below.' ;});
           app.update();
         };      
       });
@@ -62,12 +130,14 @@ var svg = d3.select("svg"),
 
 var x = d3.scaleLinear()
     .domain([0, 100])
-    .range([0, width])
+    .range([0, 400])
     .clamp(true);
+var center=width/2-150
 
 var slider = svg.append("g")
     .attr("class", "slider")
-    .attr("transform", "translate(" + margin.left + "," + height / 2 + ")");
+    .attr('position',"relative")
+    .attr("transform", "translate("+center+",15)");
 
 slider.append("line")
     .attr("class", "track")
@@ -89,7 +159,7 @@ slider.insert("g", ".track-overlay")
   .enter().append("text")
     .attr("x", x)
     .attr("text-anchor", "middle")
-    .text(function(d) { return d + "°"; });
+    .text(function(d) { return d + "%"; });
 
 var handle = slider.insert("circle", ".track-overlay")
     .attr("class", "handle")
@@ -117,13 +187,6 @@ function hue(h) {
   }
 }
 app.update();
-
-var margin = {
-    left: 75,
-    right: 50,
-    top: 50,
-    bottom: 75
-};
 
 function Chart(selector) {
 
@@ -178,41 +241,25 @@ Chart.prototype = {
     chart.colorScale = d3.scaleLinear()
         .domain([d3.min(app.data, function (d) { return d.pop; }), d3.max(app.data, function (d) { return d.pop; })])
         .range(["#d73027","#4575b4"]);
-
-    // Create a projection with geoAlbersUSA
-    // Many more geographic projections available here:
-    // https://github.com/d3/d3/blob/master/API.md#projections
-
-    // First create a map projection and specify some options:
-    //var projection = d3.geoAlbersUsa()
-      // .translate([width/2, height/2])// Places the map in the center of the SVG
-       //.scale([width * 1.5]); // Scales the size of the map
-
-    // Then pass this projection to d3.geoPath() - which is analagous to d3.line()
-    //var projectionPath = d3.geoPath().projection(projection);
-
-    // Now we have this projection path that we can give to the "d" attribute of a new path:
    
     // Statebin
     var states = chart.svg.selectAll('.state')
       .data(app.data)
-      .enter().append('g');
-
-
+      .enter().append('g')
+      .attr('class','state');
 
     states.append('rect')
       .attr('height',0)
       .attr('width',0)
       .attr('x', function (d) { return chart.x(d.lon); })
       .attr('y', function (d) { return chart.y(d.lat); })
-      .transition().duration(1000)
-      .attr('class','state')      
+      .transition().duration(4000)       
       .attr('width', function (d) { return chart.sidelength(d.pop); })
       .attr('height', function (d) { return chart.sidelength(d.pop); })
       .attr('fill',function (d) { return chart.colorScale(d.pop); }) ;
 
     states.append('text')
-    .attr('x', function (d) { return chart.x(d.lon); })
+      .attr('x', function (d) { return chart.x(d.lon); })
       .attr('y', function (d) { return chart.y(d.lat); })
       .attr('dx',0)
       .attr('dy',0)

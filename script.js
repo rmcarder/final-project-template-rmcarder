@@ -1,4 +1,5 @@
 var app;
+var slice = 60
 
 
 // Declaring our constants
@@ -162,7 +163,7 @@ chart.svg = d3.select(selector)
 
   chart.sidelength = d3.scaleSqrt()
     .domain([d3.min(app.data, function (d) { return d.pop; }), d3.max(app.data, function (d) { return d.pop; })])
-    .range([0, app.slice]);
+    .range([0, slice]);
   
   chart.update();
 }
@@ -194,9 +195,12 @@ Chart.prototype = {
    
     // Statebin
     var states = chart.svg.selectAll('.state')
-      .data(app.data);
+      .data(app.data)
+      .enter().append('g');
 
-    states.enter().append('rect')
+
+
+    states.append('rect')
       .attr('height',0)
       .attr('width',0)
       .attr('x', function (d) { return chart.x(d.lon); })
@@ -206,9 +210,13 @@ Chart.prototype = {
       .attr('width', function (d) { return chart.sidelength(d.pop); })
       .attr('height', function (d) { return chart.sidelength(d.pop); })
       .attr('fill',function (d) { return chart.colorScale(d.pop); }) ;
-      //.attr('width', 50)
-      //.attr('height', 50)
 
+    states.append('text')
+    .attr('x', function (d) { return chart.x(d.lon); })
+      .attr('y', function (d) { return chart.y(d.lat); })
+      .attr('dx',0)
+      .attr('dy',0)
+      .text(function (d) {return d.abbr;});
 
 
       

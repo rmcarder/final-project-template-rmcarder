@@ -77,11 +77,13 @@ var color = d3.scaleLinear()
             };
           };
           app.centroids = centroids;
-          console.log(app.centroids);
-        };
+          };
 
+    app.GroupByState = d3.nest()
+      .key(function(d) { return d.name; })
+      .entries(centroids);
 
-
+     console.log(app.GroupByState);
 
     // Here we create each of the components on our page, storing them in an array
     app.components = [

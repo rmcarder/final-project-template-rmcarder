@@ -25,20 +25,22 @@ var color = d3.scaleLinear()
   app = {
     data: [],
     components: [],
-    options: [],
+  
 
   initialize: function (data) {
     app.data = data;
-
+    app.slice=60
     
 
     app.options = {
         slider: false,
+        slicer: 0,
         };
 
     // Here we create each of the components on our page, storing them in an array
     app.components = [
-      new Chart('#chart')
+      new Chart('#chart'),
+      new Slider('#slider')
     ];
 
  d3.select("#slider-white")
@@ -123,58 +125,10 @@ var color = d3.scaleLinear()
 
     // Add event listeners and the like here
        //start slider
-var svg = d3.select("svg"),
-    margin = {right: 50, left: 50},
-    width = +svg.attr("width") - margin.left - margin.right,
-    height = +svg.attr("height");
 
-var x = d3.scaleLinear()
-    .domain([0, 100])
-    .range([0, 400])
-    .clamp(true);
-var center=width/2-150
-
-var slider = svg.append("g")
-    .attr("class", "slider")
-    .attr('position',"relative")
-    .attr("transform", "translate("+center+",15)");
-
-slider.append("line")
-    .attr("class", "track")
-    .attr("x1", x.range()[0])
-    .attr("x2", x.range()[1])
-  .select(function() { return this.parentNode.appendChild(this.cloneNode(true)); })
-    .attr("class", "track-inset")
-  .select(function() { return this.parentNode.appendChild(this.cloneNode(true)); })
-    .attr("class", "track-overlay")
-    .call(d3.drag()
-        .on("start.interrupt", function() { slider.interrupt(); })
-        .on("start drag", function() { hue(x.invert(d3.event.x)); }));
-
-slider.insert("g", ".track-overlay")
-    .attr("class", "ticks")
-    .attr("transform", "translate(0," + 18 + ")")
-  .selectAll("text")
-  .data(x.ticks(10))
-  .enter().append("text")
-    .attr("x", x)
-    .attr("text-anchor", "middle")
-    .text(function(d) { return d + "%"; });
-
-var handle = slider.insert("circle", ".track-overlay")
-    .attr("class", "handle")
-    .attr("r", 9);
-
-function hue(h) {
-  handle.attr("cx", x(h));
-  svg.style("background-color", d3.hsl(h, 0.8, 0.8));
-  app.slice=h;
-  console.log(app.slice);
-  app.update();
- }
 
     // app.resize() will be called anytime the page size is changed
-    d3.select(window).on('resize', app.resize);
+  d3.select(window).on('resize', app.resize);
 
    },
 
@@ -187,6 +141,72 @@ function hue(h) {
   }
 }
 app.update();
+
+
+
+function Slider(selector) {
+  slider=this;
+
+  slider.svg = d3.select(selector)
+  .append('svg'),
+    margin = {right: 50, left: 50},
+    width = +slider.svg.attr("width") - margin.left - margin.right,
+    height = +slider.svg.attr("height");
+
+slider.x = d3.scaleLinear()
+    .domain([0, 100])
+    .range([0, 400])
+    .clamp(true);
+
+slider.center=width/2-150
+
+slider.slider = slider.svg.append("g")
+    .attr("class", "slider")
+    .attr('position',"relative")
+    .attr("transform", "translate("+slider.center+",15)");
+
+slider.slider.append("line")
+    .attr("class", "track")
+    .attr("x1", slider.x.range()[0])
+    .attr("x2", slider.x.range()[1])
+  .select(function() { return this.parentNode.appendChild(this.cloneNode(true)); })
+    .attr("class", "track-inset")
+  .select(function() { return this.parentNode.appendChild(this.cloneNode(true)); })
+    .attr("class", "track-overlay")
+    .call(d3.drag()
+        .on("start.interrupt", function() { slider.slider.interrupt(); })
+        .on("start drag", function() { hue(slider.x.invert(d3.event.x)); }));
+
+slider.slider.insert("g", ".track-overlay")
+    .attr("class", "ticks")
+    .attr("transform", "translate(0," + 18 + ")")
+  .selectAll("text")
+  .data(slider.x.ticks(10))
+  .enter().append("text")
+    .attr("x", x)
+    .attr("text-anchor", "middle")
+    .text(function(d) { return d + "%"; });
+
+slider.slider.handle = slider.slider.insert("circle", ".track-overlay")
+    .attr("class", "handle")
+    .attr("r", 9);
+
+//app.options.slicer= function slice(j) {
+    //slider.slider.handle.attr("cx", slider.x(j));
+    //return j;
+    //console.log(j);
+    //app.update();
+//}
+
+function hue(h) {
+  slider.slider.handle.attr("cx", slider.x(h));
+  app.options.slicer=h;
+  slider.svg.style("background-color", d3.hsl(h, 0.8, 0.8));  
+                     
+}
+ app.update;
+ console.log(app.options.slicer); 
+}
 
 function Chart(selector) {
 
@@ -226,7 +246,7 @@ chart.svg = d3.select(selector)
 
   chart.sidelength = d3.scaleSqrt()
     .domain([d3.min(app.data, function (d) { return d.pop; }), d3.max(app.data, function (d) { return d.pop; })])
-    .range([0, slice]);
+    .range([0, app.options.slicer]);
   
   chart.update();
 }

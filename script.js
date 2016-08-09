@@ -19,7 +19,8 @@ var color = d3.scaleLinear()
    .awaitAll(function (error, results) {
      if (error) { throw error; }
      app.initialize(results[0],results[1]);
-   });
+     
+    });
 
 
   app = {
@@ -27,15 +28,60 @@ var color = d3.scaleLinear()
     components: [],
   
 
-  initialize: function (data) {
-    app.data = data;
-    app.slice=60
-    
+  initialize: function (centroids,county) {
+    app.data = centroids;
+    app.slice=60 
 
     app.options = {
         slider: false,
         slicer: 0,
         };
+
+
+   for (var i = 0; i < county.length; i++) {
+
+        var dataState = county[i].State;
+        var Pop = county[i].POPEST2012;
+        var White = county[i].PCT_NHWHITE10;
+        var Black = county[i].PCT_NHBLACK10;
+        var Asian = county[i].PCT_NHASIAN10;
+        var Hispanic = county[i].PCT_HISP10;
+        var Median = county[i].median;
+        var MaleLifeEx = county[i].MaleLifeEx;
+        var Uninsured2014 = county[i].Uninsured2014;
+        var obesity = county[i].obesity;
+        var YPLS = county[i].YPLS;
+        var DaysPoorHealth = county[i].DaysPoorHealth;
+        var DaysPoorPhys = county[i].DaysPoorPhys;
+
+        // Find the corresponding state inside the GeoJSON
+        for (var j = 0; j < centroids.length; j++)  {
+            var jsonState = centroids[j].name;
+
+            if (dataState == jsonState) {
+            centroids[j].Pop = Pop; 
+            centroids[j].White = White; 
+            centroids[j].Black = Black; 
+            centroids[j].Asian = Asian; 
+            centroids[j].Hispanic = Hispanic; 
+            centroids[j].Median = Median; 
+            centroids[j].MaleLifeEx = MaleLifeEx; 
+            centroids[j].Uninsured2014 = Uninsured2014; 
+            centroids[j].obesity = obesity; 
+            centroids[j].YPLS = YPLS; 
+            centroids[j].DaysPoorPhys = DaysPoorPhys; 
+            centroids[j].DaysPoorHealth = DaysPoorHealth; 
+
+            break;
+
+            };
+          };
+          app.centroids = centroids;
+          console.log(app.centroids);
+        };
+
+
+
 
     // Here we create each of the components on our page, storing them in an array
     app.components = [
@@ -125,6 +171,8 @@ var color = d3.scaleLinear()
 
     // Add event listeners and the like here
        //start slider
+     // Data merge:
+    
 
 
     // app.resize() will be called anytime the page size is changed
@@ -218,6 +266,9 @@ function Chart(selector) {
     top: 50,
     bottom: 75
   };
+
+
+
 
 
 chart.width = 800 - margin.left - margin.right;

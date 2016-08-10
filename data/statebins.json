@@ -6,7 +6,7 @@
 {"abbr":"CO","name":"Colorado","lon":-99.75,"lat":40.75,"pop":4301261},
 {"abbr":"CT","name":"Connecticut","lon":-91,"lat":42,"pop":3405565},
 {"abbr":"DE","name":"Delaware","lon":-91,"lat":40.75,"pop":783600},
-{"abbr":"DC","name":"District of Columbia","lon":-92.25,"lat":39.5,"pop":572059},
+{"abbr":"DC","name":"District Of Columbia","lon":-92.25,"lat":39.5,"pop":572059},
 {"abbr":"FL","name":"Florida","lon":-92.25,"lat":37,"pop":15982378},
 {"abbr":"GA","name":"Georgia","lon":-93.5,"lat":38.25,"pop":8186453},
 {"abbr":"HI","name":"Hawaii","lon":-103.5,"lat":37,"pop":1211537},

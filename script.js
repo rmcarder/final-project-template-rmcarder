@@ -29,30 +29,26 @@ var color = d3.scaleLinear()
   
 
   initialize: function (centroids,county) {
-    app.data = centroids;
+    app.data = county;
     app.slice=60 
 
     app.options = {
         slider: false,
-        slicer: 0,
+        slicer: 30,
         };
+  //Get State Populations from County Dataset
+    app.PopSums = d3.nest()
+      .key(function(d) { return d.State; })
+      .rollup(function(leaves) { return {"counties": leaves.length, "total_pop": d3.sum(leaves, function(d) {return parseFloat(d.POPEST2012);})} })
+      .entries(app.data); 
 
+    console.log(app.PopSums);   
 
-   for (var i = 0; i < county.length; i++) {
+   for (var i = 0; i < app.PopSums.length; i++) {
 
-        var dataState = county[i].State;
-        var Pop = county[i].POPEST2012;
-        var White = county[i].PCT_NHWHITE10;
-        var Black = county[i].PCT_NHBLACK10;
-        var Asian = county[i].PCT_NHASIAN10;
-        var Hispanic = county[i].PCT_HISP10;
-        var Median = county[i].median;
-        var MaleLifeEx = county[i].MaleLifeEx;
-        var Uninsured2014 = county[i].Uninsured2014;
-        var obesity = county[i].obesity;
-        var YPLS = county[i].YPLS;
-        var DaysPoorHealth = county[i].DaysPoorHealth;
-        var DaysPoorPhys = county[i].DaysPoorPhys;
+        var dataState = app.PopSums[i].key;
+        var Pop= app.PopSums[i].value.total_pop;
+        
 
         // Find the corresponding state inside the GeoJSON
         for (var j = 0; j < centroids.length; j++)  {
@@ -60,30 +56,15 @@ var color = d3.scaleLinear()
 
             if (dataState == jsonState) {
             centroids[j].Pop = Pop; 
-            centroids[j].White = White; 
-            centroids[j].Black = Black; 
-            centroids[j].Asian = Asian; 
-            centroids[j].Hispanic = Hispanic; 
-            centroids[j].Median = Median; 
-            centroids[j].MaleLifeEx = MaleLifeEx; 
-            centroids[j].Uninsured2014 = Uninsured2014; 
-            centroids[j].obesity = obesity; 
-            centroids[j].YPLS = YPLS; 
-            centroids[j].DaysPoorPhys = DaysPoorPhys; 
-            centroids[j].DaysPoorHealth = DaysPoorHealth; 
-
+            
             break;
 
             };
           };
-          app.centroids = centroids;
+    app.sum = centroids;
           };
 
-    app.GroupByState = d3.nest()
-      .key(function(d) { return d.name; })
-      .entries(centroids);
-
-     console.log(app.GroupByState);
+    console.log(app.sum);
 
     // Here we create each of the components on our page, storing them in an array
     app.components = [
@@ -225,7 +206,10 @@ slider.slider.append("line")
     .attr("class", "track-overlay")
     .call(d3.drag()
         .on("start.interrupt", function() { slider.slider.interrupt(); })
-        .on("start drag", function() { hue(slider.x.invert(d3.event.x)); }));
+        .on("start drag", function() { hue(slider.x.invert(d3.event.x));
+        app.options.slicer=slider.x.invert(d3.event.x);
+        app.update();
+        console.log(app.options.slicer); }));
 
 slider.slider.insert("g", ".track-overlay")
     .attr("class", "ticks")
@@ -250,11 +234,9 @@ slider.slider.handle = slider.slider.insert("circle", ".track-overlay")
 
 function hue(h) {
   slider.slider.handle.attr("cx", slider.x(h));
-  app.options.slicer=h;
   slider.svg.style("background-color", d3.hsl(h, 0.8, 0.8));  
-                     
+  app.update();            
 }
- app.update;
  console.log(app.options.slicer); 
 }
 
@@ -269,10 +251,6 @@ function Chart(selector) {
     bottom: 75
   };
 
-
-
-
-
 chart.width = 800 - margin.left - margin.right;
 chart.height = 500 - margin.top - margin.bottom;
 
@@ -286,24 +264,22 @@ chart.svg = d3.select(selector)
 //Scales - Hopefully 
 
 // SCALES
-
+  console.log(app.sum);
   chart.x = d3.scaleLinear()
-    .domain([d3.min(app.data, function (d) { return d.lon; }),d3.max(app.data, function (d) { return d.lon; })])
+    .domain([d3.min(app.sum, function (d) { return d.lon; }),d3.max(app.sum, function (d) { return d.lon; })])
     .range([0, chart.width])
     .nice();
 
   chart.y = d3.scaleLinear()
-    .domain([d3.min(app.data, function (d) { return d.lat; }),d3.max(app.data, function (d) { return d.lat; })])
+    .domain([d3.min(app.sum, function (d) { return d.lat; }),d3.max(app.sum, function (d) { return d.lat; })])
     .range([chart.height, 0])
     .nice();
 
-  chart.sidelength = d3.scaleSqrt()
-    .domain([d3.min(app.data, function (d) { return d.pop; }), d3.max(app.data, function (d) { return d.pop; })])
-    .range([0, app.options.slicer]);
+  
   
   chart.update();
 }
-    // Data merge:
+    // data merge:
  
 Chart.prototype = {
   update: function () {
@@ -312,12 +288,16 @@ Chart.prototype = {
     // Interrupt ongoing transitions:  
 
     chart.colorScale = d3.scaleLinear()
-        .domain([d3.min(app.data, function (d) { return d.pop; }), d3.max(app.data, function (d) { return d.pop; })])
+        .domain([d3.min(app.sum, function (d) { return d.Pop; }), d3.max(app.sum, function (d) { return d.Pop; })])
         .range(["#d73027","#4575b4"]);
+
+    chart.sidelength = d3.scaleSqrt()
+    .domain([d3.min(app.sum, function (d) { return d.Pop; }), d3.max(app.sum, function (d) { return d.Pop; })])
+    .range([0, app.options.slicer]);
    
     // Statebin
     var states = chart.svg.selectAll('.state')
-      .data(app.data)
+      .data(app.sum)
       .enter().append('g')
       .attr('class','state');
 
@@ -327,9 +307,9 @@ Chart.prototype = {
       .attr('x', function (d) { return chart.x(d.lon); })
       .attr('y', function (d) { return chart.y(d.lat); })
       .transition().duration(4000)       
-      .attr('width', function (d) { return chart.sidelength(d.pop); })
-      .attr('height', function (d) { return chart.sidelength(d.pop); })
-      .attr('fill',function (d) { return chart.colorScale(d.pop); }) ;
+      .attr('width', function (d) { return chart.sidelength(d.Pop); })
+      .attr('height', function (d) { return chart.sidelength(d.Pop); })
+      .attr('fill',function (d) { return chart.colorScale(d.Pop); }) ;
 
     states.append('text')
       .attr('x', function (d) { return chart.x(d.lon); })
@@ -338,10 +318,13 @@ Chart.prototype = {
       .attr('dy',0)
       .text(function (d) {return d.abbr;});
 
+  
+
 
       
 
     states.exit().transition().duration(1000).delay(150).style("opacity", 0).remove();
+    
 
     }
 }

@@ -250,7 +250,6 @@ var color = d3.scaleLinear()
     app.components.forEach(function (c) { if (c.update) { c.update(); }});
   }
 }
-app.update();
 
 
 
@@ -287,7 +286,6 @@ slider.slider.append("line")
         .on("start.interrupt", function() { slider.slider.interrupt(); })
         .on("start drag", function() { hue(slider.x.invert(d3.event.x));
         app.options.slicer=(slider.x.invert(d3.event.x))/100;
-        app.update();
         console.log(app.options.slicer); }));
 
 slider.slider.insert("g", ".track-overlay")
@@ -306,8 +304,8 @@ slider.slider.handle = slider.slider.insert("circle", ".track-overlay")
 
 function hue(h) {
   slider.slider.handle.attr("cx", slider.x(h));
-  slider.svg.style("background-color", d3.hsl(h, 0.8, 0.8));  
-  app.update();            
+  slider.svg.style("background-color", d3.hsl(h, 0.8, 0.8)); 
+  app.update();           
 }
 }
 
@@ -346,7 +344,7 @@ chart.svg = d3.select(selector)
     .range([chart.height, 0])
     .nice();
 
-  chart.update();
+chart.update();
 }
     // data merge:
  
@@ -356,7 +354,7 @@ Chart.prototype = {
 
     // Interrupt ongoing transitions:
 
-
+console.log(app.options);
 
     chart.colorScale = d3.scaleLinear()
         .domain(d3.extent(app.sum, function (d) { return d[app.options.yvar]; }))
@@ -395,7 +393,6 @@ Chart.prototype = {
 
     states.exit().transition().duration(1000).delay(150).style("opacity", 0).remove();
 
-app.update();
     }
 
 }

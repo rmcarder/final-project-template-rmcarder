@@ -35,7 +35,7 @@ var color = d3.scaleLinear()
     app.options = {
         slider: false,
         slicer: 60,
-        yvar: 'MaleLifeEx',
+        yvar: 'obesity',
         };
 
   //Data Manipulation      
@@ -395,8 +395,9 @@ Chart.prototype = {
 
     states.exit().transition().duration(1000).delay(150).style("opacity", 0).remove();
 
-
+app.update();
     }
+
 }
 
 

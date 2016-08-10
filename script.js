@@ -34,28 +34,47 @@ var color = d3.scaleLinear()
 
     app.options = {
         slider: false,
-        slicer: 30,
+        slicer: 60,
+        yvar: 'MaleLifeEx',
         };
-  //Get State Populations from County Dataset
+
+  //Data Manipulation      
+  //Get State Populations and weighted averages of each variable from County Dataset
     app.PopSums = d3.nest()
       .key(function(d) { return d.State; })
-      .rollup(function(leaves) { return {"counties": leaves.length, "total_pop": d3.sum(leaves, function(d) {return parseFloat(d.POPEST2012);})} })
+      .rollup(function(leaves) { return {
+        "counties": leaves.length, 
+        "total_pop": d3.sum(leaves, function(d) {return parseFloat(d.POPEST2012);}),
+        "ave_MaleLifeEx": (d3.sum(leaves, function(d) {return parseFloat(d.POPMaleLifeEx);}))/(d3.sum(leaves, function(d) {return parseFloat(d.POPEST2012);})), 
+        "ave_uninsured": (d3.sum(leaves, function(d) {return parseFloat(d.POPUninsured);}))/(d3.sum(leaves, function(d) {return parseFloat(d.POPEST2012);})),
+        "ave_obesity": (d3.sum(leaves, function(d) {return parseFloat(d.POPobesity);}))/(d3.sum(leaves, function(d) {return parseFloat(d.POPEST2012);})),
+        "ave_DaysPoorHealth": (d3.sum(leaves, function(d) {return parseFloat(d.POPDaysPoorHealth);}))/(d3.sum(leaves, function(d) {return parseFloat(d.POPEST2012);})),
+        "ave_YPLS": (d3.sum(leaves, function(d) {return parseFloat(d.POPYPLS);}))/(d3.sum(leaves, function(d) {return parseFloat(d.POPEST2012);}))} })
       .entries(app.data); 
 
     console.log(app.PopSums);   
-
+    //Append variables above to centroids (statebins.json)
    for (var i = 0; i < app.PopSums.length; i++) {
 
         var dataState = app.PopSums[i].key;
-        var Pop= app.PopSums[i].value.total_pop;
-        
+        var YPLS= app.PopSums[i].value.ave_YPLS;
+        var MaleLifeEx= app.PopSums[i].value.ave_MaleLifeEx;
+        var uninsiured= app.PopSums[i].value.ave_uninsured;
+        var obesity= app.PopSums[i].value.ave_obesity;
+        var DaysPoorHealth= app.PopSums[i].value.ave_DaysPoorHealth;
+        var Pop= app.PopSums[i].value.total_pop;        
 
         // Find the corresponding state inside the GeoJSON
         for (var j = 0; j < centroids.length; j++)  {
             var jsonState = centroids[j].name;
 
             if (dataState == jsonState) {
-            centroids[j].Pop = Pop; 
+            centroids[j].Pop = Pop;
+            centroids[j].YPLS = YPLS; 
+            centroids[j].MaleLifeEx = MaleLifeEx; 
+            centroids[j].obesity = obesity; 
+            centroids[j].DaysPoorHealth = DaysPoorHealth; 
+            centroids[j].uninsiured = uninsiured;  
             
             break;
 
@@ -152,6 +171,66 @@ var color = d3.scaleLinear()
         };      
       });
 
+    d3.select("#yvar-MaleLifeEx")
+      .on("click", function(){
+        if(app.options.yvar==='MaleLifeEx'){
+          app.options.yvar=false;
+          app.update();
+        } else {
+          app.options.yvar='MaleLifeEx';
+          console.log(app.options);
+          app.update();
+        };      
+      });
+
+      d3.select("#yvar-obesity")
+      .on("click", function(){
+        if(app.options.yvar==='obesity'){
+          app.options.yvar=false;
+          app.update();
+        } else {
+          app.options.yvar='obesity';
+          console.log(app.options);
+          app.update();
+        };      
+      });
+
+      d3.select("#yvar-uninsured")
+      .on("click", function(){
+        if(app.options.yvar==='uninsured'){
+          app.options.yvar=false;
+          app.update();
+        } else {
+          app.options.yvar='uninsured';
+          console.log(app.options);
+          app.update();
+        };      
+      });
+
+      d3.select("#yvar-DaysPoorHealth")
+      .on("click", function(){
+        if(app.options.yvar==='DaysPoorHealth'){
+          app.options.yvar=false;
+          app.update();
+        } else {
+          app.options.yvar='DaysPoorHealth';
+          console.log(app.options);
+          app.update();
+        };      
+      });
+
+      d3.select("#yvar-YPLS")
+      .on("click", function(){
+        if(app.options.yvar==='YPLS'){
+          app.options.yvar=false;
+          app.update();
+        } else {
+          app.options.yvar='YPLS';
+          console.log(app.options);
+          app.update();
+        };      
+      });
+
     // Add event listeners and the like here
        //start slider
      // Data merge:
@@ -207,7 +286,7 @@ slider.slider.append("line")
     .call(d3.drag()
         .on("start.interrupt", function() { slider.slider.interrupt(); })
         .on("start drag", function() { hue(slider.x.invert(d3.event.x));
-        app.options.slicer=slider.x.invert(d3.event.x);
+        app.options.slicer=(slider.x.invert(d3.event.x))/100;
         app.update();
         console.log(app.options.slicer); }));
 
@@ -225,19 +304,11 @@ slider.slider.handle = slider.slider.insert("circle", ".track-overlay")
     .attr("class", "handle")
     .attr("r", 9);
 
-//app.options.slicer= function slice(j) {
-    //slider.slider.handle.attr("cx", slider.x(j));
-    //return j;
-    //console.log(j);
-    //app.update();
-//}
-
 function hue(h) {
   slider.slider.handle.attr("cx", slider.x(h));
   slider.svg.style("background-color", d3.hsl(h, 0.8, 0.8));  
   app.update();            
 }
- console.log(app.options.slicer); 
 }
 
 function Chart(selector) {
@@ -275,8 +346,6 @@ chart.svg = d3.select(selector)
     .range([chart.height, 0])
     .nice();
 
-  
-  
   chart.update();
 }
     // data merge:
@@ -285,46 +354,47 @@ Chart.prototype = {
   update: function () {
     var chart = this;
 
-    // Interrupt ongoing transitions:  
+    // Interrupt ongoing transitions:
+
+
 
     chart.colorScale = d3.scaleLinear()
-        .domain([d3.min(app.sum, function (d) { return d.Pop; }), d3.max(app.sum, function (d) { return d.Pop; })])
-        .range(["#d73027","#4575b4"]);
+        .domain(d3.extent(app.sum, function (d) { return d[app.options.yvar]; }))
+        .range([d3.interpolateYlOrRd(0.25),d3.interpolateYlOrRd(.75)]);
 
     chart.sidelength = d3.scaleSqrt()
-    .domain([d3.min(app.sum, function (d) { return d.Pop; }), d3.max(app.sum, function (d) { return d.Pop; })])
-    .range([0, app.options.slicer]);
+    .domain(d3.extent(app.sum, function (d) { return d.Pop; }))
+    .range([30, app.options.slicer]);
    
     // Statebin
     var states = chart.svg.selectAll('.state')
       .data(app.sum)
       .enter().append('g')
-      .attr('class','state');
+      .attr('class','state')
+      .attr('x',0)
+      .attr('y',0);
 
     states.append('rect')
       .attr('height',0)
       .attr('width',0)
-      .attr('x', function (d) { return chart.x(d.lon); })
-      .attr('y', function (d) { return chart.y(d.lat); })
-      .transition().duration(4000)       
+      .attr('x', function (d) { return chart.x(d.lon)- (chart.sidelength(d.Pop))/2; })
+      .attr('y', function (d) { return chart.y(d.lat)- (chart.sidelength(d.Pop))/2; })
+      .transition().duration(1000)       
       .attr('width', function (d) { return chart.sidelength(d.Pop); })
       .attr('height', function (d) { return chart.sidelength(d.Pop); })
-      .attr('fill',function (d) { return chart.colorScale(d.Pop); }) ;
+      .attr('fill',function (d) { return chart.colorScale(d[app.options.yvar]); }) ;
 
     states.append('text')
-      .attr('x', function (d) { return chart.x(d.lon); })
-      .attr('y', function (d) { return chart.y(d.lat); })
+      .attr('x', function (d) { return chart.x(d.lon)-8; })
+      .attr('y', function (d) { return chart.y(d.lat)+4; })
       .attr('dx',0)
       .attr('dy',0)
       .text(function (d) {return d.abbr;});
 
   
 
-
-      
-
     states.exit().transition().duration(1000).delay(150).style("opacity", 0).remove();
-    
+
 
     }
 }

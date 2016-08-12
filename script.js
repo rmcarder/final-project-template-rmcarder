@@ -262,19 +262,22 @@ function Slider(selector) {
   slider=this;
 
   slider.svg = d3.select(selector)
-  .append('svg'),
+  .append('svg')
+  .attr('height',25)
+  .attr('width',170)
     margin = {right: 50, left: 50},
     width = +slider.svg.attr("width") - margin.left - margin.right,
-    height = +slider.svg.attr("height");
+    height = 20;
 
 slider.x = d3.scaleLinear()
     .domain([0, 100])
-    .range([0, 400])
+    .range([0, 150])
     .clamp(true);
 
-slider.center=width/2-150
+slider.center=10
 
 slider.slider = slider.svg.append("g")
+    .attr('height',5)
     .attr("class", "slider")
     .attr('position',"relative")
     .attr("transform", "translate("+slider.center+",15)");
@@ -309,7 +312,7 @@ slider.slider.handle = slider.slider.insert("circle", ".track-overlay")
 
 function hue(h) {
   slider.slider.handle.attr("cx", slider.x(h));
-  slider.svg.style("background-color", d3.hsl(h, 0.8, 0.8)); 
+  slider.svg.style("background-color", 'none'); 
   app.update();           
 }
 }
@@ -319,14 +322,14 @@ function Chart(selector) {
   var chart = this;
 
   var margin = {
-    left: 75,
-    right: 50,
+    left: 0,
+    right: 0,
     top: 50,
-    bottom: 75
+    bottom: 50
   };
 
-chart.width = 670 - margin.left - margin.right;
-chart.height = 440 - margin.top - margin.bottom;
+chart.width = 480 - margin.left - margin.right;
+chart.height = 370 - margin.top - margin.bottom;
 
 chart.svg = d3.select(selector)
     .append('svg')
@@ -367,7 +370,7 @@ console.log(app.options);
 
     chart.sidelength = d3.scaleSqrt()
     .domain(d3.extent(app.sum, function (d) { return d.PopPercent; }))
-    .range([40,70]);
+    .range([35,70]);
    
     // Statebin
     var states = chart.svg.selectAll('.state')

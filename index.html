@@ -25,24 +25,26 @@
           <button type="button" class="btn btn-default" id="yvar-DaysPoorHealth">Days of Poor Health</button>
           <button type="button" class="btn btn-default" id="yvar-YPLS">YPLS</button>
 </div> 
-<div class="container"><p>Choose a Demographic to Move Counties Between Maps:</p></div>
-  <div class="btn-group" role="group" aria-label="Filter">
-          <button type="button" class="btn btn-default" id="slider-white">White</button>
-          <button type="button" class="btn btn-default" id="slider-black">Black</button>
-          <button type="button" class="btn btn-default" id="slider-hispanic">Hispanic</button>
-          <button type="button" class="btn btn-default" id="slider-asian">Asian</button>
-          <button type="button" class="btn btn-default" id="slider-income">Income</button>
-</div>
-<p id='linebreak'> </br></p>
-<p id='slidertext'> </p>
-<div id='slider'></div>
+
 </div>
 
 <div class="main section">
   <div class="container">
 <div class="row">
-    <div class="col-lg-6" id='chart'></div>
-    <div class="col-lg-6" id='chart2'></div>
+    <div class="col-lg-5" id='chart'></div>
+     <div class="col-lg-2" id='sliderbuttons'>
+       <p>Choose a Demographic to Move Counties Between Maps:</p>
+       <div class="btn-group-vertical" role="group" aria-label="Filter">   
+          <button type="button" class="btn btn-default" id="slider-white">White</button>
+          <button type="button" class="btn btn-default" id="slider-black">Black</button>
+          <button type="button" class="btn btn-default" id="slider-hispanic">Hispanic</button>
+          <button type="button" class="btn btn-default" id="slider-asian">Asian</button>
+          <button type="button" class="btn btn-default" id="slider-income">Income</button>
+        </div>
+          <div id='slider'></div>
+        </div>
+     
+    <div class="col-lg-5" id='chart2'></div>
   </div>
   </div>
 </div>

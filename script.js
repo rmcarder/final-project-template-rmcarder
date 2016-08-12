@@ -1,5 +1,5 @@
 var app;
-var slice = 60
+var slice = 0;
 var x;
 
 
@@ -52,6 +52,8 @@ var color = d3.scaleLinear()
         "ave_YPLS": (d3.sum(leaves, function(d) {return parseFloat(d.POPYPLS);}))/(d3.sum(leaves, function(d) {return parseFloat(d.POPEST2012);}))} })
       .entries(app.data); 
 
+
+
     console.log(app.PopSums);   
     //Append variables above to centroids (statebins.json)
    for (var i = 0; i < app.PopSums.length; i++) {
@@ -59,7 +61,7 @@ var color = d3.scaleLinear()
         var dataState = app.PopSums[i].key;
         var YPLS= app.PopSums[i].value.ave_YPLS;
         var MaleLifeEx= app.PopSums[i].value.ave_MaleLifeEx;
-        var uninsiured= app.PopSums[i].value.ave_uninsured;
+        var uninsured= app.PopSums[i].value.ave_uninsured;
         var obesity= app.PopSums[i].value.ave_obesity;
         var DaysPoorHealth= app.PopSums[i].value.ave_DaysPoorHealth;
         var Pop= app.PopSums[i].value.total_pop;        
@@ -67,6 +69,7 @@ var color = d3.scaleLinear()
         // Find the corresponding state inside the GeoJSON
         for (var j = 0; j < centroids.length; j++)  {
             var jsonState = centroids[j].name;
+            var totalPop = centroids[j].totalpop;
 
             if (dataState == jsonState) {
             centroids[j].Pop = Pop;
@@ -74,7 +77,8 @@ var color = d3.scaleLinear()
             centroids[j].MaleLifeEx = MaleLifeEx; 
             centroids[j].obesity = obesity; 
             centroids[j].DaysPoorHealth = DaysPoorHealth; 
-            centroids[j].uninsiured = uninsiured;  
+            centroids[j].uninsured = uninsured;  
+            centroids[j].PopPercent = (Pop/totalPop);
             
             break;
 
@@ -88,6 +92,7 @@ var color = d3.scaleLinear()
     // Here we create each of the components on our page, storing them in an array
     app.components = [
       new Chart('#chart'),
+      new Chart('#chart2'),
       new Slider('#slider')
     ];
 
@@ -320,8 +325,8 @@ function Chart(selector) {
     bottom: 75
   };
 
-chart.width = 800 - margin.left - margin.right;
-chart.height = 500 - margin.top - margin.bottom;
+chart.width = 670 - margin.left - margin.right;
+chart.height = 440 - margin.top - margin.bottom;
 
 chart.svg = d3.select(selector)
     .append('svg')
@@ -361,28 +366,36 @@ console.log(app.options);
         .range([d3.interpolateYlOrRd(0.25),d3.interpolateYlOrRd(.75)]);
 
     chart.sidelength = d3.scaleSqrt()
-    .domain(d3.extent(app.sum, function (d) { return d.Pop; }))
-    .range([30, app.options.slicer]);
+    .domain(d3.extent(app.sum, function (d) { return d.PopPercent; }))
+    .range([40,70]);
    
     // Statebin
     var states = chart.svg.selectAll('.state')
       .data(app.sum)
+
+    var statesEnter=states
       .enter().append('g')
       .attr('class','state')
       .attr('x',0)
       .attr('y',0);
 
-    states.append('rect')
+    states=states.merge(statesEnter);
+
+    statesEnter.append('rect')
       .attr('height',0)
       .attr('width',0)
-      .attr('x', function (d) { return chart.x(d.lon)- (chart.sidelength(d.Pop))/2; })
-      .attr('y', function (d) { return chart.y(d.lat)- (chart.sidelength(d.Pop))/2; })
-      .transition().duration(1000)       
-      .attr('width', function (d) { return chart.sidelength(d.Pop); })
-      .attr('height', function (d) { return chart.sidelength(d.Pop); })
+      .attr('x', function (d) { return chart.x(d.lon)- (chart.sidelength(d.PopPercent))/2; })
+      .attr('y', function (d) { return chart.y(d.lat)- (chart.sidelength(d.PopPercent))/2; })
+      
+
+    states.selectAll('rect')
+      .transition().duration(400)       
+      .attr('width', function (d) { return chart.sidelength(d.PopPercent); })
+      .attr('height', function (d) { return chart.sidelength(d.PopPercent); })
       .attr('fill',function (d) { return chart.colorScale(d[app.options.yvar]); }) ;
 
-    states.append('text')
+    statesEnter.append('text')
+      .attr('class','statetext')
       .attr('x', function (d) { return chart.x(d.lon)-8; })
       .attr('y', function (d) { return chart.y(d.lat)+4; })
       .attr('dx',0)
@@ -391,7 +404,6 @@ console.log(app.options);
 
   
 
-    states.exit().transition().duration(1000).delay(150).style("opacity", 0).remove();
 
     }
 

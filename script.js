@@ -29,14 +29,38 @@ var color = d3.scaleLinear()
   
 
   initialize: function (centroids,county) {
-    app.data = county;
+    app.leftData = county;
+    app.rightData = county;
     app.slice=60 
 
     app.options = {
         slider: false,
-        slicer: 60,
+        slicer: 0,
         yvar: 'obesity',
         };
+
+
+        if(app.options.slider) {
+          if (app.options.slider ==='white') {
+            app.leftData=app.leftData.filter(function (d) {return d.PCT_NHWHITE10>app.options.slicer; });
+            app.rightData=app.rightData.filter(function (d) {return d.PCT_NHWHITE10<app.options.slicer; });
+          } else if (app.options.slider ==='black') {
+            app.leftData=app.leftData.filter(function (d) {return d.PCT_NHBLACK10>app.options.slicer; });
+            app.rightData=app.rightData.filter(function (d) {return d.PCT_NHBLACK10<app.options.slicer; });
+          } else if (app.options.slider ==='hispanic') {
+            app.leftData=app.leftData.filter(function (d) {return d.PCT_HISP10>app.options.slicer; });
+            app.rightData=app.rightData.filter(function (d) {return d.PCT_HISP10<app.options.slicer; });
+
+          } else if (app.options.slider ==='asian') {
+            app.leftData=app.leftData.filter(function (d) {return d.PCT_NHASIAN10>app.options.slicer; });
+            app.rightData=app.rightData.filter(function (d) {return d.PCT_NHASIAN10<app.options.slicer; });
+          }
+        }
+  
+  
+
+
+
 
   //Data Manipulation      
   //Get State Populations and weighted averages of each variable from County Dataset
@@ -50,7 +74,7 @@ var color = d3.scaleLinear()
         "ave_obesity": (d3.sum(leaves, function(d) {return parseFloat(d.POPobesity);}))/(d3.sum(leaves, function(d) {return parseFloat(d.POPEST2012);})),
         "ave_DaysPoorHealth": (d3.sum(leaves, function(d) {return parseFloat(d.POPDaysPoorHealth);}))/(d3.sum(leaves, function(d) {return parseFloat(d.POPEST2012);})),
         "ave_YPLS": (d3.sum(leaves, function(d) {return parseFloat(d.POPYPLS);}))/(d3.sum(leaves, function(d) {return parseFloat(d.POPEST2012);}))} })
-      .entries(app.data); 
+      .entries(app.leftData); 
 
 
 
@@ -98,84 +122,37 @@ var color = d3.scaleLinear()
 
  d3.select("#slider-white")
       .on("click", function(){
-        if(app.options.slider==="white"){
-          app.options.slider=false;
-          app.update();
-        } else {
-          app.options.slider="white";
-          console.log(app.options);
-          d3.select('#slider')
-          .style('display','inline')
+          app.options.slider="White";
           d3.select('#slidertext')
-          .text(function (d) {return 'All counties less than (need slider value as global variable)%'+app.options.slider+' will leave the top map and start building one below.' ;});
+          .text(function (d) {return app.options.slider;});
           app.update();
-        };      
-      });
+        });
 
-  d3.select("#slider-black")
+   d3.select("#slider-black")
       .on("click", function(){
-        if(app.options.slider==="black"){
-          app.options.slider=false;
-          app.update();
-        } else {
-          app.options.slider="black";
-          console.log(app.options);
-          d3.select('#slider')
-          .style('display','inline')
+          app.options.slider="Black";
           d3.select('#slidertext')
-          .text(function (d) {return 'All counties less than (need slider value as global variable)% '+app.options.slider+' will leave the top map and start building one below.' ;});
+          .text(function (d) {return app.options.slider;});
           app.update();
-        };      
-      });
+        });
 
-  d3.select("#slider-hispanic")
+   d3.select("#slider-hispanic")
       .on("click", function(){
-        if(app.options.slider==="hispanic"){
-          app.options.slider=false;
-          app.update();
-        } else {
-          app.options.slider="hispanic";
-          console.log(app.options);
-          d3.select('#slider')
-          .style('display','inline')
+          app.options.slider="Hispanic";
           d3.select('#slidertext')
-          .text(function (d) {return 'All counties less than (need slider value as global variable)% '+app.options.slider+' will leave the top map and start building one below.' ;});
+          .text(function (d) {return app.options.slider;});
           app.update();
-        };      
-      });
+        });
 
-  d3.select("#slider-asian")
+     d3.select("#slider-asian")
       .on("click", function(){
-        if(app.options.slider==="asian"){
-          app.options.slider=false;
-          app.update();
-        } else {
-          app.options.slider="asian";
-          console.log(app.options);
-          d3.select('#slider')
-          .style('display','inline')
+          app.options.slider="Asian";
           d3.select('#slidertext')
-          .text(function (d) {return 'All counties less than (need slider value as global variable)% '+app.options.slider+' will leave the top map and start building one below.' ;});
+          .text(function (d) {return app.options.slider;});
           app.update();
-        };      
-      });
+        });
 
-  d3.select("#slider-income")
-      .on("click", function(){
-        if(app.options.slider==="income"){
-          app.options.slider=false;
-          app.update();
-        } else {
-          app.options.slider="income";
-          console.log(app.options);
-          d3.select('#slider')
-          .style('display','inline')
-          d3.select('#slidertext')
-          .text(function (d) {return 'All counties manking less than (need slider value as global variable) dollars a year will leave the top map and start building one below.' ;});
-          app.update();
-        };      
-      });
-
+ 
     d3.select("#yvar-MaleLifeEx")
       .on("click", function(){
         if(app.options.yvar==='MaleLifeEx'){
@@ -294,6 +271,9 @@ slider.slider.append("line")
         .on("start.interrupt", function() { slider.slider.interrupt(); })
         .on("start drag", function() { hue(slider.x.invert(d3.event.x));
         app.options.slicer=(slider.x.invert(d3.event.x))/100;
+        d3.select('#slidernumber')
+          .text(function (d) {return (d3.format(".0f")(app.options.slicer*100))+'%';});
+         
         console.log(app.options.slicer); }));
 
 slider.slider.insert("g", ".track-overlay")

@@ -14,6 +14,12 @@
     text-align: center;
 }
 
+#slidernumber {
+  font-size: 38px;
+  font-family: 'Exo', sans-serif;
+        color: #FFFFFF;
+}
+
 .state {
 	color: black;
   stroke-width: 1px;
@@ -93,6 +99,10 @@
 .hidden {
   display: none;
 }
+
+.vert {
+  border-radius: ;
+}
 .btn:hover {
   background-color: #FD8D3C;
   color: #545454;
@@ -137,7 +147,7 @@ body{
       font-family: 'Arimo', sans-serif;
       color: #CECECE;
 }
-h1{
+h1,h2,h3,h4,h5{
   font-family: 'Exo', sans-serif;
         color: #FFFFFF;
 }

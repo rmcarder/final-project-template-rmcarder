@@ -18,20 +18,44 @@
     <h1>US Health Outcomes by Race and Income</h1>
   </div>
     <h5>Choose a Health Outcome:</h5>
+  <div class='row'>  
   <div class="btn-group" role="group" aria-label="Filter">
           <button type="button" class="btn btn-default" id="yvar-MaleLifeEx">Male Life Expectancy</button>
           <button type="button" class="btn btn-default" id="yvar-obesity">Obesity</button>
           <button type="button" class="btn btn-default" id="yvar-uninsured">Uninsured</button>
           <button type="button" class="btn btn-default" id="yvar-DaysPoorHealth">Days of Poor Health</button>
           <button type="button" class="btn btn-default" id="yvar-YPLS">Years of Potential Life Lost</button>
-</div> 
-
 </div>
+</div>
+<div class='container'>
+ <div class="row">
+     <div id='leftNumberTop'>United States</div> 
+     <div id='rightNumberTop'>United States</div>     
+</div>
+</div>
+
+<div class='container'>
+ <div class="row">
+       <div id='leftNumber'>0%</div> 
+       <div id='rightNumber'>0%</div>
+</div>
+</div>
+<div class='container'>
+ <div class="row">
+     <div id='leftNumberBottom'>United States</div> 
+     <div id='rightNumberBottom'>United States</div>     
+</div>
+</div>
+</div>
+
 
 <div class="main section">
   <div class="container">
+
+   
 <div class="row">
-    <div class="col-lg-5" id='chart'></div>
+   <div class="col-lg-5" id='chart'></div>
+    
      <div class="col-lg-2" id='sliderbuttons'>
        <h5>Select a Demographic to Filter Counties:</h5>
        <div class="btn-group-vertical" role="group" aria-label="Filter">   
@@ -41,8 +65,9 @@
           <button type="button" class="btn btn-default vert" id="slider-asian">Asian</button>
           <button type="button" class="btn btn-default vert" id="slider-income">Income</button>
         </div>
+
           <div id='slider'></div>
-          <div>Counties<br>-Greater Than<br>Less Than-</div>
+          <div id='topSliderText'>Counties<br>-Greater Than<br>Less Than-</div>
           <div id='slidernumber'>0%</div>
           <div id='slidertext'></div>
         </div>

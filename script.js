@@ -31,10 +31,10 @@ var color = d3.scaleLinear()
   initialize: function (centroids,county) {
     app.leftData = county;
     app.rightData = county;
-    app.slice=60 
+    app.slice=20 
 
     app.options = {
-        slider: false,
+        slider: 'black',
         slicer: 0,
         yvar: 'obesity',
         };
@@ -64,7 +64,7 @@ var color = d3.scaleLinear()
 
   //Data Manipulation      
   //Get State Populations and weighted averages of each variable from County Dataset
-    app.PopSums = d3.nest()
+    app.leftPopSums = d3.nest()
       .key(function(d) { return d.State; })
       .rollup(function(leaves) { return {
         "counties": leaves.length, 
@@ -76,19 +76,32 @@ var color = d3.scaleLinear()
         "ave_YPLS": (d3.sum(leaves, function(d) {return parseFloat(d.POPYPLS);}))/(d3.sum(leaves, function(d) {return parseFloat(d.POPEST2012);}))} })
       .entries(app.leftData); 
 
+    app.rightPopSums = d3.nest()
+      .key(function(d) { return d.State; })
+      .rollup(function(leaves) { return {
+        "counties": leaves.length, 
+        "total_pop": d3.sum(leaves, function(d) {return parseFloat(d.POPEST2012);}),
+        "ave_MaleLifeEx": (d3.sum(leaves, function(d) {return parseFloat(d.POPMaleLifeEx);}))/(d3.sum(leaves, function(d) {return parseFloat(d.POPEST2012);})), 
+        "ave_uninsured": (d3.sum(leaves, function(d) {return parseFloat(d.POPUninsured);}))/(d3.sum(leaves, function(d) {return parseFloat(d.POPEST2012);})),
+        "ave_obesity": (d3.sum(leaves, function(d) {return parseFloat(d.POPobesity);}))/(d3.sum(leaves, function(d) {return parseFloat(d.POPEST2012);})),
+        "ave_DaysPoorHealth": (d3.sum(leaves, function(d) {return parseFloat(d.POPDaysPoorHealth);}))/(d3.sum(leaves, function(d) {return parseFloat(d.POPEST2012);})),
+        "ave_YPLS": (d3.sum(leaves, function(d) {return parseFloat(d.POPYPLS);}))/(d3.sum(leaves, function(d) {return parseFloat(d.POPEST2012);}))} })
+      .entries(app.rightData); 
 
 
-    console.log(app.PopSums);   
+
+    console.log(app.leftPopSums);   
+    console.log(app.rightPopSums);  
     //Append variables above to centroids (statebins.json)
-   for (var i = 0; i < app.PopSums.length; i++) {
+   for (var i = 0; i < app.leftPopSums.length; i++) {
 
-        var dataState = app.PopSums[i].key;
-        var YPLS= app.PopSums[i].value.ave_YPLS;
-        var MaleLifeEx= app.PopSums[i].value.ave_MaleLifeEx;
-        var uninsured= app.PopSums[i].value.ave_uninsured;
-        var obesity= app.PopSums[i].value.ave_obesity;
-        var DaysPoorHealth= app.PopSums[i].value.ave_DaysPoorHealth;
-        var Pop= app.PopSums[i].value.total_pop;        
+        var dataState = app.leftPopSums[i].key;
+        var YPLS= app.leftPopSums[i].value.ave_YPLS;
+        var MaleLifeEx= app.leftPopSums[i].value.ave_MaleLifeEx;
+        var uninsured= app.leftPopSums[i].value.ave_uninsured;
+        var obesity= app.leftPopSums[i].value.ave_obesity;
+        var DaysPoorHealth= app.leftPopSums[i].value.ave_DaysPoorHealth;
+        var Pop= app.leftPopSums[i].value.total_pop;        
 
         // Find the corresponding state inside the GeoJSON
         for (var j = 0; j < centroids.length; j++)  {
@@ -111,7 +124,7 @@ var color = d3.scaleLinear()
     app.sum = centroids;
           };
 
-    console.log(app.sum);
+  
 
     // Here we create each of the components on our page, storing them in an array
     app.components = [
@@ -332,6 +345,10 @@ chart.svg = d3.select(selector)
     .range([chart.height, 0])
     .nice();
 
+  chart.tooltip = d3.select("body").append("div")   
+    .attr("class", "header")               
+    .style("opacity", 1);
+
 chart.update();
 }
     // data merge:
@@ -350,7 +367,7 @@ console.log(app.options);
 
     chart.sidelength = d3.scaleSqrt()
     .domain(d3.extent(app.sum, function (d) { return d.PopPercent; }))
-    .range([35,70]);
+    .range([35,35]);
    
     // Statebin
     var states = chart.svg.selectAll('.state')
@@ -376,6 +393,22 @@ console.log(app.options);
       .attr('width', function (d) { return chart.sidelength(d.PopPercent); })
       .attr('height', function (d) { return chart.sidelength(d.PopPercent); })
       .attr('fill',function (d) { return chart.colorScale(d[app.options.yvar]); }) ;
+
+    states
+        .on("mouseover", function(d) {   
+        d3.select('#leftNumber')
+          .html(function () {return d3.format(".0f")(d[app.options.yvar])+' %' ;});
+        d3.select('#leftNumberTop')
+          .html(function () {return d.name;});
+        d3.select('#leftNumberBottom')
+          .html(function () {
+              return d.name;});
+        d3.select('#rightNumber')
+          .html(function () {return d3.format(".0f")(d[app.options.yvar])+' %' ;});
+        d3.select('#rightNumberTop')
+          .html(function () {return d.name;});
+        })        
+     
 
     statesEnter.append('text')
       .attr('class','statetext')

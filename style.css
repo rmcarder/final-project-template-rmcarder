@@ -10,6 +10,29 @@
   text-align: center;
 }
 
+#topSliderText {
+  font-family: 'Open Sans', sans-serif;
+  background-color: #383838;
+  font-family: 'Arimo', sans-serif;
+  color: #CECECE;
+}
+
+#rightNumberTop, #rightNumberBottom {
+  font-family: 'Open Sans', sans-serif;
+  background-color: #383838;
+  font-family: 'Arimo', sans-serif;
+  color: #CECECE;
+  float: right;
+}
+
+#leftNumberTop, #leftNumberBottom{
+  font-family: 'Open Sans', sans-serif;
+  background-color: #383838;
+  font-family: 'Arimo', sans-serif;
+  color: #CECECE;
+  float: left;
+}
+
 #sliderbuttons {
     text-align: center;
 }
@@ -17,7 +40,21 @@
 #slidernumber {
   font-size: 38px;
   font-family: 'Exo', sans-serif;
-        color: #FFFFFF;
+  color: #FFFFFF;
+}
+
+#leftNumber {
+  font-size: 50px;
+  font-family: 'Exo', sans-serif;
+  color: #FFFFFF;
+  float: left;
+}
+
+#rightNumber{
+  font-size: 50px;
+  font-family: 'Exo', sans-serif;
+  color: #FFFFFF;
+  float:right;
 }
 
 .state {
@@ -32,6 +69,10 @@
 }
 
 #chart svg {
+  display: block;
+  margin: 0 auto;
+}
+#chart2 svg {
   display: block;
   margin: 0 auto;
 }

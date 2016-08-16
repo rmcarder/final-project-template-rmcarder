@@ -241,13 +241,17 @@ var color = d3.scaleLinear()
   },
 
   update: function (centroids,county) {
+   app.components.forEach(function (c) { if (c.update) { c.update(); }});
+
+   console.log(app.options.slicer);
+
     app.update.leftData = county;
     app.update.rightData = county;
 
 
 
     console.log(app.update.leftData);
-    console.log(app.update.options.slicer);
+ 
 
     app.update.centroids = centroids;
 
@@ -257,8 +261,8 @@ var color = d3.scaleLinear()
             app.update.leftData=app.update.leftData.filter(function (d) {return d.PCT_NHWHITE10>app.options.slicer; });
             app.update.rightData=app.update.rightData.filter(function (d) {return d.PCT_NHWHITE10<app.options.slicer; });
           } else if (app.options.slider ==='black') {
-            app.update.leftData=app.update.leftData.filter(function (d) {return d.PCT_NHBLACK10>app.update.options.slicer; });
-            app.update.rightData=app.update.rightData.filter(function (d) {return d.PCT_NHBLACK10<app.update.options.slicer; });
+            app.update.leftData=app.update.leftData.filter(function (d) {return d.PCT_NHBLACK10>app.options.slicer; });
+            app.update.rightData=app.update.rightData.filter(function (d) {return d.PCT_NHBLACK10<app.options.slicer; });
           } else if (app.options.slider ==='hispanic') {
             app.update.leftData=app.update.leftData.filter(function (d) {return d.PCT_HISP10>app.options.slicer; });
             app.update.rightData=app.update.rightData.filter(function (d) {return d.PCT_HISP10<app.options.slicer; });
@@ -334,7 +338,7 @@ var color = d3.scaleLinear()
 
     
 
-    app.components.forEach(function (c) { if (c.update) { c.update(); }});
+ 
   }
 }
 
@@ -380,7 +384,7 @@ slider.slider.append("line")
     .call(d3.drag()
         .on("start.interrupt", function() { slider.slider.interrupt(); })
         .on("start drag", function() { hue(slider.x.invert(d3.event.x));
-        app.update.options.slicer=(slider.x.invert(d3.event.x))/100;
+        app.options.slicer=(slider.x.invert(d3.event.x))/100;
         app.update();
         d3.select('#slidernumber')
           .text(function (d) {return (d3.format(".0f")(app.options.slicer*100))+'%';});

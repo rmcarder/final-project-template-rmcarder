@@ -19,6 +19,7 @@ var color = d3.scaleLinear()
    .awaitAll(function (error, results) {
      if (error) { throw error; }
      app.initialize(results[0],results[1]);
+     app.update(results[0],results[1]);
      
     });
 
@@ -29,6 +30,7 @@ var color = d3.scaleLinear()
   
 
   initialize: function (centroids,county) {
+    centroids=centroids;
     app.leftData = county;
     app.rightData = county;
     app.slice=20; 
@@ -238,7 +240,100 @@ var color = d3.scaleLinear()
     app.components.forEach(function (c) { if (c.resize) { c.resize(); }});
   },
 
-  update: function () {
+  update: function (centroids,county) {
+    app.update.leftData = county;
+    app.update.rightData = county;
+
+
+
+    console.log(app.update.leftData);
+    console.log(app.update.options.slicer);
+
+    app.update.centroids = centroids;
+
+   
+      if(app.options.slider) {
+          if (app.options.slider ==='white') {
+            app.update.leftData=app.update.leftData.filter(function (d) {return d.PCT_NHWHITE10>app.options.slicer; });
+            app.update.rightData=app.update.rightData.filter(function (d) {return d.PCT_NHWHITE10<app.options.slicer; });
+          } else if (app.options.slider ==='black') {
+            app.update.leftData=app.update.leftData.filter(function (d) {return d.PCT_NHBLACK10>app.update.options.slicer; });
+            app.update.rightData=app.update.rightData.filter(function (d) {return d.PCT_NHBLACK10<app.update.options.slicer; });
+          } else if (app.options.slider ==='hispanic') {
+            app.update.leftData=app.update.leftData.filter(function (d) {return d.PCT_HISP10>app.options.slicer; });
+            app.update.rightData=app.update.rightData.filter(function (d) {return d.PCT_HISP10<app.options.slicer; });
+
+          } else if (app.options.slider ==='asian') {
+            app.update.leftData=app.update.leftData.filter(function (d) {return d.PCT_NHASIAN10>app.options.slicer; });
+            app.update.rightData=app.update.rightData.filter(function (d) {return d.PCT_NHASIAN10<app.options.slicer; });
+          }
+        }
+
+
+  //Data Manipulation      
+  //Get State Populations and weighted averages of each variable from County Dataset
+    app.update.leftPopSums = d3.nest()
+      .key(function(d) { return d.State; })
+      .rollup(function(leaves) { return {
+        "counties": leaves.length, 
+        "total_pop": d3.sum(leaves, function(d) {return parseFloat(d.POPEST2012);}),
+        "ave_MaleLifeEx": (d3.sum(leaves, function(d) {return parseFloat(d.POPMaleLifeEx);}))/(d3.sum(leaves, function(d) {return parseFloat(d.POPEST2012);})), 
+        "ave_uninsured": (d3.sum(leaves, function(d) {return parseFloat(d.POPUninsured);}))/(d3.sum(leaves, function(d) {return parseFloat(d.POPEST2012);})),
+        "ave_obesity": (d3.sum(leaves, function(d) {return parseFloat(d.POPobesity);}))/(d3.sum(leaves, function(d) {return parseFloat(d.POPEST2012);})),
+        "ave_DaysPoorHealth": (d3.sum(leaves, function(d) {return parseFloat(d.POPDaysPoorHealth);}))/(d3.sum(leaves, function(d) {return parseFloat(d.POPEST2012);})),
+        "ave_YPLS": (d3.sum(leaves, function(d) {return parseFloat(d.POPYPLS);}))/(d3.sum(leaves, function(d) {return parseFloat(d.POPEST2012);}))} })
+      .entries(app.update.leftData); 
+
+    app.update.rightPopSums = d3.nest()
+      .key(function(d) { return d.State; })
+      .rollup(function(leaves) { return {
+        "counties": leaves.length, 
+        "total_pop": d3.sum(leaves, function(d) {return parseFloat(d.POPEST2012);}),
+        "ave_MaleLifeEx": (d3.sum(leaves, function(d) {return parseFloat(d.POPMaleLifeEx);}))/(d3.sum(leaves, function(d) {return parseFloat(d.POPEST2012);})), 
+        "ave_uninsured": (d3.sum(leaves, function(d) {return parseFloat(d.POPUninsured);}))/(d3.sum(leaves, function(d) {return parseFloat(d.POPEST2012);})),
+        "ave_obesity": (d3.sum(leaves, function(d) {return parseFloat(d.POPobesity);}))/(d3.sum(leaves, function(d) {return parseFloat(d.POPEST2012);})),
+        "ave_DaysPoorHealth": (d3.sum(leaves, function(d) {return parseFloat(d.POPDaysPoorHealth);}))/(d3.sum(leaves, function(d) {return parseFloat(d.POPEST2012);})),
+        "ave_YPLS": (d3.sum(leaves, function(d) {return parseFloat(d.POPYPLS);}))/(d3.sum(leaves, function(d) {return parseFloat(d.POPEST2012);}))} })
+      .entries(app.update.rightData); 
+
+
+
+    console.log(app.update.leftPopSums);   
+    console.log(app.update.rightPopSums);  
+    //Append variables above to centroids (statebins.json)
+   for (var i = 0; i < app.update.leftPopSums.length; i++) {
+
+        var dataState = app.update.leftPopSums[i].key;
+        var YPLS= app.update.leftPopSums[i].value.ave_YPLS;
+        var MaleLifeEx= app.update.leftPopSums[i].value.ave_MaleLifeEx;
+        var uninsured= app.update.leftPopSums[i].value.ave_uninsured;
+        var obesity= app.update.leftPopSums[i].value.ave_obesity;
+        var DaysPoorHealth= app.update.leftPopSums[i].value.ave_DaysPoorHealth;
+        var Pop= app.update.leftPopSums[i].value.total_pop;        
+
+        // Find the corresponding state inside the GeoJSON
+        for (var j = 0; j < app.update.centroids.length; j++)  {
+            var jsonState = app.update.centroids[j].name;
+            var totalPop = app.update.centroids[j].totalpop;
+
+            if (dataState == jsonState) {
+            app.update.centroids[j].Pop = Pop;
+            app.update.centroids[j].YPLS = YPLS; 
+            app.update.centroids[j].MaleLifeEx = MaleLifeEx; 
+            app.update.centroids[j].obesity = obesity; 
+            app.update.centroids[j].DaysPoorHealth = DaysPoorHealth; 
+            app.update.centroids[j].uninsured = uninsured;  
+            app.update.centroids[j].PopPercent = (Pop/totalPop);
+            
+            break;
+
+            };
+          };
+    app.sum = app.update.centroids;
+          };
+
+    
+
     app.components.forEach(function (c) { if (c.update) { c.update(); }});
   }
 }
@@ -285,13 +380,13 @@ slider.slider.append("line")
     .call(d3.drag()
         .on("start.interrupt", function() { slider.slider.interrupt(); })
         .on("start drag", function() { hue(slider.x.invert(d3.event.x));
-        app.options.slicer=(slider.x.invert(d3.event.x))/100;
-        app.initialize();
+        app.update.options.slicer=(slider.x.invert(d3.event.x))/100;
+        app.update();
         d3.select('#slidernumber')
           .text(function (d) {return (d3.format(".0f")(app.options.slicer*100))+'%';});
         
          
-        console.log(app.options.slicer); }));
+        console.log(app.update.options.slicer); }));
 
 slider.slider.insert("g", ".track-overlay")
     .attr("class", "ticks")

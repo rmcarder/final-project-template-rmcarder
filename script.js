@@ -45,18 +45,18 @@ var color = d3.scaleLinear()
         
   if(app.options.slider) {
           if (app.options.slider ==='white') {
-            app.leftData=app.leftData.filter(function (d) {return d.PCT_NHWHITE10>app.options.slicer; });
-            app.rightData=app.rightData.filter(function (d) {return d.PCT_NHWHITE10<app.options.slicer; });
+            app.leftDataFilter=app.leftData.filter(function (d) {return d.PCT_NHWHITE10>app.options.slicer; });
+            app.rightDataFilter=app.rightData.filter(function (d) {return d.PCT_NHWHITE10<app.options.slicer; });
           } else if (app.options.slider ==='black') {
-            app.leftData=app.leftData.filter(function (d) {return d.PCT_NHBLACK10>app.options.slicer; });
-            app.rightData=app.rightData.filter(function (d) {return d.PCT_NHBLACK10<app.options.slicer; });
+            app.leftDataFilter=app.leftData.filter(function (d) {return d.PCT_NHBLACK10>app.options.slicer; });
+            app.rightDataFilter=app.rightData.filter(function (d) {return d.PCT_NHBLACK10<app.options.slicer; });
           } else if (app.options.slider ==='hispanic') {
-            app.leftData=app.leftData.filter(function (d) {return d.PCT_HISP10>app.options.slicer; });
-            app.rightData=app.rightData.filter(function (d) {return d.PCT_HISP10<app.options.slicer; });
+            app.leftDataFilter=app.leftData.filter(function (d) {return d.PCT_HISP10>app.options.slicer; });
+            app.rightDataFilter=app.rightData.filter(function (d) {return d.PCT_HISP10<app.options.slicer; });
 
           } else if (app.options.slider ==='asian') {
-            app.leftData=app.leftData.filter(function (d) {return d.PCT_NHASIAN10>app.options.slicer; });
-            app.rightData=app.rightData.filter(function (d) {return d.PCT_NHASIAN10<app.options.slicer; });
+            app.leftDataFilter=app.leftData.filter(function (d) {return d.PCT_NHASIAN10>app.options.slicer; });
+            app.rightDataFilter=app.rightData.filter(function (d) {return d.PCT_NHASIAN10<app.options.slicer; });
           }
         }
 
@@ -73,7 +73,7 @@ var color = d3.scaleLinear()
         "ave_obesity": (d3.sum(leaves, function(d) {return parseFloat(d.POPobesity);}))/(d3.sum(leaves, function(d) {return parseFloat(d.POPEST2012);})),
         "ave_DaysPoorHealth": (d3.sum(leaves, function(d) {return parseFloat(d.POPDaysPoorHealth);}))/(d3.sum(leaves, function(d) {return parseFloat(d.POPEST2012);})),
         "ave_YPLS": (d3.sum(leaves, function(d) {return parseFloat(d.POPYPLS);}))/(d3.sum(leaves, function(d) {return parseFloat(d.POPEST2012);}))} })
-      .entries(app.leftData); 
+      .entries(app.leftDataFilter); 
 
     app.rightPopSums = d3.nest()
       .key(function(d) { return d.State; })
@@ -85,7 +85,7 @@ var color = d3.scaleLinear()
         "ave_obesity": (d3.sum(leaves, function(d) {return parseFloat(d.POPobesity);}))/(d3.sum(leaves, function(d) {return parseFloat(d.POPEST2012);})),
         "ave_DaysPoorHealth": (d3.sum(leaves, function(d) {return parseFloat(d.POPDaysPoorHealth);}))/(d3.sum(leaves, function(d) {return parseFloat(d.POPEST2012);})),
         "ave_YPLS": (d3.sum(leaves, function(d) {return parseFloat(d.POPYPLS);}))/(d3.sum(leaves, function(d) {return parseFloat(d.POPEST2012);}))} })
-      .entries(app.rightData); 
+      .entries(app.rightDataFilter); 
 
 
 
@@ -258,18 +258,18 @@ var color = d3.scaleLinear()
    
       if(app.options.slider) {
           if (app.options.slider ==='white') {
-            app.update.leftData=app.update.leftData.filter(function (d) {return d.PCT_NHWHITE10>app.options.slicer; });
-            app.update.rightData=app.update.rightData.filter(function (d) {return d.PCT_NHWHITE10<app.options.slicer; });
+            app.update.leftDataFilter=app.update.leftData.filter(function (d) {return d.PCT_NHWHITE10>app.options.slicer; });
+            app.update.rightDataFilter=app.update.rightData.filter(function (d) {return d.PCT_NHWHITE10<app.options.slicer; });
           } else if (app.options.slider ==='black') {
-            app.update.leftData=app.update.leftData.filter(function (d) {return d.PCT_NHBLACK10>app.options.slicer; });
-            app.update.rightData=app.update.rightData.filter(function (d) {return d.PCT_NHBLACK10<app.options.slicer; });
+            app.update.leftDataFilter=app.update.leftData.filter(function (d) {return d.PCT_NHBLACK10>app.options.slicer; });
+            app.update.rightDataFilter=app.update.rightData.filter(function (d) {return d.PCT_NHBLACK10<app.options.slicer; });
           } else if (app.options.slider ==='hispanic') {
-            app.update.leftData=app.update.leftData.filter(function (d) {return d.PCT_HISP10>app.options.slicer; });
-            app.update.rightData=app.update.rightData.filter(function (d) {return d.PCT_HISP10<app.options.slicer; });
+            app.update.leftDataFilter=app.update.leftData.filter(function (d) {return d.PCT_HISP10>app.options.slicer; });
+            app.update.rightDataFilter=app.update.rightData.filter(function (d) {return d.PCT_HISP10<app.options.slicer; });
 
           } else if (app.options.slider ==='asian') {
-            app.update.leftData=app.update.leftData.filter(function (d) {return d.PCT_NHASIAN10>app.options.slicer; });
-            app.update.rightData=app.update.rightData.filter(function (d) {return d.PCT_NHASIAN10<app.options.slicer; });
+            app.update.leftDataFilter=app.update.leftData.filter(function (d) {return d.PCT_NHASIAN10>app.options.slicer; });
+            app.update.rightDataFilter=app.update.rightData.filter(function (d) {return d.PCT_NHASIAN10<app.options.slicer; });
           }
         }
 
@@ -286,7 +286,7 @@ var color = d3.scaleLinear()
         "ave_obesity": (d3.sum(leaves, function(d) {return parseFloat(d.POPobesity);}))/(d3.sum(leaves, function(d) {return parseFloat(d.POPEST2012);})),
         "ave_DaysPoorHealth": (d3.sum(leaves, function(d) {return parseFloat(d.POPDaysPoorHealth);}))/(d3.sum(leaves, function(d) {return parseFloat(d.POPEST2012);})),
         "ave_YPLS": (d3.sum(leaves, function(d) {return parseFloat(d.POPYPLS);}))/(d3.sum(leaves, function(d) {return parseFloat(d.POPEST2012);}))} })
-      .entries(app.update.leftData); 
+      .entries(app.update.leftDataFilter); 
 
     app.update.rightPopSums = d3.nest()
       .key(function(d) { return d.State; })
@@ -298,12 +298,13 @@ var color = d3.scaleLinear()
         "ave_obesity": (d3.sum(leaves, function(d) {return parseFloat(d.POPobesity);}))/(d3.sum(leaves, function(d) {return parseFloat(d.POPEST2012);})),
         "ave_DaysPoorHealth": (d3.sum(leaves, function(d) {return parseFloat(d.POPDaysPoorHealth);}))/(d3.sum(leaves, function(d) {return parseFloat(d.POPEST2012);})),
         "ave_YPLS": (d3.sum(leaves, function(d) {return parseFloat(d.POPYPLS);}))/(d3.sum(leaves, function(d) {return parseFloat(d.POPEST2012);}))} })
-      .entries(app.update.rightData); 
+      .entries(app.update.rightDataFilter); 
 
 
 
     console.log(app.update.leftPopSums);   
     console.log(app.update.rightPopSums);  
+     console.log(app.update.leftData);
     //Append variables above to centroids (statebins.json)
    for (var i = 0; i < app.update.leftPopSums.length; i++) {
 
@@ -340,13 +341,6 @@ var color = d3.scaleLinear()
 
  
   }
-}
-
-function Filter (centroids,county){
-
-
-
-
 }
 
 function Slider(selector) {
@@ -390,7 +384,7 @@ slider.slider.append("line")
           .text(function (d) {return (d3.format(".0f")(app.options.slicer*100))+'%';});
         
          
-        console.log(app.update.options.slicer); }));
+        console.log(app.options.slicer); }));
 
 slider.slider.insert("g", ".track-overlay")
     .attr("class", "ticks")
@@ -408,8 +402,7 @@ slider.slider.handle = slider.slider.insert("circle", ".track-overlay")
 
 function hue(h) {
   slider.slider.handle.attr("cx", slider.x(h));
-  slider.svg.style("background-color", 'none'); 
-  app.update();           
+  slider.svg.style("background-color", 'none');          
 }
 }
 

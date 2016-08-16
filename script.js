@@ -57,9 +57,6 @@ var color = d3.scaleLinear()
             app.rightData=app.rightData.filter(function (d) {return d.PCT_NHASIAN10<app.options.slicer; });
           }
         }
-  
-
-
 
 
   //Data Manipulation      
@@ -124,7 +121,7 @@ var color = d3.scaleLinear()
     app.sum = centroids;
           };
 
-  
+    
 
     // Here we create each of the components on our page, storing them in an array
     app.components = [
@@ -289,9 +286,10 @@ slider.slider.append("line")
         .on("start.interrupt", function() { slider.slider.interrupt(); })
         .on("start drag", function() { hue(slider.x.invert(d3.event.x));
         app.options.slicer=(slider.x.invert(d3.event.x))/100;
+        app.initialize();
         d3.select('#slidernumber')
           .text(function (d) {return (d3.format(".0f")(app.options.slicer*100))+'%';});
-        app.update();
+        
          
         console.log(app.options.slicer); }));
 

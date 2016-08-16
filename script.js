@@ -31,7 +31,7 @@ var color = d3.scaleLinear()
   initialize: function (centroids,county) {
     app.leftData = county;
     app.rightData = county;
-    app.slice=20 
+    app.slice=20; 
 
     app.options = {
         slider: 'black',
@@ -40,7 +40,8 @@ var color = d3.scaleLinear()
         };
 
 
-        if(app.options.slider) {
+        
+  if(app.options.slider) {
           if (app.options.slider ==='white') {
             app.leftData=app.leftData.filter(function (d) {return d.PCT_NHWHITE10>app.options.slicer; });
             app.rightData=app.rightData.filter(function (d) {return d.PCT_NHWHITE10<app.options.slicer; });
@@ -56,7 +57,6 @@ var color = d3.scaleLinear()
             app.rightData=app.rightData.filter(function (d) {return d.PCT_NHASIAN10<app.options.slicer; });
           }
         }
-  
   
 
 
@@ -246,7 +246,12 @@ var color = d3.scaleLinear()
   }
 }
 
+function Filter (centroids,county){
 
+
+
+
+}
 
 function Slider(selector) {
   slider=this;
@@ -286,6 +291,7 @@ slider.slider.append("line")
         app.options.slicer=(slider.x.invert(d3.event.x))/100;
         d3.select('#slidernumber')
           .text(function (d) {return (d3.format(".0f")(app.options.slicer*100))+'%';});
+        app.update();
          
         console.log(app.options.slicer); }));
 
@@ -385,7 +391,7 @@ console.log(app.options);
       .attr('height',0)
       .attr('width',0)
       .attr('x', function (d) { return chart.x(d.lon)- (chart.sidelength(d.PopPercent))/2; })
-      .attr('y', function (d) { return chart.y(d.lat)- (chart.sidelength(d.PopPercent))/2; })
+      .attr('y', function (d) { return chart.y(d.lat)- (chart.sidelength(d.PopPercent))/2 - 40; })
       
 
     states.selectAll('rect')
@@ -412,8 +418,8 @@ console.log(app.options);
 
     statesEnter.append('text')
       .attr('class','statetext')
-      .attr('x', function (d) { return chart.x(d.lon)-8; })
-      .attr('y', function (d) { return chart.y(d.lat)+4; })
+      .attr('x', function (d) { return chart.x(d.lon)-9; })
+      .attr('y', function (d) { return chart.y(d.lat)-33; })
       .attr('dx',0)
       .attr('dy',0)
       .text(function (d) {return d.abbr;});

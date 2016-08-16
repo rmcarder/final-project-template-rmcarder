@@ -33,6 +33,15 @@
   float: left;
 }
 
+#centerSliderInfo {
+  font-family: 'Open Sans', sans-serif;
+  background-color: #383838;
+  font-family: 'Arimo', sans-serif;
+  color: #CECECE;
+  float: center;
+  text-align: center;
+}
+
 #sliderbuttons {
     text-align: center;
 }

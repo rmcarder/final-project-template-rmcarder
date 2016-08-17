@@ -30,10 +30,12 @@ var color = d3.scaleLinear()
   
 
   initialize: function (centroids,county) {
-    app.centroids=centroids;
+    app.leftCentroids=centroids;
+    app.rightCentroids=centroids;
     app.leftData = county;
     app.rightData = county;
     app.county=county;
+    app.centroids=centroids;
     app.slice=20; 
 
     app.options = {
@@ -105,24 +107,24 @@ var color = d3.scaleLinear()
         var Pop= app.leftPopSums[i].value.total_pop;        
 
         // Find the corresponding state inside the GeoJSON
-        for (var j = 0; j < centroids.length; j++)  {
-            var jsonState = centroids[j].name;
-            var totalPop = centroids[j].totalpop;
+        for (var j = 0; j < app.leftCentroids.length; j++)  {
+            var jsonState = app.leftCentroids[j].name;
+            var totalPop = app.leftCentroids[j].totalpop;
 
             if (dataState == jsonState) {
-            centroids[j].Pop = Pop;
-            centroids[j].YPLS = YPLS; 
-            centroids[j].MaleLifeEx = MaleLifeEx; 
-            centroids[j].obesity = obesity; 
-            centroids[j].DaysPoorHealth = DaysPoorHealth; 
-            centroids[j].uninsured = uninsured;  
-            centroids[j].PopPercent = (Pop/totalPop);
+            app.leftCentroids[j].Pop = Pop;
+            app.leftCentroids[j].YPLS = YPLS; 
+            app.leftCentroids[j].MaleLifeEx = MaleLifeEx; 
+            app.leftCentroids[j].obesity = obesity; 
+            app.leftCentroids[j].DaysPoorHealth = DaysPoorHealth; 
+            app.leftCentroids[j].uninsured = uninsured;  
+            app.leftCentroids[j].PopPercent = (Pop/totalPop);
             
             break;
 
             };
           };
-    app.leftSum = centroids;
+    app.leftSum = app.leftCentroids;
           };
 
    for (var i = 0; i < app.rightPopSums.length; i++) {
@@ -136,24 +138,24 @@ var color = d3.scaleLinear()
         var Pop= app.rightPopSums[i].value.total_pop;        
 
         // Find the corresponding state inside the GeoJSON
-        for (var j = 0; j < centroids.length; j++)  {
-            var jsonState = centroids[j].name;
-            var totalPop = centroids[j].totalpop;
+        for (var j = 0; j < app.rightCentroids.length; j++)  {
+            var jsonState = app.rightCentroids[j].name;
+            var totalPop = app.rightCentroids[j].totalpop;
 
             if (dataState == jsonState) {
-            centroids[j].Pop = Pop;
-            centroids[j].YPLS = YPLS; 
-            centroids[j].MaleLifeEx = MaleLifeEx; 
-            centroids[j].obesity = obesity; 
-            centroids[j].DaysPoorHealth = DaysPoorHealth; 
-            centroids[j].uninsured = uninsured;  
-            centroids[j].PopPercent = (Pop/totalPop);
+            app.rightCentroids[j].Pop = Pop;
+            app.rightCentroids[j].YPLS = YPLS; 
+            app.rightCentroids[j].MaleLifeEx = MaleLifeEx; 
+            app.rightCentroids[j].obesity = obesity; 
+            app.rightCentroids[j].DaysPoorHealth = DaysPoorHealth; 
+            app.rightCentroids[j].uninsured = uninsured;  
+            app.rightCentroids[j].PopPercent = (Pop/totalPop);
             
             break;
 
             };
           };
-    app.rightSum = centroids;
+    app.rightSum = app.rightCentroids;
           };
     
 
@@ -254,7 +256,8 @@ var color = d3.scaleLinear()
 
     var leftData = app.county;
     var rightData = app.county;
-    var centroids = app.centroids;
+    var leftCentroids = app.centroids;
+    var rightCentroids = app.centroids;
  
 
    
@@ -303,10 +306,6 @@ var color = d3.scaleLinear()
       .entries(rightDataFilter); 
 
 
-
-    console.log(leftPopSums);   
-    console.log(rightPopSums);  
-     console.log(leftData);
     //Append variables above to centroids (statebins.json)
    for (var i = 0; i < leftPopSums.length; i++) {
 
@@ -319,29 +318,59 @@ var color = d3.scaleLinear()
         var Pop= leftPopSums[i].value.total_pop;        
 
         // Find the corresponding state inside the GeoJSON
-        for (var j = 0; j < centroids.length; j++)  {
-            var jsonState = centroids[j].name;
-            var totalPop = centroids[j].totalpop;
+        for (var j = 0; j < leftCentroids.length; j++)  {
+            var leftjsonState = leftCentroids[j].name;
+            var lefttotalPop = leftCentroids[j].totalpop;
 
             if (dataState == jsonState) {
-            centroids[j].Pop = Pop;
-            centroids[j].YPLS = YPLS; 
-            centroids[j].MaleLifeEx = MaleLifeEx; 
-            centroids[j].obesity = obesity; 
-            centroids[j].DaysPoorHealth = DaysPoorHealth; 
-            centroids[j].uninsured = uninsured;  
-            centroids[j].PopPercent = (Pop/totalPop);
+            leftCentroids[j].Pop = Pop;
+            leftCentroids[j].YPLS = YPLS; 
+            leftCentroids[j].MaleLifeEx = MaleLifeEx; 
+            leftCentroids[j].obesity = obesity; 
+            leftCentroids[j].DaysPoorHealth = DaysPoorHealth; 
+            leftCentroids[j].uninsured = uninsured;  
+            leftCentroids[j].PopPercent = (Pop/totalPop);
             
             break;
 
             };
           };
-    app.leftSum = centroids;
+    app.leftSum = leftCentroids;
           };
 
-    
+     for (var i = 0; i < rightPopSums.length; i++) {
 
- 
+        var rightdataState = rightPopSums[i].key;
+        var rightYPLS= rightPopSums[i].value.ave_YPLS;
+        var rightMaleLifeEx= rightPopSums[i].value.ave_MaleLifeEx;
+        var rightuninsured= rightPopSums[i].value.ave_uninsured;
+        var rightobesity= rightPopSums[i].value.ave_obesity;
+        var rightDaysPoorHealth= rightPopSums[i].value.ave_DaysPoorHealth;
+        var rightPop= rightPopSums[i].value.total_pop;        
+
+        // Find the corresponding state inside the GeoJSON
+        for (var j = 0; j < rightCentroids.length; j++)  {
+            var rightjsonState = rightCentroids[j].name;
+            var righttotalPop = rightCentroids[j].totalpop;
+
+            if (dataState == jsonState) {
+            rightCentroids[j].Pop = rightPop;
+            rightCentroids[j].YPLS = rightYPLS; 
+            rightCentroids[j].MaleLifeEx = rightMaleLifeEx; 
+            rightCentroids[j].obesity = rightobesity; 
+            rightCentroids[j].DaysPoorHealth = rightDaysPoorHealth; 
+            rightCentroids[j].uninsured = rightuninsured;  
+            rightCentroids[j].PopPercent = (rightPop/totalPop);
+            
+            break;
+
+            };
+          };
+    app.rightSum = rightCentroids;
+          };    
+
+ console.log(app.leftSum);
+  console.log(app.rightSum);
   }
 }
 

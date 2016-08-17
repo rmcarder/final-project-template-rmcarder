@@ -39,6 +39,7 @@ var color = d3.scaleLinear()
         slider: 'black',
         slicer: 0,
         yvar: 'obesity',
+        yvartext: 'Obesity Rate (%)'
         };
 
 
@@ -127,8 +128,8 @@ var color = d3.scaleLinear()
 
     // Here we create each of the components on our page, storing them in an array
     app.components = [
-      new Chart('#chart'),
-      new Chart('#chart2'),
+      new Chart('#chart','#leftNumberTop','#leftNumber','#leftNumberBottom'),
+      new Chart('#chart2','#rightNumberTop','#rightNumber','#rightNumberBottom'),
       new Slider('#slider')
     ];
 
@@ -136,7 +137,7 @@ var color = d3.scaleLinear()
       .on("click", function(){
           app.options.slider="White";
           d3.select('#slidertext')
-          .text(function (d) {return app.options.slider;});
+          .text(function (d) {return app.options.slicer+'% '+app.options.slider;});
           app.update();
         });
 
@@ -144,7 +145,7 @@ var color = d3.scaleLinear()
       .on("click", function(){
           app.options.slider="Black";
           d3.select('#slidertext')
-          .text(function (d) {return app.options.slider;});
+          .text(function (d) {return app.options.slicer+'% '+app.options.slider;});
           app.update();
         });
 
@@ -152,7 +153,7 @@ var color = d3.scaleLinear()
       .on("click", function(){
           app.options.slider="Hispanic";
           d3.select('#slidertext')
-          .text(function (d) {return app.options.slider;});
+          .text(function (d) {return app.options.slicer+'% '+app.options.slider;});
           app.update();
         });
 
@@ -160,69 +161,44 @@ var color = d3.scaleLinear()
       .on("click", function(){
           app.options.slider="Asian";
           d3.select('#slidertext')
-          .text(function (d) {return app.options.slider;});
+          .text(function (d) {return app.options.slicer+'% '+app.options.slider;});
           app.update();
         });
 
  
     d3.select("#yvar-MaleLifeEx")
       .on("click", function(){
-        if(app.options.yvar==='MaleLifeEx'){
-          app.options.yvar=false;
-          app.update();
-        } else {
           app.options.yvar='MaleLifeEx';
-          console.log(app.options);
-          app.update();
-        };      
+          app.options.yvartext= 'Male Life Expectancy (years)';
+          app.update();      
       });
 
       d3.select("#yvar-obesity")
       .on("click", function(){
-        if(app.options.yvar==='obesity'){
-          app.options.yvar=false;
-          app.update();
-        } else {
           app.options.yvar='obesity';
-          console.log(app.options);
-          app.update();
-        };      
+          app.options.yvartext= 'Obesity Rate (%)';
+          app.update();    
       });
 
       d3.select("#yvar-uninsured")
       .on("click", function(){
-        if(app.options.yvar==='uninsured'){
-          app.options.yvar=false;
-          app.update();
-        } else {
           app.options.yvar='uninsured';
-          console.log(app.options);
-          app.update();
-        };      
+          app.options.yvartext= 'Rate (%) Without Health Insurance';
+          app.update();     
       });
 
       d3.select("#yvar-DaysPoorHealth")
       .on("click", function(){
-        if(app.options.yvar==='DaysPoorHealth'){
-          app.options.yvar=false;
-          app.update();
-        } else {
           app.options.yvar='DaysPoorHealth';
-          console.log(app.options);
+          app.options.yvartext= 'Average Days of Poor Health in 2014';
           app.update();
-        };      
       });
 
       d3.select("#yvar-YPLS")
       .on("click", function(){
-        if(app.options.yvar==='YPLS'){
-          app.options.yvar=false;
-          app.update();
-        } else {
           app.options.yvar='YPLS';
-          console.log(app.options);
-          app.update();
-        };      
+          app.options.yvartext= 'Average Years of Potential Life Lost 2014';
+          app.update();     
       });
 
     // Add event listeners and the like here
@@ -406,9 +382,15 @@ function hue(h) {
 }
 }
 
-function Chart(selector) {
+function Chart(selector,numberTop,number,numberBottom) {
 
   var chart = this;
+
+chart.number=number;
+chart.numberTop=numberTop;
+chart.numberBottom=numberBottom;
+
+console.log(chart.number);
 
   var margin = {
     left: 0,
@@ -492,17 +474,13 @@ console.log(app.options);
 
     states
         .on("mouseover", function(d) {   
-        d3.select('#leftNumber')
-          .html(function () {return d3.format(".0f")(d[app.options.yvar])+' %' ;});
-        d3.select('#leftNumberTop')
+        d3.select(chart.number)
+          .html(function () {return d3.format(".0f")(d[app.options.yvar]);});
+        d3.select(chart.numberTop)
           .html(function () {return d.name;});
-        d3.select('#leftNumberBottom')
+        d3.select(chart.numberBottom)
           .html(function () {
-              return d.name;});
-        d3.select('#rightNumber')
-          .html(function () {return d3.format(".0f")(d[app.options.yvar])+' %' ;});
-        d3.select('#rightNumberTop')
-          .html(function () {return d.name;});
+              return app.options.yvartext;});
         })        
      
 

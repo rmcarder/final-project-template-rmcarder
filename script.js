@@ -98,34 +98,36 @@ var color = d3.scaleLinear()
     //Append variables above to centroids (statebins.json)
    for (var i = 0; i < app.leftPopSums.length; i++) {
 
-        var dataState = app.leftPopSums[i].key;
-        var YPLS= app.leftPopSums[i].value.ave_YPLS;
-        var MaleLifeEx= app.leftPopSums[i].value.ave_MaleLifeEx;
-        var uninsured= app.leftPopSums[i].value.ave_uninsured;
-        var obesity= app.leftPopSums[i].value.ave_obesity;
-        var DaysPoorHealth= app.leftPopSums[i].value.ave_DaysPoorHealth;
-        var Pop= app.leftPopSums[i].value.total_pop;        
+        var leftdataState = app.leftPopSums[i].key;
+        var leftYPLS= app.leftPopSums[i].value.ave_YPLS;
+        var leftMaleLifeEx= app.leftPopSums[i].value.ave_MaleLifeEx;
+        var leftuninsured= app.leftPopSums[i].value.ave_uninsured;
+        var leftobesity= app.leftPopSums[i].value.ave_obesity;
+        var leftDaysPoorHealth= app.leftPopSums[i].value.ave_DaysPoorHealth;
+        var leftPop= app.leftPopSums[i].value.total_pop;        
 
         // Find the corresponding state inside the GeoJSON
         for (var j = 0; j < app.leftCentroids.length; j++)  {
-            var jsonState = app.leftCentroids[j].name;
-            var totalPop = app.leftCentroids[j].totalpop;
+            var leftjsonState = app.leftCentroids[j].name;
+            var lefttotalPop = app.leftCentroids[j].totalpop;
 
-            if (dataState == jsonState) {
-            app.leftCentroids[j].Pop = Pop;
-            app.leftCentroids[j].YPLS = YPLS; 
-            app.leftCentroids[j].MaleLifeEx = MaleLifeEx; 
-            app.leftCentroids[j].obesity = obesity; 
-            app.leftCentroids[j].DaysPoorHealth = DaysPoorHealth; 
-            app.leftCentroids[j].uninsured = uninsured;  
-            app.leftCentroids[j].PopPercent = (Pop/totalPop);
+            if (leftdataState == leftjsonState) {
+            app.leftCentroids[j].Pop = leftPop;
+            app.leftCentroids[j].YPLS = leftYPLS; 
+            app.leftCentroids[j].MaleLifeEx = leftMaleLifeEx; 
+            app.leftCentroids[j].obesity = leftobesity; 
+            app.leftCentroids[j].DaysPoorHealth = leftDaysPoorHealth; 
+            app.leftCentroids[j].uninsured = leftuninsured;  
+            app.leftCentroids[j].PopPercent = (leftPop/lefttotalPop);
             
             break;
 
             };
           };
-    app.leftSum = app.leftCentroids;
+
           };
+          app.leftSum = app.leftCentroids;
+      console.log(app.leftSum);
 
    for (var i = 0; i < app.rightPopSums.length; i++) {
 
@@ -153,11 +155,13 @@ var color = d3.scaleLinear()
             
             break;
 
+
             };
           };
     app.rightSum = app.rightCentroids;
           };
-    
+   console.log(app.rightCentroids);
+   console.log(app.leftCentroids);
 
     // Here we create each of the components on our page, storing them in an array
     app.components = [
@@ -169,6 +173,7 @@ var color = d3.scaleLinear()
  d3.select("#slider-white")
       .on("click", function(){
           app.options.slider="White";
+          app.options.slicer=0;
           d3.select('#slidertext')
           .text(function (d) {return app.options.slicer+'% '+app.options.slider;});
           app.update();
@@ -177,6 +182,7 @@ var color = d3.scaleLinear()
    d3.select("#slider-black")
       .on("click", function(){
           app.options.slider="Black";
+           app.options.slicer=0;
           d3.select('#slidertext')
           .text(function (d) {return app.options.slicer+'% '+app.options.slider;});
           app.update();
@@ -185,6 +191,7 @@ var color = d3.scaleLinear()
    d3.select("#slider-hispanic")
       .on("click", function(){
           app.options.slider="Hispanic";
+           app.options.slicer=0;
           d3.select('#slidertext')
           .text(function (d) {return app.options.slicer+'% '+app.options.slider;});
           app.update();
@@ -193,6 +200,7 @@ var color = d3.scaleLinear()
      d3.select("#slider-asian")
       .on("click", function(){
           app.options.slider="Asian";
+           app.options.slicer=0;
           d3.select('#slidertext')
           .text(function (d) {return app.options.slicer+'% '+app.options.slider;});
           app.update();
@@ -309,27 +317,27 @@ var color = d3.scaleLinear()
     //Append variables above to centroids (statebins.json)
    for (var i = 0; i < leftPopSums.length; i++) {
 
-        var dataState = leftPopSums[i].key;
-        var YPLS= leftPopSums[i].value.ave_YPLS;
-        var MaleLifeEx= leftPopSums[i].value.ave_MaleLifeEx;
-        var uninsured= leftPopSums[i].value.ave_uninsured;
-        var obesity= leftPopSums[i].value.ave_obesity;
-        var DaysPoorHealth= leftPopSums[i].value.ave_DaysPoorHealth;
-        var Pop= leftPopSums[i].value.total_pop;        
+        var leftdataState = leftPopSums[i].key;
+        var leftYPLS= leftPopSums[i].value.ave_YPLS;
+        var leftMaleLifeEx= leftPopSums[i].value.ave_MaleLifeEx;
+        var leftuninsured= leftPopSums[i].value.ave_uninsured;
+        var leftobesity= leftPopSums[i].value.ave_obesity;
+        var leftDaysPoorHealth= leftPopSums[i].value.ave_DaysPoorHealth;
+        var leftPop= leftPopSums[i].value.total_pop;        
 
         // Find the corresponding state inside the GeoJSON
         for (var j = 0; j < leftCentroids.length; j++)  {
             var leftjsonState = leftCentroids[j].name;
             var lefttotalPop = leftCentroids[j].totalpop;
 
-            if (dataState == jsonState) {
-            leftCentroids[j].Pop = Pop;
-            leftCentroids[j].YPLS = YPLS; 
-            leftCentroids[j].MaleLifeEx = MaleLifeEx; 
-            leftCentroids[j].obesity = obesity; 
-            leftCentroids[j].DaysPoorHealth = DaysPoorHealth; 
-            leftCentroids[j].uninsured = uninsured;  
-            leftCentroids[j].PopPercent = (Pop/totalPop);
+            if (leftdataState == leftjsonState) {
+            leftCentroids[j].Pop = leftPop;
+            leftCentroids[j].YPLS = leftYPLS; 
+            leftCentroids[j].MaleLifeEx = leftMaleLifeEx; 
+            leftCentroids[j].obesity = leftobesity; 
+            leftCentroids[j].DaysPoorHealth = leftDaysPoorHealth; 
+            leftCentroids[j].uninsured = leftuninsured;  
+            leftCentroids[j].PopPercent = (leftPop/lefttotalPop);
             
             break;
 
@@ -353,14 +361,14 @@ var color = d3.scaleLinear()
             var rightjsonState = rightCentroids[j].name;
             var righttotalPop = rightCentroids[j].totalpop;
 
-            if (dataState == jsonState) {
+            if (rightdataState == rightjsonState) {
             rightCentroids[j].Pop = rightPop;
             rightCentroids[j].YPLS = rightYPLS; 
             rightCentroids[j].MaleLifeEx = rightMaleLifeEx; 
             rightCentroids[j].obesity = rightobesity; 
             rightCentroids[j].DaysPoorHealth = rightDaysPoorHealth; 
             rightCentroids[j].uninsured = rightuninsured;  
-            rightCentroids[j].PopPercent = (rightPop/totalPop);
+            rightCentroids[j].PopPercent = (rightPop/righttotalPop);
             
             break;
 
@@ -477,6 +485,10 @@ chart.svg = d3.select(selector)
     .range([chart.height, 0])
     .nice();
 
+   chart.sidelength = d3.scaleSqrt()
+    .domain([0,1])
+    .range([0,35]);
+
   chart.tooltip = d3.select("body").append("div")   
     .attr("class", "header")               
     .style("opacity", 1);
@@ -497,9 +509,7 @@ console.log(app.options);
         .domain(d3.extent(chart.sum, function (d) { return d[app.options.yvar]; }))
         .range([d3.interpolateYlOrRd(0.25),d3.interpolateYlOrRd(.75)]);
 
-    chart.sidelength = d3.scaleSqrt()
-    .domain([0,1])
-    .range([0,35]);
+   
    
     // Statebin
     var states = chart.svg.selectAll('.state')
@@ -514,14 +524,11 @@ console.log(app.options);
     states=states.merge(statesEnter);
 
     statesEnter.append('rect')
-      .attr('height',0)
-      .attr('width',0)
       .attr('x', function (d) { return chart.x(d.lon)- (chart.sidelength(d.PopPercent))/2; })
       .attr('y', function (d) { return chart.y(d.lat)- (chart.sidelength(d.PopPercent))/2 - 40; })
       
 
-    states.selectAll('rect')
-      .transition().duration(400)       
+    states.selectAll('rect')     
       .attr('width', function (d) { return chart.sidelength(d.PopPercent); })
       .attr('height', function (d) { return chart.sidelength(d.PopPercent); })
       .attr('fill',function (d) { return chart.colorScale(d[app.options.yvar]); }) ;
@@ -529,7 +536,7 @@ console.log(app.options);
     states
         .on("mouseover", function(d) {   
         d3.select(chart.number)
-          .html(function () {return d3.format(".0f")(d[app.options.yvar]);});
+          .html(function () {return d3.format(".1f")(d[app.options.yvar])+'<br>'+d3.format(".1f")(d.PopPercent);});
         d3.select(chart.numberTop)
           .html(function () {return d.name;});
         d3.select(chart.numberBottom)

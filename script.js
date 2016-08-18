@@ -1,6 +1,8 @@
 var app;
 var slice = 0;
 var x;
+var greater='greater';
+var less='less';
 
 
 // Declaring our constants
@@ -36,7 +38,6 @@ var color = d3.scaleLinear()
     app.rightData = county;
     app.county=county;
     app.centroids=centroids;
-    app.slice=20; 
 
    var max = d3.max(d3.values(app.leftData));
    console.log(max);
@@ -44,7 +45,7 @@ var color = d3.scaleLinear()
 
     app.options = {
         slider: 'black',
-        slicer: 20,
+        slicer: .9,
         yvar: 'obesity',
         yvartext: 'Obesity Rate (%)'
         };
@@ -169,8 +170,8 @@ var color = d3.scaleLinear()
 
     // Here we create each of the components on our page, storing them in an array
     app.components = [
-      new Chart('#chart',app.leftSum,'#leftNumberTop','#leftNumber','#leftNumberBottom'),
-      new Chart('#chart2',app.rightSum,'#rightNumberTop','#rightNumber','#rightNumberBottom'),
+      new Chart('#chart',app.leftSum,'#leftNumberTop','#leftNumber','#leftNumberBottom','greater'),
+      new Chart('#chart2',app.rightSum,'#rightNumberTop','#rightNumber','#rightNumberBottom','less'),
       new Slider('#slider')
     ];
 
@@ -449,13 +450,15 @@ function hue(h) {
 }
 }
 
-function Chart(selector,sum,numberTop,number,numberBottom) {
+function Chart(selector,sum,numberTop,number,numberBottom,greaterLess) {
 
   var chart = this;
 
 chart.number=number;
 chart.numberTop=numberTop;
 chart.numberBottom=numberBottom;
+chart.greaterLess=greaterLess;
+chart.sum=sum;
 
 console.log(chart.number);
 
@@ -496,7 +499,7 @@ chart.svg = d3.select(selector)
   chart.tooltip = d3.select("body").append("div")   
     .attr("class", "header")               
     .style("opacity", 1);
-chart.sum=sum;
+
 chart.update();
 }
     // data merge:
@@ -508,23 +511,22 @@ Chart.prototype = {
     // Interrupt ongoing transitions:
 
 
+//original color scale
+//if (app.options.yvar==='MaleLifeEx') {chart.colorScale = d3.scaleLinear()
+  //      .domain(d3.extent(chart.sum, function (d) { return d[app.options.yvar]; }))
+    //    .range([d3.interpolateYlOrRd(0.75),d3.interpolateYlOrRd(.25)]);}
+      //  else { chart.colorScale = d3.scaleLinear()
+        //.domain(d3.extent(chart.sum, function (d) { return d[app.options.yvar]; }))
+        //.range([d3.interpolateYlOrRd(0.25),d3.interpolateYlOrRd(.75)]);};
 
-if (app.options.yvar==='MaleLifeEx') {chart.colorScale = d3.scaleLinear()
-        .domain(d3.extent(chart.sum, function (d) { return d[app.options.yvar]; }))
-        .range([d3.interpolateYlOrRd(0.75),d3.interpolateYlOrRd(.25)]);}
-        else { chart.colorScale = d3.scaleLinear()
-        .domain(d3.extent(chart.sum, function (d) { return d[app.options.yvar]; }))
-        .range([d3.interpolateYlOrRd(0.25),d3.interpolateYlOrRd(.75)]);};
-
-
-
-    chart.data_bins = [d3.min(chart.sum, function (d) { return d[app.options.yvar]; }),
+chart.data_bins = [d3.min(chart.sum, function (d) { return d[app.options.yvar]; }),
     ((d3.min(chart.sum, function (d) { return d[app.options.yvar]; })+d3.max(chart.sum, function (d) { return d[app.options.yvar]; }))/2),
     d3.max(chart.sum, function (d) { return d[app.options.yvar]; })];
 
-    chart.color_range = ["#1a9850","#ffffbf","#d73027"];
-
-    chart.colorScale2 = d3.scaleLinear()
+if (app.options.yvar==='MaleLifeEx') {chart.color_range = ["#d73027","#ffffbf","#1a9850"];}
+    else {chart.color_range = ["#1a9850","#ffffbf","#d73027"];
+    }
+chart.colorScale2 = d3.scaleLinear()
         .domain(chart.data_bins)
         .range(chart.color_range);
 
@@ -548,7 +550,8 @@ if (app.options.yvar==='MaleLifeEx') {chart.colorScale = d3.scaleLinear()
     
       states=states.merge(statesEnter);  
 
-    states.selectAll('rect')     
+    states.selectAll('rect')
+      .transition().duration(600)    
       .attr('width', function (d) { return chart.sidelength(d.PopPercent); })
       .attr('height', function (d) { return chart.sidelength(d.PopPercent); })
       .attr('fill',function (d) { return chart.colorScale2(d[app.options.yvar]); }) ;
@@ -556,12 +559,15 @@ if (app.options.yvar==='MaleLifeEx') {chart.colorScale = d3.scaleLinear()
     states
         .on("mouseover", function(d) {   
         d3.select(chart.number)
-          .html(function () {return d3.format(".1f")(d[app.options.yvar])+'<br>'+d3.format(".1f")(d.PopPercent);});
+          .html(function () {return d3.format(".1f")(d[app.options.yvar]);});
         d3.select(chart.numberTop)
           .html(function () {return d.name;});
         d3.select(chart.numberBottom)
           .html(function () {
-              return app.options.yvartext;});
+              return app.options.yvartext+' in counties that are '+chart.greaterLess+
+              ' than '+d3.format(".1f")(app.options.slicer*100)+'% '+app.options.slider+
+              '. This accounts for '+d3.format(",.0f")(d.Pop)+' people, '+d3.format(".1f")(d.PopPercent*100)+
+              '% of '+d.name+'s total population.';});
         })        
      
 

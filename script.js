@@ -38,9 +38,13 @@ var color = d3.scaleLinear()
     app.centroids=centroids;
     app.slice=20; 
 
+   var max = d3.max(d3.values(app.leftData));
+   console.log(max);
+
+
     app.options = {
         slider: 'black',
-        slicer: 2,
+        slicer: 20,
         yvar: 'obesity',
         yvartext: 'Obesity Rate (%)'
         };
@@ -131,27 +135,27 @@ var color = d3.scaleLinear()
 
    for (var i = 0; i < app.rightPopSums.length; i++) {
 
-        var dataState = app.rightPopSums[i].key;
-        var YPLS= app.rightPopSums[i].value.ave_YPLS;
-        var MaleLifeEx= app.rightPopSums[i].value.ave_MaleLifeEx;
-        var uninsured= app.rightPopSums[i].value.ave_uninsured;
-        var obesity= app.rightPopSums[i].value.ave_obesity;
-        var DaysPoorHealth= app.rightPopSums[i].value.ave_DaysPoorHealth;
-        var Pop= app.rightPopSums[i].value.total_pop;        
+        var rightdataState = app.rightPopSums[i].key;
+        var rightYPLS= app.rightPopSums[i].value.ave_YPLS;
+        var rightMaleLifeEx= app.rightPopSums[i].value.ave_MaleLifeEx;
+        var rightuninsured= app.rightPopSums[i].value.ave_uninsured;
+        var rightobesity= app.rightPopSums[i].value.ave_obesity;
+        var rightDaysPoorHealth= app.rightPopSums[i].value.ave_DaysPoorHealth;
+        var rightPop= app.rightPopSums[i].value.total_pop;        
 
         // Find the corresponding state inside the GeoJSON
         for (var j = 0; j < app.rightCentroids.length; j++)  {
-            var jsonState = app.rightCentroids[j].name;
-            var totalPop = app.rightCentroids[j].totalpop;
+            var rightjsonState = app.rightCentroids[j].name;
+            var righttotalPop = app.rightCentroids[j].totalpop;
 
-            if (dataState == jsonState) {
-            app.rightCentroids[j].Pop = Pop;
-            app.rightCentroids[j].YPLS = YPLS; 
-            app.rightCentroids[j].MaleLifeEx = MaleLifeEx; 
-            app.rightCentroids[j].obesity = obesity; 
-            app.rightCentroids[j].DaysPoorHealth = DaysPoorHealth; 
-            app.rightCentroids[j].uninsured = uninsured;  
-            app.rightCentroids[j].PopPercent = (Pop/totalPop);
+            if (rightdataState == rightjsonState) {
+            app.rightCentroids[j].Pop = rightPop;
+            app.rightCentroids[j].YPLS = rightYPLS; 
+            app.rightCentroids[j].MaleLifeEx = rightMaleLifeEx; 
+            app.rightCentroids[j].obesity = rightobesity; 
+            app.rightCentroids[j].DaysPoorHealth = rightDaysPoorHealth; 
+            app.rightCentroids[j].uninsured = rightuninsured;  
+            app.rightCentroids[j].PopPercent = (rightPop/righttotalPop);
             
             break;
 
@@ -160,8 +164,8 @@ var color = d3.scaleLinear()
           };
     app.rightSum = app.rightCentroids;
           };
-   console.log(app.rightCentroids);
-   console.log(app.leftCentroids);
+   console.log(app.leftSum);
+   console.log(app.rightSum);
 
     // Here we create each of the components on our page, storing them in an array
     app.components = [
@@ -172,7 +176,7 @@ var color = d3.scaleLinear()
 
  d3.select("#slider-white")
       .on("click", function(){
-          app.options.slider="White";
+          app.options.slider="white";
           app.options.slicer=0;
           d3.select('#slidertext')
           .text(function (d) {return app.options.slicer+'% '+app.options.slider;});
@@ -181,7 +185,7 @@ var color = d3.scaleLinear()
 
    d3.select("#slider-black")
       .on("click", function(){
-          app.options.slider="Black";
+          app.options.slider="black";
            app.options.slicer=0;
           d3.select('#slidertext')
           .text(function (d) {return app.options.slicer+'% '+app.options.slider;});
@@ -190,7 +194,7 @@ var color = d3.scaleLinear()
 
    d3.select("#slider-hispanic")
       .on("click", function(){
-          app.options.slider="Hispanic";
+          app.options.slider="hispanic";
            app.options.slicer=0;
           d3.select('#slidertext')
           .text(function (d) {return app.options.slicer+'% '+app.options.slider;});
@@ -199,7 +203,7 @@ var color = d3.scaleLinear()
 
      d3.select("#slider-asian")
       .on("click", function(){
-          app.options.slider="Asian";
+          app.options.slider="asian";
            app.options.slicer=0;
           d3.select('#slidertext')
           .text(function (d) {return app.options.slicer+'% '+app.options.slider;});
@@ -503,11 +507,26 @@ Chart.prototype = {
 
     // Interrupt ongoing transitions:
 
-console.log(app.options);
 
-    chart.colorScale = d3.scaleLinear()
+
+if (app.options.yvar==='MaleLifeEx') {chart.colorScale = d3.scaleLinear()
         .domain(d3.extent(chart.sum, function (d) { return d[app.options.yvar]; }))
-        .range([d3.interpolateYlOrRd(0.25),d3.interpolateYlOrRd(.75)]);
+        .range([d3.interpolateYlOrRd(0.75),d3.interpolateYlOrRd(.25)]);}
+        else { chart.colorScale = d3.scaleLinear()
+        .domain(d3.extent(chart.sum, function (d) { return d[app.options.yvar]; }))
+        .range([d3.interpolateYlOrRd(0.25),d3.interpolateYlOrRd(.75)]);};
+
+
+
+    chart.data_bins = [d3.min(chart.sum, function (d) { return d[app.options.yvar]; }),
+    ((d3.min(chart.sum, function (d) { return d[app.options.yvar]; })+d3.max(chart.sum, function (d) { return d[app.options.yvar]; }))/2),
+    d3.max(chart.sum, function (d) { return d[app.options.yvar]; })];
+
+    chart.color_range = ["#1a9850","#ffffbf","#d73027"];
+
+    chart.colorScale2 = d3.scaleLinear()
+        .domain(chart.data_bins)
+        .range(chart.color_range);
 
    
    
@@ -521,17 +540,18 @@ console.log(app.options);
       .attr('x',0)
       .attr('y',0);
 
-    states=states.merge(statesEnter);
+  
 
     statesEnter.append('rect')
       .attr('x', function (d) { return chart.x(d.lon)- (chart.sidelength(d.PopPercent))/2; })
       .attr('y', function (d) { return chart.y(d.lat)- (chart.sidelength(d.PopPercent))/2 - 40; })
-      
+    
+      states=states.merge(statesEnter);  
 
     states.selectAll('rect')     
       .attr('width', function (d) { return chart.sidelength(d.PopPercent); })
       .attr('height', function (d) { return chart.sidelength(d.PopPercent); })
-      .attr('fill',function (d) { return chart.colorScale(d[app.options.yvar]); }) ;
+      .attr('fill',function (d) { return chart.colorScale2(d[app.options.yvar]); }) ;
 
     states
         .on("mouseover", function(d) {   

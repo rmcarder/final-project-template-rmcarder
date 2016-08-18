@@ -1,5 +1,4 @@
 var app;
-var slice = 0;
 var x;
 var greater='greater';
 var less='less';
@@ -46,8 +45,8 @@ var color = d3.scaleLinear()
 
 
     app.options = {
-        slider: 'black',
-        slicer: .9,
+        slider: 'white',
+        slicer: .999999999999999999999,
         yvar: 'obesity',
         yvartext: 'Obesity Rate (%)',
         mouseover: true,
@@ -119,7 +118,7 @@ var color = d3.scaleLinear()
             var leftjsonState = app.leftCentroids[j].name;
             var lefttotalPop = app.leftCentroids[j].totalpop;
 
-            if (leftdataState == leftjsonState) {
+            if (leftdataState === leftjsonState) {
             app.leftCentroids[j].Pop = leftPop;
             app.leftCentroids[j].YPLS = leftYPLS; 
             app.leftCentroids[j].MaleLifeEx = leftMaleLifeEx; 
@@ -135,7 +134,7 @@ var color = d3.scaleLinear()
 
           };
           app.leftSum = app.leftCentroids;
-      console.log(app.leftSum);
+          console.log(app.leftSum);
 
    for (var i = 0; i < app.rightPopSums.length; i++) {
 
@@ -152,7 +151,7 @@ var color = d3.scaleLinear()
             var rightjsonState = app.rightCentroids[j].name;
             var righttotalPop = app.rightCentroids[j].totalpop;
 
-            if (rightdataState == rightjsonState) {
+            if (rightdataState === rightjsonState) {
             app.rightCentroids[j].Pop = rightPop;
             app.rightCentroids[j].YPLS = rightYPLS; 
             app.rightCentroids[j].MaleLifeEx = rightMaleLifeEx; 
@@ -166,8 +165,8 @@ var color = d3.scaleLinear()
 
             };
           };
-    app.rightSum = app.rightCentroids;
-          };
+              };
+  app.rightSum = app.rightCentroids;
    console.log(app.leftSum);
    console.log(app.rightSum);
 
@@ -338,7 +337,7 @@ var color = d3.scaleLinear()
             var leftjsonState = leftCentroids[j].name;
             var lefttotalPop = leftCentroids[j].totalpop;
 
-            if (leftdataState == leftjsonState) {
+            if (leftdataState === leftjsonState) {
             leftCentroids[j].Pop = leftPop;
             leftCentroids[j].YPLS = leftYPLS; 
             leftCentroids[j].MaleLifeEx = leftMaleLifeEx; 
@@ -351,8 +350,9 @@ var color = d3.scaleLinear()
 
             };
           };
-    app.leftSum = leftCentroids;
+   
           };
+           app.leftSum2 = leftCentroids;
 
      for (var i = 0; i < rightPopSums.length; i++) {
 
@@ -369,7 +369,7 @@ var color = d3.scaleLinear()
             var rightjsonState = rightCentroids[j].name;
             var righttotalPop = rightCentroids[j].totalpop;
 
-            if (rightdataState == rightjsonState) {
+            if (rightdataState === rightjsonState) {
             rightCentroids[j].Pop = rightPop;
             rightCentroids[j].YPLS = rightYPLS; 
             rightCentroids[j].MaleLifeEx = rightMaleLifeEx; 
@@ -382,11 +382,12 @@ var color = d3.scaleLinear()
 
             };
           };
-    app.rightSum = rightCentroids;
-          };    
 
- console.log(app.leftSum);
-  console.log(app.rightSum);
+          };
+              app.rightSum2 = rightCentroids;    
+
+ console.log(app.leftSum2);
+  console.log(app.rightSum2);
   }
 }
 
@@ -574,9 +575,13 @@ chart.colorScale2 = d3.scaleLinear()
         };})        
         .on("click", function () {if (app.options.mouseover===true) {
           d3.select(this)
-            .attr('stroke','#FFFFFF');
+            .attr('stroke','#FFFFFF')
+            .attr('stroke-width','4px');
             app.options.mouseover=false;
-         } else {app.options.mouseover=true;}});
+         } else {
+          d3.selectAll('g')
+            .attr('stroke','none');
+            app.options.mouseover=true;}});
 
 
         

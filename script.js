@@ -39,15 +39,18 @@ var color = d3.scaleLinear()
     app.county=county;
     app.centroids=centroids;
 
-   var max = d3.max(d3.values(app.leftData));
+   var max = d3.max(d3.entries(app.leftData));
    console.log(max);
+   var min = d3.min(d3.entries(app.leftData));
+   console.log(min);
 
 
     app.options = {
         slider: 'black',
         slicer: .9,
         yvar: 'obesity',
-        yvartext: 'Obesity Rate (%)'
+        yvartext: 'Obesity Rate (%)',
+        mouseover: true,
         };
 
 
@@ -557,7 +560,7 @@ chart.colorScale2 = d3.scaleLinear()
       .attr('fill',function (d) { return chart.colorScale2(d[app.options.yvar]); }) ;
 
     states
-        .on("mouseover", function(d) {   
+        .on("mouseover", function(d) {if (app.options.mouseover===true){  
         d3.select(chart.number)
           .html(function () {return d3.format(".1f")(d[app.options.yvar]);});
         d3.select(chart.numberTop)
@@ -568,7 +571,15 @@ chart.colorScale2 = d3.scaleLinear()
               ' than '+d3.format(".1f")(app.options.slicer*100)+'% '+app.options.slider+
               '. This accounts for '+d3.format(",.0f")(d.Pop)+' people, '+d3.format(".1f")(d.PopPercent*100)+
               '% of '+d.name+'s total population.';});
-        })        
+        };})        
+        .on("click", function () {if (app.options.mouseover===true) {
+          d3.select(this)
+            .attr('stroke','#FFFFFF');
+            app.options.mouseover=false;
+         } else {app.options.mouseover=true;}});
+
+
+        
      
 
     statesEnter.append('text')

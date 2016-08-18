@@ -72,14 +72,14 @@
 }
 
 .state {
-	color: black;
+	color: #CECECE;
   stroke-width: 1px;
    font-family: 'Exo', sans-serif;
   
 }
 
 .statetext {
-  color: black;
+  color: #CECECE;
 }
 
 #chart svg {

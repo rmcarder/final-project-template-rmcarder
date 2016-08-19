@@ -20,7 +20,7 @@ var color = d3.scaleLinear()
    .awaitAll(function (error, results) {
      if (error) { throw error; }
      app.initialize(results[0],results[1]);
-     app.update(results[0],results[1]);
+    
      
     });
 
@@ -31,10 +31,10 @@ var color = d3.scaleLinear()
   
 
   initialize: function (centroids,county) {
-    app.leftCentroids=centroids;
-    app.rightCentroids=centroids;
-    app.leftData = county;
-    app.rightData = county;
+    app.leftCentroids=_.cloneDeep(centroids);
+    app.rightCentroids=_.cloneDeep(centroids);
+    app.leftData = _.cloneDeep(county);
+    app.rightData = _.cloneDeep(county);
     app.county=county;
     app.centroids=centroids;
 
@@ -46,7 +46,7 @@ var color = d3.scaleLinear()
 
     app.options = {
         slider: 'white',
-        slicer: .999999999999999999999,
+        slicer: 0,
         yvar: 'obesity',
         yvartext: 'Obesity Rate (%)',
         mouseover: true,
@@ -103,6 +103,20 @@ var color = d3.scaleLinear()
     console.log(app.leftPopSums);   
     console.log(app.rightPopSums);  
     //Append variables above to centroids (statebins.json)
+    //Create blank fields with zeros
+     for (var i = 0; i < app.leftCentroids.length; i++) {
+
+        
+
+        app.leftCentroids[i].Pop = 0;
+            app.leftCentroids[i].YPLS = 0;
+            app.leftCentroids[i].MaleLifeEx =0;
+            app.leftCentroids[i].obesity = 0;
+            app.leftCentroids[i].DaysPoorHealth =0;
+            app.leftCentroids[i].uninsured = 0; 
+            app.leftCentroids[i].PopPercent = 0;
+
+      } ;  
    for (var i = 0; i < app.leftPopSums.length; i++) {
 
         var leftdataState = app.leftPopSums[i].key;
@@ -119,7 +133,7 @@ var color = d3.scaleLinear()
             var lefttotalPop = app.leftCentroids[j].totalpop;
 
             if (leftdataState === leftjsonState) {
-            app.leftCentroids[j].Pop = leftPop;
+            app.leftCentroids[j].Pop = leftPop || 0;
             app.leftCentroids[j].YPLS = leftYPLS; 
             app.leftCentroids[j].MaleLifeEx = leftMaleLifeEx; 
             app.leftCentroids[j].obesity = leftobesity; 
@@ -135,6 +149,20 @@ var color = d3.scaleLinear()
           };
           app.leftSum = app.leftCentroids;
           console.log(app.leftSum);
+
+   for (var i = 0; i < app.rightCentroids.length; i++) {
+
+        
+
+        app.rightCentroids[i].Pop = 0;
+            app.rightCentroids[i].YPLS = 0;
+            app.rightCentroids[i].MaleLifeEx =0;
+            app.rightCentroids[i].obesity = 0;
+            app.rightCentroids[i].DaysPoorHealth =0;
+            app.rightCentroids[i].uninsured = 0; 
+            app.rightCentroids[i].PopPercent = 0;
+
+      } ;  
 
    for (var i = 0; i < app.rightPopSums.length; i++) {
 
@@ -271,8 +299,8 @@ var color = d3.scaleLinear()
 
     var leftData = app.county;
     var rightData = app.county;
-    var leftCentroids = app.centroids;
-    var rightCentroids = app.centroids;
+    var leftCentroids = app.leftCentroids;
+    var rightCentroids = app.rightCentroids;
  
 
    
@@ -320,8 +348,25 @@ var color = d3.scaleLinear()
         "ave_YPLS": (d3.sum(leaves, function(d) {return parseFloat(d.POPYPLS);}))/(d3.sum(leaves, function(d) {return parseFloat(d.POPEST2012);}))} })
       .entries(rightDataFilter); 
 
-
+console.log(rightPopSums);
+console.log(leftPopSums);
     //Append variables above to centroids (statebins.json)
+   
+for (var i = 0; i < app.leftCentroids.length; i++) {
+
+        
+
+        app.leftCentroids[i].Pop = 0;
+            app.leftCentroids[i].YPLS = 0;
+            app.leftCentroids[i].MaleLifeEx =0;
+            app.leftCentroids[i].obesity = 0;
+            app.leftCentroids[i].DaysPoorHealth =0;
+            app.leftCentroids[i].uninsured = 0; 
+            app.leftCentroids[i].PopPercent = 0;
+
+      } ;  
+
+
    for (var i = 0; i < leftPopSums.length; i++) {
 
         var leftdataState = leftPopSums[i].key;
@@ -352,7 +397,22 @@ var color = d3.scaleLinear()
           };
    
           };
-           app.leftSum2 = leftCentroids;
+           app.leftSum = leftCentroids;
+
+
+    for (var i = 0; i < app.rightCentroids.length; i++) {
+
+        
+
+        app.rightCentroids[i].Pop = 0;
+            app.rightCentroids[i].YPLS = 0;
+            app.rightCentroids[i].MaleLifeEx =0;
+            app.rightCentroids[i].obesity = 0;
+            app.rightCentroids[i].DaysPoorHealth =0;
+            app.rightCentroids[i].uninsured = 0; 
+            app.rightCentroids[i].PopPercent = 0;
+
+      } ;  
 
      for (var i = 0; i < rightPopSums.length; i++) {
 
@@ -384,10 +444,10 @@ var color = d3.scaleLinear()
           };
 
           };
-              app.rightSum2 = rightCentroids;    
+              app.rightSum = rightCentroids;    
 
- console.log(app.leftSum2);
-  console.log(app.rightSum2);
+ console.log(app.leftSum);
+  console.log(app.rightSum);
   }
 }
 

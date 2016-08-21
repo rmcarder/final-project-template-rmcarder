@@ -208,37 +208,37 @@ var color = d3.scaleLinear()
  d3.select("#slider-white")
       .on("click", function(){
           app.options.slider="white";
-          app.options.slicer=0;
           d3.select('#slidertext')
           .text(function (d) {return app.options.slider;});
           app.update();
+          chart.update();
         });
 
    d3.select("#slider-black")
       .on("click", function(){
           app.options.slider="black";
-           app.options.slicer=0;
           d3.select('#slidertext')
           .text(function (d) {return app.options.slider;});
           app.update();
+          chart.update();
         });
 
    d3.select("#slider-hispanic")
       .on("click", function(){
           app.options.slider="hispanic";
-           app.options.slicer=0;
           d3.select('#slidertext')
           .text(function (d) {return app.options.slider;});
           app.update();
+          chart.update();
         });
 
      d3.select("#slider-asian")
       .on("click", function(){
           app.options.slider="asian";
-           app.options.slicer=0;
           d3.select('#slidertext')
           .text(function (d) {return app.options.slider;});
           app.update();
+          chart.update();
         });
 
  

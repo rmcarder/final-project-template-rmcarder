@@ -200,8 +200,8 @@ var color = d3.scaleLinear()
 
     // Here we create each of the components on our page, storing them in an array
     app.components = [
-      new Chart('#chart',app.leftSum,'#leftNumberTop','#leftNumber','#leftNumberBottom','greater'),
-      new Chart('#chart2',app.rightSum,'#rightNumberTop','#rightNumber','#rightNumberBottom','less'),
+      new Chart('#chart',app.rightSum,'#leftNumberTop','#leftNumber','#leftNumberBottom','greater'),
+      new Chart('#chart2',app.leftSum,'#rightNumberTop','#rightNumber','#rightNumberBottom','less'),
       new Slider('#slider')
     ];
 
@@ -210,7 +210,7 @@ var color = d3.scaleLinear()
           app.options.slider="white";
           app.options.slicer=0;
           d3.select('#slidertext')
-          .text(function (d) {return app.options.slicer+'% '+app.options.slider;});
+          .text(function (d) {return app.options.slider;});
           app.update();
         });
 
@@ -219,7 +219,7 @@ var color = d3.scaleLinear()
           app.options.slider="black";
            app.options.slicer=0;
           d3.select('#slidertext')
-          .text(function (d) {return app.options.slicer+'% '+app.options.slider;});
+          .text(function (d) {return app.options.slider;});
           app.update();
         });
 
@@ -228,7 +228,7 @@ var color = d3.scaleLinear()
           app.options.slider="hispanic";
            app.options.slicer=0;
           d3.select('#slidertext')
-          .text(function (d) {return app.options.slicer+'% '+app.options.slider;});
+          .text(function (d) {return app.options.slider;});
           app.update();
         });
 
@@ -237,7 +237,7 @@ var color = d3.scaleLinear()
           app.options.slider="asian";
            app.options.slicer=0;
           d3.select('#slidertext')
-          .text(function (d) {return app.options.slicer+'% '+app.options.slider;});
+          .text(function (d) {return app.options.slider;});
           app.update();
         });
 
@@ -609,8 +609,8 @@ chart.colorScale2 = d3.scaleLinear()
   
 
     statesEnter.append('rect')
-      .attr('x', function (d) { return chart.x(d.lon)- (chart.sidelength(d.PopPercent))/2; })
-      .attr('y', function (d) { return chart.y(d.lat)- (chart.sidelength(d.PopPercent))/2 - 40; })
+      .attr('x', function (d) { return chart.x(d.lon)- 17.5; })
+      .attr('y', function (d) { return chart.y(d.lat)- 17.5 - 40; })
     
       states=states.merge(statesEnter);  
 

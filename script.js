@@ -39,16 +39,24 @@ var color = d3.scaleLinear()
     app.centroids=centroids;
 
     //Min and max values for set color scale
-    app.maxMaleLifeEx = d3.max(app.county, function(d) { return d.MaleLifeEx2010;} );
-    app.maxuninsured = d3.max(app.county, function(d) { return d.Uninsured2014;} );
-    app.maxobesity = d3.max(app.county, function(d) { return d.obesity;} );
-    app.maxYPLS = d3.max(app.county, function(d) { return d.YPLS;} );
-    app.maxDaysPoorHealth = d3.max(app.county, function(d) { return d.DaysPoorHealth;} );
-    app.minMaleLifeEx = d3.min(app.county, function(d) { return d.MaleLifeEx2010;} );
-    app.minuninsured = d3.min(app.county, function(d) { return d.Uninsured2014;} );
-    app.minobesity = d3.min(app.county, function(d) { return d.obesity;} );
-    app.minYPLS = d3.min(app.county, function(d) { return d.YPLS;} );
-    app.minDaysPoorHealth = d3.min(app.county, function(d) { return d.DaysPoorHealth;} );
+    //app.maxMaleLifeEx = d3.max(app.county, function(d) { return d.MaleLifeEx2010;} );
+    //app.maxuninsured = d3.max(app.county, function(d) { return d.Uninsured2014;} );
+    //app.maxobesity = d3.max(app.county, function(d) { return d.obesity;} );
+    app.minuninsured=3
+    app.maxuninsured=25
+    app.minobesity = 10;
+    app.maxobesity = 40;
+    app.minYPLS = 3000;
+    app.maxYPLS = 12000;
+    app.minDaysPoorHealth=5;
+    app.maxDaysPoorHealth=25;
+    app.minMaleLifeEx=65;
+    app.maxMaleLifeEx=80;
+    // = d3.max(app.county, function(d) { return d.DaysPoorHealth;} );
+    //app.minMaleLifeEx = d3.min(app.county, function(d) { return d.MaleLifeEx2010;} );
+    //app.minuninsured = d3.min(app.county, function(d) { return d.Uninsured2014;} );
+    //app.minobesity = d3.min(app.county, function(d) { return d.obesity;} );
+    //app.minDaysPoorHealth = d3.min(app.county, function(d) { return d.DaysPoorHealth;} );
   
 
 
@@ -217,6 +225,14 @@ var color = d3.scaleLinear()
  d3.select("#slider-white")
       .on("click", function(){
           app.options.slider="white";
+           d3.select("#slider-hispanic")
+          .classed('active',false);
+          d3.select("#slider-white")
+          .classed('active',true);
+          d3.select("#slider-black")
+          .classed('active',false);
+          d3.select("#slider-asian")
+          .classed('active',false);
           d3.select('#slidertext')
           .text(function (d) {return app.options.slider;});
           app.update();
@@ -225,6 +241,14 @@ var color = d3.scaleLinear()
    d3.select("#slider-black")
       .on("click", function(){
           app.options.slider="black";
+            d3.select("#slider-hispanic")
+          .classed('active',false);
+          d3.select("#slider-white")
+          .classed('active',false);
+          d3.select("#slider-black")
+          .classed('active',true);
+          d3.select("#slider-asian")
+          .classed('active',false);
           d3.select('#slidertext')
           .text(function (d) {return app.options.slider;});
           app.update();
@@ -234,7 +258,13 @@ var color = d3.scaleLinear()
       .on("click", function(){
           app.options.slider="hispanic";
            d3.select("#slider-hispanic")
-          .classed('btn:active',true);
+          .classed('active',true);
+          d3.select("#slider-white")
+          .classed('active',false);
+          d3.select("#slider-black")
+          .classed('active',false);
+          d3.select("#slider-asian")
+          .classed('active',false);
           d3.select('#slidertext')
           .text(function (d) {return app.options.slider;});
           app.update();
@@ -243,6 +273,14 @@ var color = d3.scaleLinear()
      d3.select("#slider-asian")
       .on("click", function(){
           app.options.slider="asian";
+            d3.select("#slider-hispanic")
+          .classed('active',false);
+          d3.select("#slider-white")
+          .classed('active',false);
+          d3.select("#slider-black")
+          .classed('active',false);
+          d3.select("#slider-asian")
+          .classed('active',true);
           d3.select('#slidertext')
           .text(function (d) {return app.options.slider;});
           app.update();
@@ -251,6 +289,16 @@ var color = d3.scaleLinear()
  
     d3.select("#yvar-MaleLifeEx")
       .on("click", function(){
+            d3.select("#yvar-MaleLifeEx")
+          .classed('active',true);
+          d3.select("#yvar-YPLS")
+          .classed('active',false);
+          d3.select("#yvar-obesity")
+          .classed('active',false);
+          d3.select("#yvar-uninsured")
+          .classed('active',false);
+          d3.select("#yvar-DaysPoorHealth")
+          .classed('active',false);
           app.options.yvar='MaleLifeEx';
           app.options.yvartext= 'Male Life Expectancy (years)';
           app.update();      
@@ -258,6 +306,16 @@ var color = d3.scaleLinear()
 
       d3.select("#yvar-obesity")
       .on("click", function(){
+         d3.select("#yvar-MaleLifeEx")
+          .classed('active',false);
+          d3.select("#yvar-YPLS")
+          .classed('active',false);
+          d3.select("#yvar-obesity")
+          .classed('active',true);
+          d3.select("#yvar-uninsured")
+          .classed('active',false);
+          d3.select("#yvar-DaysPoorHealth")
+          .classed('active',false);
           app.options.yvar='obesity';
           app.options.yvartext= 'Obesity Rate (%)';
           app.update();    
@@ -265,6 +323,16 @@ var color = d3.scaleLinear()
 
       d3.select("#yvar-uninsured")
       .on("click", function(){
+         d3.select("#yvar-MaleLifeEx")
+          .classed('active',false);
+          d3.select("#yvar-YPLS")
+          .classed('active',false);
+          d3.select("#yvar-obesity")
+          .classed('active',false);
+          d3.select("#yvar-uninsured")
+          .classed('active',true);
+          d3.select("#yvar-DaysPoorHealth")
+          .classed('active',false);
           app.options.yvar='uninsured';
           app.options.yvartext= 'Rate (%) Without Health Insurance';
           app.update();     
@@ -272,6 +340,16 @@ var color = d3.scaleLinear()
 
       d3.select("#yvar-DaysPoorHealth")
       .on("click", function(){
+         d3.select("#yvar-MaleLifeEx")
+          .classed('active',false);
+          d3.select("#yvar-YPLS")
+          .classed('active',false);
+          d3.select("#yvar-obesity")
+          .classed('active',false);
+          d3.select("#yvar-uninsured")
+          .classed('active',false);
+          d3.select("#yvar-DaysPoorHealth")
+          .classed('active',true);
           app.options.yvar='DaysPoorHealth';
           app.options.yvartext= 'Average Days of Poor Health in 2014';
           app.update();
@@ -279,6 +357,16 @@ var color = d3.scaleLinear()
 
       d3.select("#yvar-YPLS")
       .on("click", function(){
+         d3.select("#yvar-MaleLifeEx")
+          .classed('active',false);
+          d3.select("#yvar-YPLS")
+          .classed('active',true);
+          d3.select("#yvar-obesity")
+          .classed('active',false);
+          d3.select("#yvar-uninsured")
+          .classed('active',false);
+          d3.select("#yvar-DaysPoorHealth")
+          .classed('active',false);
           app.options.yvar='YPLS';
           app.options.yvartext= 'Average Years of Potential Life Lost 2014';
           app.update();     
@@ -630,6 +718,7 @@ chart.colorScale2 = d3.scaleLinear()
     statesEnter.append('rect')
       .attr('x', function (d) { return chart.x(d.lon)- 17.5; })
       .attr('y', function (d) { return chart.y(d.lat)- 17.5 - 40; })
+      .attr('stroke','#CECECE');
     
     states=states.merge(statesEnter);  
 
@@ -654,6 +743,9 @@ chart.colorScale2 = d3.scaleLinear()
         };})        
         .on("click", function () {if (app.options.mouseover===true) {
           d3.select(this)
+            .transition().duration(400)
+            .attr('width',60)
+            .attr('height',60)
             .attr('stroke','#FFFFFF')
             .attr('stroke-width','4px');
             app.options.mouseover=false;

@@ -173,7 +173,33 @@
   outline:0;
 }
 
+.btn-group .btn:focus{
+  position: 50%;
+  background: #F57E20;
+  color: #FFFFFF;
+  border: 2px solid #FFFFFF;
+  border-radius: 24px;
+  outline:0;
+}
+
 .btn-group-vertical .btn:active{
+  position: 50%;
+  background: #F57E20;
+  color: #FFFFFF;
+  border: 2px solid #FFFFFF;
+  border-radius: 24px;
+  outline:0;
+}
+
+.btn-group-vertical .btn:focus{
+  position: 50%;
+  background: #F57E20;
+  color: #FFFFFF;
+  border: 2px solid #FFFFFF;
+  border-radius: 24px;
+  outline:0;
+}
+.btn-group-vertical .btn:visited{
   position: 50%;
   background: #F57E20;
   color: #FFFFFF;
@@ -196,6 +222,15 @@
   border-radius: 24px;
   outline:0;
 }
+
+.btn.focus{
+  background-color: #F57E20;
+  color: #FFFFFF;
+  border: 2px solid #FFFFB2;
+  border-radius: 24px;
+  outline:0;
+}
+
 body{
   font-family: 'Open Sans', sans-serif;
    background-color: #383838;

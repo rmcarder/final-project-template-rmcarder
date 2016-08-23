@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Final Project Template</title>
+  <title>US Health and Race</title>
   <!-- Bootstrap documentation: http://getbootstrap.com -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600' rel='stylesheet' type='text/css'>
@@ -40,7 +40,7 @@
        <div class='col-lg-3' id='leftNumber'>-</div> 
         <div class='col-lg-2' id='lessThan'><img width="130px" height="100px" src = 'LessThan.svg'></div> 
       <div class='col-lg-2' id='centerSliderInfo'>
-          <h5>Select a Demographic to Move Counties from Contributing to the Left Map to the Right Map:</h5>
+          <h5>Drag the slider to shift counties that no longer meet the criteria from the right map to the left map:</h5>
          
         </div>
          <div class='col-lg-2' id='greaterThan'><img width="130px" height="100px" src = 'GreaterThan.svg'></div> 
@@ -73,16 +73,17 @@
           <button type="button" class="btn btn-default vert" id="slider-black">Black</button>
           <button type="button" class="btn btn-default vert" id="slider-hispanic">Hispanic</button>
           <button type="button" class="btn btn-default vert" id="slider-asian">Asian</button>
-          <button type="button" class="btn btn-default vert" id="slider-income">Income</button>
         </div>
+        <div  id='sources'>2015 Health Data from <a href='http://www.countyhealthrankings.org/rankings/data'>County Health Rankings</a></div>
 
    
        
-             <div id='topSliderText'>States are sized by percentage of total population for all Counties that are:</div>
            
           
                    
         </div>
+
+             
      
     <div class="col-lg-5" id='chart2'></div>
   </div>

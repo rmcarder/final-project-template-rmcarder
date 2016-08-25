@@ -19,7 +19,6 @@
 
 #rightNumberTop, #rightNumberBottom{
   font-family: 'Open Sans', sans-serif;
-  background-color: #383838;
   font-family: 'Arimo', sans-serif;
   color: #CECECE;
   float: right;
@@ -32,7 +31,6 @@
 }
 #leftNumberTop, #leftNumberBottom{
   font-family: 'Open Sans', sans-serif;
-  background-color: #383838;
   font-family: 'Arimo', sans-serif;
   color: #CECECE;
   float: left;
@@ -245,6 +243,12 @@
   border: 1px solid #FFFFFF;
   border-radius: 24px;
   outline:0;
+}
+
+.domain, .tick, .yaxis,#legend, #legendStart{
+    font-family: 'Exo', sans-serif;
+
+  color: #FFFFFF;
 }
 
 a{

@@ -67,14 +67,14 @@ var color = d3.scaleLinear()
         yvar: 'obesity',
         yvartext: 'Obesity Rate (%)',
         mouseover: true,
-        leftName: false,
-        leftPop: false,
-        leftPopPercent:false,
-        leftyvarValue:false,
-        rightName: false,
-        rightPop: false,
-        rightPopPercent:false,
-        rightyvarValue:false,
+        leftName: ' ',
+        leftPop: ' ',
+        leftPopPercent:' ',
+        leftyvarValue:' ',
+        rightName: ' ',
+        rightPop: ' ',
+        rightPopPercent:' ',
+        rightyvarValue:' ',
      
         };
 
@@ -590,9 +590,16 @@ function textBox() {
 
 function legend() {
 
+
+var margin = {top: 5, right: 5, bottom: 5, left: 5},
+    width = 180 - margin.left - margin.right,
+    height = 50 - margin.top - margin.bottom;
+
+
 var legend=d3.select('#legend').append('svg')
-    .attr('width','100%')
-    .attr('height',30)
+    .attr('width',180)
+    .attr('height',50)
+     .attr('align','center')
 
 var gradient = legend.append("defs")
   .append("linearGradient")
@@ -638,10 +645,31 @@ gradientLife.append("stop")
     .attr("stop-opacity", 1);
 
 
-legend.append('g').append("rect")
-    .attr("width", '100%')
-    .attr("height", '100%')
+legend.append("rect")
+.attr("transform", "translate(10,0)")
+ .attr('align','center')
+ .attr('position','relative')
+ .attr('margin','0 auto')
+    .attr("width", 160)
+    .attr("height", 25)
+    .attr('align','center')
     .style("fill", "url(#gradientLife)");
+
+var y = d3.scaleLinear()
+  .range([0, 160]).domain([0, 100]);
+
+var yAxis = d3.axisBottom()
+  .scale(y);
+
+legend.append("g")
+.attr("transform", "translate(10,15)")
+ .attr('align','center')
+  .attr("class", "yaxis")
+  .attr("transform", "translate(10,30)")
+  .call(yAxis)
+  .append("text")
+
+
 
 
 }
@@ -831,7 +859,7 @@ chart.colorScale2 = d3.scaleLinear()
   
 
     statesEnter.append('rect')
-      .attr('x', function (d) { return chart.x(d.lon)- 17.5; })
+      .attr('x', function (d) { return chart.x(d.lon)- 17.5+7; })
       .attr('y', function (d) { return chart.y(d.lat)- 17.5 - 40; })
       .attr('stroke','#CECECE');
     
@@ -905,7 +933,7 @@ chart.colorScale2 = d3.scaleLinear()
 
     statesEnter.append('text')
       .attr('class','statetext')
-      .attr('x', function (d) { return chart.x(d.lon)-9; })
+      .attr('x', function (d) { return chart.x(d.lon)-2; })
       .attr('y', function (d) { return chart.y(d.lat)-33; })
       .attr('dx',0)
       .attr('dy',0)

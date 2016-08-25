@@ -228,7 +228,8 @@ var color = d3.scaleLinear()
     app.components = [
       new Chart('#chart','chart2',app.rightSum,'#leftNumberTop','#leftNumber','#leftNumberBottom','less'),
       new Chart('#chart2','chart',app.leftSum,'#rightNumberTop','#rightNumber','#rightNumberBottom','greater'),
-      new Slider('#slider')
+      new Slider('#slider'),
+      new legend()
     ];
 
  d3.select("#slider-white")
@@ -586,6 +587,65 @@ function textBox() {
   app.update();
 }
 
+
+function legend() {
+
+var legend=d3.select('#legend').append('svg')
+    .attr('width','100%')
+    .attr('height',30)
+
+var gradient = legend.append("defs")
+  .append("linearGradient")
+    .attr("id", "gradient")
+    .attr("x1", "0%")
+    .attr("x2", "100%");
+
+gradient.append("stop")
+    .attr("offset", "0%")
+    .attr("stop-color", "#1a9850")
+    .attr("stop-opacity", 1);
+
+gradient.append("stop")
+    .attr("offset", "50%")
+    .attr("stop-color", "#ffffbf")
+    .attr("stop-opacity", 1);
+
+gradient.append("stop")
+    .attr("offset", "100%")
+    .attr("stop-color", "#d73027")
+    .attr("stop-opacity", 1);
+
+
+var gradientLife = legend.append("defs")
+  .append("linearGradient")
+    .attr("id", "gradientLife")
+    .attr("x1", "0%")
+    .attr("x2", "100%");
+
+gradientLife.append("stop")
+    .attr("offset", "0%")
+    .attr("stop-color", "#d73027")
+    .attr("stop-opacity", 1);
+
+gradientLife.append("stop")
+    .attr("offset", "50%")
+    .attr("stop-color", "#ffffbf")
+    .attr("stop-opacity", 1);
+
+gradientLife.append("stop")
+    .attr("offset", "100%")
+    .attr("stop-color", "#1a9850")
+    .attr("stop-opacity", 1);
+
+
+legend.append('g').append("rect")
+    .attr("width", '100%')
+    .attr("height", '100%')
+    .style("fill", "url(#gradientLife)");
+
+
+}
+
 function Slider(selector) {
   slider=this;
 
@@ -708,59 +768,6 @@ chart.svg = d3.select(selector)
    chart.sidelength = d3.scaleSqrt()
     .domain([0,1])
     .range([0,35]);
-
-
-  chart.legend=d3.select('#legend').append('svg')
-    .attr('width','100%')
-    .attr('height',30)
-
-var gradient = chart.legend.append("defs")
-  .append("linearGradient")
-    .attr("id", "gradient")
-    .attr("x1", "0%")
-    .attr("x2", "100%");
-
-gradient.append("stop")
-    .attr("offset", "0%")
-    .attr("stop-color", "#1a9850")
-    .attr("stop-opacity", 1);
-
-    gradient.append("stop")
-    .attr("offset", "50%")
-    .attr("stop-color", "#ffffbf")
-    .attr("stop-opacity", 1);
-
-gradient.append("stop")
-    .attr("offset", "100%")
-    .attr("stop-color", "#d73027")
-    .attr("stop-opacity", 1);
-
-
-
-var gradientLife = chart.legend.append("defs")
-  .append("linearGradient")
-    .attr("id", "gradientLife")
-    .attr("x1", "0%")
-    .attr("x2", "100%");
-
-gradientLife.append("stop")
-    .attr("offset", "0%")
-    .attr("stop-color", "#d73027")
-    .attr("stop-opacity", 1);
-
-    gradientLife.append("stop")
-    .attr("offset", "50%")
-    .attr("stop-color", "#ffffbf")
-    .attr("stop-opacity", 1);
-
-gradientLife.append("stop")
-    .attr("offset", "100%")
-    .attr("stop-color", "#1a9850")
-    .attr("stop-opacity", 1);
-
-chart.legend.append("rect")
-    .attr("width", '100%')
-    .attr("height", 30)
  
 
 chart.update();
@@ -787,34 +794,19 @@ Chart.prototype = {
 
 if (app.options.yvar==='MaleLifeEx') {
     chart.data_bins = [app.minMaleLifeEx,(app.minMaleLifeEx+app.maxMaleLifeEx)/2,app.maxMaleLifeEx];
-    chart.color_range = ["#d73027","#ffffbf","#1a9850"];
-   chart.legend.selectAll('rect')
-      .transition().duration(600)
-      .style("fill", "url(#gradientLife)");}
+    chart.color_range = ["#d73027","#ffffbf","#1a9850"];}
 else if (app.options.yvar==='obesity'){
       chart.data_bins = [app.minobesity,(app.minobesity+app.maxobesity)/2,app.maxobesity];
-      chart.color_range = ["#1a9850","#ffffbf","#d73027"];
-      chart.legend.select('rect')
-          .transition().duration(600)
-          .style("fill", "url(#gradient)");}
+      chart.color_range = ["#1a9850","#ffffbf","#d73027"];}
 else if (app.options.yvar==='DaysPoorHealth'){
       chart.data_bins = [app.minDaysPoorHealth,(app.minDaysPoorHealth+app.maxDaysPoorHealth)/2,app.maxDaysPoorHealth];
-      chart.color_range = ["#1a9850","#ffffbf","#d73027"];
-      chart.legend.select('rect')
-          .transition().duration(600)
-          .style("fill", "url(#gradient)");}
+      chart.color_range = ["#1a9850","#ffffbf","#d73027"];}
 else if (app.options.yvar==='YPLS'){
       chart.data_bins = [app.minYPLS,(app.minYPLS+app.maxYPLS)/2,app.maxYPLS];
-      chart.color_range = ["#1a9850","#ffffbf","#d73027"];
-      chart.legend.selectAll('rect')
-          .transition().duration(600)
-          .style("fill", "url(#gradient)");}
+      chart.color_range = ["#1a9850","#ffffbf","#d73027"];}
 else if (app.options.yvar==='uninsured'){
       chart.data_bins = [app.minuninsured,(app.minuninsured+app.maxuninsured)/2,app.maxuninsured];
-      chart.color_range = ["#1a9850","#ffffbf","#d73027"];
-      chart.legend.select('rect')
-          .transition().duration(600)
-          .style("fill", "url(#gradient)");}
+      chart.color_range = ["#1a9850","#ffffbf","#d73027"];}
 
 
 

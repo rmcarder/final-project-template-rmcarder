@@ -67,6 +67,15 @@ var color = d3.scaleLinear()
         yvar: 'obesity',
         yvartext: 'Obesity Rate (%)',
         mouseover: true,
+        leftName: false,
+        leftPop: false,
+        leftPopPercent:false,
+        leftyvarValue:false,
+        rightName: false,
+        rightPop: false,
+        rightPopPercent:false,
+        rightyvarValue:false,
+     
         };
 
 
@@ -217,8 +226,8 @@ var color = d3.scaleLinear()
 
     // Here we create each of the components on our page, storing them in an array
     app.components = [
-      new Chart('#chart',app.rightSum,'#leftNumberTop','#leftNumber','#leftNumberBottom','less'),
-      new Chart('#chart2',app.leftSum,'#rightNumberTop','#rightNumber','#rightNumberBottom','greater'),
+      new Chart('#chart','chart2',app.rightSum,'#leftNumberTop','#leftNumber','#leftNumberBottom','less'),
+      new Chart('#chart2','chart',app.leftSum,'#rightNumberTop','#rightNumber','#rightNumberBottom','greater'),
       new Slider('#slider')
     ];
 
@@ -609,7 +618,7 @@ function hue(h) {
 }
 }
 
-function Chart(selector,sum,numberTop,number,numberBottom,greaterLess) {
+function Chart(selector,analog,sum,numberTop,number,numberBottom,greaterLess) {
 
   var chart = this;
 
@@ -729,17 +738,35 @@ chart.colorScale2 = d3.scaleLinear()
       .attr('fill',function (d) { return chart.colorScale2(d[app.options.yvar]); }) ;
 
     states
-        .on("mouseover", function(d) {if (app.options.mouseover===true){  
-        d3.select(chart.number)
-          .html(function () {return d3.format(".1f")(d[app.options.yvar]);});
-        d3.select(chart.numberTop)
-          .html(function () {return d.name;});
-        d3.select(chart.numberBottom)
-          .html(function () {
-              return app.options.yvartext+' in counties that are '+chart.greaterLess+
-              ' than '+d3.format(".1f")(app.options.slicer*100)+'% '+app.options.slider+
-              '. This accounts for '+d3.format(",.0f")(d.Pop)+' people, '+d3.format(".1f")(d.PopPercent*100)+
-              '% of '+d.name+'s total population.';});
+        .on("mouseover", function(d) {if (app.options.mouseover===true){ 
+          app.options.leftName=d.name;
+          app.options.leftPop=d.Pop;
+          app.options.leftPopPercent=d.PopPercent;
+          app.options.leftyvarValue=d[app.options.yvar];
+            var id = d.name;
+            var matchingState=d3.select('#chart2').selectAll('.state')
+              .filter(function(d) {return d.name==id;});
+              app.options.rightName=matchingState.data()[0].name;
+              app.options.rightPop=matchingState.data()[0].Pop;
+              app.options.rightPopPercent=matchingState.data()[0].PopPercent;
+              app.options.rightyvarValue=matchingState.data()[0][app.options.yvar];
+          console.log(matchingState.data()[0].Pop);
+          console.log(app.options);
+
+
+
+
+
+        // d3.select(chart.number)
+        //   .html(function () {return d3.format(".1f")(d[app.options.yvar]);});
+        // d3.select(chart.numberTop)
+        //   .html(function () {return d.name;});
+        // d3.select(chart.numberBottom)
+        //   .html(function () {
+        //       return app.options.yvartext+' in counties that are '+chart.greaterLess+
+        //       ' than '+d3.format(".1f")(app.options.slicer*100)+'% '+app.options.slider+
+        //       '. This accounts for '+d3.format(",.0f")(d.Pop)+' people, '+d3.format(".1f")(d.PopPercent*100)+
+        //       '% of '+d.name+'s total population.';});
         };})        
         .on("click", function () {if (app.options.mouseover===true) {
           d3.select(this)

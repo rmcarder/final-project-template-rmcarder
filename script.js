@@ -709,10 +709,6 @@ chart.svg = d3.select(selector)
     .domain([0,1])
     .range([0,35]);
 
-  chart.tooltip = d3.select("body").append("div")   
-    .attr("class", "header")               
-    .style("opacity", 1);
-
 
   chart.legend=d3.select('#legend').append('svg')
     .attr('width','100%')
@@ -765,29 +761,7 @@ gradientLife.append("stop")
 chart.legend.append("rect")
     .attr("width", '100%')
     .attr("height", 30)
-  
-        // '<svg width="120" height="240" version="1.1" xmlns="http://www.w3.org/2000/svg">
-        //   <defs>
-        //       <linearGradient id="Gradient1">
-        //         <stop class="stop1" offset="0%"/>
-        //         <stop class="stop2" offset="50%"/>
-        //         <stop class="stop3" offset="100%"/>
-        //       </linearGradient>
-             
-        //       <style type="text/css"><![CDATA[
-        //         #rect1 { fill: url(#Gradient1); }
-        //         .stop1 { stop-color: red; }
-        //         .stop2 { stop-color: black; stop-opacity: 0; }
-        //         .stop3 { stop-color: blue; }
-        //       ]]></style>
-        //   </defs>
-         
-        //   <rect id="rect1" x="10" y="10" rx="10" ry="10" width="100" height="20"/>
-          
-        // </svg>'
-      
-
-   
+ 
 
 chart.update();
 textBox();

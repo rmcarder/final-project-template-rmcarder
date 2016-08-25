@@ -245,6 +245,7 @@ var color = d3.scaleLinear()
           d3.select('#slidertext')
           .text(function (d) {return app.options.slider;});
           app.update();
+          textBox();
         });
 
    d3.select("#slider-black")
@@ -261,6 +262,7 @@ var color = d3.scaleLinear()
           d3.select('#slidertext')
           .text(function (d) {return app.options.slider;});
           app.update();
+          textBox();
         });
 
    d3.select("#slider-hispanic")
@@ -277,6 +279,7 @@ var color = d3.scaleLinear()
           d3.select('#slidertext')
           .text(function (d) {return app.options.slider;});
           app.update();
+          textBox();
         });
 
      d3.select("#slider-asian")
@@ -293,6 +296,7 @@ var color = d3.scaleLinear()
           d3.select('#slidertext')
           .text(function (d) {return app.options.slider;});
           app.update();
+          textBox();
         });
 
  
@@ -310,7 +314,8 @@ var color = d3.scaleLinear()
           .classed('active',false);
           app.options.yvar='MaleLifeEx';
           app.options.yvartext= 'Male Life Expectancy (years)';
-          app.update();      
+          app.update();  
+          textBox();    
       });
 
       d3.select("#yvar-obesity")
@@ -327,7 +332,8 @@ var color = d3.scaleLinear()
           .classed('active',false);
           app.options.yvar='obesity';
           app.options.yvartext= 'Obesity Rate (%)';
-          app.update();    
+          app.update();  
+          textBox();  
       });
 
       d3.select("#yvar-uninsured")
@@ -344,7 +350,8 @@ var color = d3.scaleLinear()
           .classed('active',false);
           app.options.yvar='uninsured';
           app.options.yvartext= 'Rate (%) Without Health Insurance';
-          app.update();     
+          app.update();   
+          textBox();  
       });
 
       d3.select("#yvar-DaysPoorHealth")
@@ -362,6 +369,7 @@ var color = d3.scaleLinear()
           app.options.yvar='DaysPoorHealth';
           app.options.yvartext= 'Average Days of Poor Health in 2014';
           app.update();
+          textBox();
       });
 
       d3.select("#yvar-YPLS")
@@ -378,7 +386,8 @@ var color = d3.scaleLinear()
           .classed('active',false);
           app.options.yvar='YPLS';
           app.options.yvartext= 'Average Years of Potential Life Lost 2014';
-          app.update();     
+          app.update(); 
+          textBox();    
       });
 
     // Add event listeners and the like here
@@ -555,6 +564,28 @@ for (var i = 0; i < app.leftCentroids.length; i++) {
   }
 }
 
+function textBox() {
+  d3.select('#leftNumberTop')
+    .html(function () {return (app.options.leftName);});
+  d3.select('#leftNumber')
+    .html(function () {return d3.format(".1f")(app.options.leftyvarValue);});
+  d3.select('#leftNumberBottom')
+    .html(function () {return app.options.yvartext+' in counties that are '+chart.greaterLess+
+    ' than '+d3.format(".1f")(app.options.slicer*100)+'% '+app.options.slider+
+    '. This accounts for '+d3.format(",.0f")(app.options.leftPop)+' people, '+d3.format(".1f")(app.options.leftPopPercent*100)+
+    '% of '+app.options.leftName+'s total population.';});
+  d3.select('#rightNumberTop')
+  .html(function () {return (app.options.rightName);});
+  d3.select('#rightNumber')
+  .html(function () {return d3.format(".1f")(app.options.rightyvarValue);});
+  d3.select('#rightNumberBottom')
+  .html(function () {return app.options.yvartext+' in counties that are '+chart.greaterLess+
+    ' than '+d3.format(".1f")(app.options.slicer*100)+'% '+app.options.slider+
+    '. This accounts for '+d3.format(",.0f")(app.options.rightPop)+' people, '+d3.format(".1f")(app.options.rightPopPercent*100)+
+    '% of '+app.options.rightName+'s total population.';});
+  app.update();
+}
+
 function Slider(selector) {
   slider=this;
 
@@ -592,6 +623,7 @@ slider.slider.append("line")
         .on("start drag", function() { hue(slider.x.invert(d3.event.x));
         app.options.slicer=(slider.x.invert(d3.event.x))/100;
         app.update();
+        textBox();
         d3.select('#slidernumber')
           .text(function (d) {return (d3.format(".0f")(app.options.slicer*100))+'%';});
         
@@ -618,6 +650,18 @@ function hue(h) {
 }
 }
 
+
+
+//.html(function () {return d3.format(".1f")(d[app.options.yvar]);});
+        // d3.select(chart.numberTop)
+        //   .html(function () {return d.name;});
+        // d3.select(chart.numberBottom)
+        //   .html(function () {
+        //       return app.options.yvartext+' in counties that are '+chart.greaterLess+
+        //       ' than '+d3.format(".1f")(app.options.slicer*100)+'% '+app.options.slider+
+        //       '. This accounts for '+d3.format(",.0f")(d.Pop)+' people, '+d3.format(".1f")(d.PopPercent*100)+
+        //       '% of '+d.name+'s total population.';});
+
 function Chart(selector,analog,sum,numberTop,number,numberBottom,greaterLess) {
 
   var chart = this;
@@ -626,7 +670,8 @@ chart.number=number;
 chart.numberTop=numberTop;
 chart.numberBottom=numberBottom;
 chart.greaterLess=greaterLess;
-chart.sum=sum;
+chart.sum=sum
+chart.selector=selector;
 
 console.log(chart.number);
 
@@ -669,6 +714,7 @@ chart.svg = d3.select(selector)
     .style("opacity", 1);
 
 chart.update();
+textBox();
 }
     // data merge:
  
@@ -738,7 +784,7 @@ chart.colorScale2 = d3.scaleLinear()
       .attr('fill',function (d) { return chart.colorScale2(d[app.options.yvar]); }) ;
 
     states
-        .on("mouseover", function(d) {if (app.options.mouseover===true){ 
+        .on("mouseover", function(d) {if (app.options.mouseover===true){ if (chart.selector=='#chart'){
           app.options.leftName=d.name;
           app.options.leftPop=d.Pop;
           app.options.leftPopPercent=d.PopPercent;
@@ -751,11 +797,23 @@ chart.colorScale2 = d3.scaleLinear()
               app.options.rightPopPercent=matchingState.data()[0].PopPercent;
               app.options.rightyvarValue=matchingState.data()[0][app.options.yvar];
           console.log(matchingState.data()[0].Pop);
-          console.log(app.options);
+          console.log(app.options.leftPop);
+          textBox();
 
-
-
-
+        } else {app.options.rightName=d.name;
+          app.options.rightPop=d.Pop;
+          app.options.rightPopPercent=d.PopPercent;
+          app.options.rightyvarValue=d[app.options.yvar];
+            var id = d.name;
+            var matchingState=d3.select('#chart').selectAll('.state')
+              .filter(function(d) {return d.name==id;});
+              app.options.leftName=matchingState.data()[0].name;
+              app.options.leftPop=matchingState.data()[0].Pop;
+              app.options.leftPopPercent=matchingState.data()[0].PopPercent;
+              app.options.leftyvarValue=matchingState.data()[0][app.options.yvar];
+          console.log(matchingState.data()[0].Pop);
+          console.log(app.options.leftPop);}
+          textBox();
 
         // d3.select(chart.number)
         //   .html(function () {return d3.format(".1f")(d[app.options.yvar]);});
@@ -792,6 +850,8 @@ chart.colorScale2 = d3.scaleLinear()
       .attr('dx',0)
       .attr('dy',0)
       .text(function (d) {return d.abbr;});
+
+
 
   
 

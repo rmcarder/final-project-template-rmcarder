@@ -217,8 +217,8 @@ var color = d3.scaleLinear()
 
     // Here we create each of the components on our page, storing them in an array
     app.components = [
-      new Chart('#chart',app.rightSum,'#leftNumberTop','#leftNumber','#leftNumberBottom','greater'),
-      new Chart('#chart2',app.leftSum,'#rightNumberTop','#rightNumber','#rightNumberBottom','less'),
+      new Chart('#chart',app.rightSum,'#leftNumberTop','#leftNumber','#leftNumberBottom','less'),
+      new Chart('#chart2',app.leftSum,'#rightNumberTop','#rightNumber','#rightNumberBottom','greater'),
       new Slider('#slider')
     ];
 

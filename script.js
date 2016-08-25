@@ -713,6 +713,82 @@ chart.svg = d3.select(selector)
     .attr("class", "header")               
     .style("opacity", 1);
 
+
+  chart.legend=d3.select('#legend').append('svg')
+    .attr('width','100%')
+    .attr('height',30)
+
+var gradient = chart.legend.append("defs")
+  .append("linearGradient")
+    .attr("id", "gradient")
+    .attr("x1", "0%")
+    .attr("x2", "100%");
+
+gradient.append("stop")
+    .attr("offset", "0%")
+    .attr("stop-color", "#1a9850")
+    .attr("stop-opacity", 1);
+
+    gradient.append("stop")
+    .attr("offset", "50%")
+    .attr("stop-color", "#ffffbf")
+    .attr("stop-opacity", 1);
+
+gradient.append("stop")
+    .attr("offset", "100%")
+    .attr("stop-color", "#d73027")
+    .attr("stop-opacity", 1);
+
+
+
+var gradientLife = chart.legend.append("defs")
+  .append("linearGradient")
+    .attr("id", "gradientLife")
+    .attr("x1", "0%")
+    .attr("x2", "100%");
+
+gradientLife.append("stop")
+    .attr("offset", "0%")
+    .attr("stop-color", "#d73027")
+    .attr("stop-opacity", 1);
+
+    gradientLife.append("stop")
+    .attr("offset", "50%")
+    .attr("stop-color", "#ffffbf")
+    .attr("stop-opacity", 1);
+
+gradientLife.append("stop")
+    .attr("offset", "100%")
+    .attr("stop-color", "#1a9850")
+    .attr("stop-opacity", 1);
+
+chart.legend.append("rect")
+    .attr("width", '100%')
+    .attr("height", 30)
+  
+        // '<svg width="120" height="240" version="1.1" xmlns="http://www.w3.org/2000/svg">
+        //   <defs>
+        //       <linearGradient id="Gradient1">
+        //         <stop class="stop1" offset="0%"/>
+        //         <stop class="stop2" offset="50%"/>
+        //         <stop class="stop3" offset="100%"/>
+        //       </linearGradient>
+             
+        //       <style type="text/css"><![CDATA[
+        //         #rect1 { fill: url(#Gradient1); }
+        //         .stop1 { stop-color: red; }
+        //         .stop2 { stop-color: black; stop-opacity: 0; }
+        //         .stop3 { stop-color: blue; }
+        //       ]]></style>
+        //   </defs>
+         
+        //   <rect id="rect1" x="10" y="10" rx="10" ry="10" width="100" height="20"/>
+          
+        // </svg>'
+      
+
+   
+
 chart.update();
 textBox();
 }
@@ -737,26 +813,44 @@ Chart.prototype = {
 
 if (app.options.yvar==='MaleLifeEx') {
     chart.data_bins = [app.minMaleLifeEx,(app.minMaleLifeEx+app.maxMaleLifeEx)/2,app.maxMaleLifeEx];
-  chart.color_range = ["#d73027","#ffffbf","#1a9850"];}
+    chart.color_range = ["#d73027","#ffffbf","#1a9850"];
+   chart.legend.selectAll('rect')
+      .transition().duration(600)
+      .style("fill", "url(#gradientLife)");}
 else if (app.options.yvar==='obesity'){
       chart.data_bins = [app.minobesity,(app.minobesity+app.maxobesity)/2,app.maxobesity];
-     chart.color_range = ["#1a9850","#ffffbf","#d73027"];}
+      chart.color_range = ["#1a9850","#ffffbf","#d73027"];
+      chart.legend.select('rect')
+          .transition().duration(600)
+          .style("fill", "url(#gradient)");}
 else if (app.options.yvar==='DaysPoorHealth'){
       chart.data_bins = [app.minDaysPoorHealth,(app.minDaysPoorHealth+app.maxDaysPoorHealth)/2,app.maxDaysPoorHealth];
-      chart.color_range = ["#1a9850","#ffffbf","#d73027"];}
+      chart.color_range = ["#1a9850","#ffffbf","#d73027"];
+      chart.legend.select('rect')
+          .transition().duration(600)
+          .style("fill", "url(#gradient)");}
 else if (app.options.yvar==='YPLS'){
       chart.data_bins = [app.minYPLS,(app.minYPLS+app.maxYPLS)/2,app.maxYPLS];
-      chart.color_range = ["#1a9850","#ffffbf","#d73027"];}
+      chart.color_range = ["#1a9850","#ffffbf","#d73027"];
+      chart.legend.selectAll('rect')
+          .transition().duration(600)
+          .style("fill", "url(#gradient)");}
 else if (app.options.yvar==='uninsured'){
       chart.data_bins = [app.minuninsured,(app.minuninsured+app.maxuninsured)/2,app.maxuninsured];
-      chart.color_range = ["#1a9850","#ffffbf","#d73027"];}
+      chart.color_range = ["#1a9850","#ffffbf","#d73027"];
+      chart.legend.select('rect')
+          .transition().duration(600)
+          .style("fill", "url(#gradient)");}
+
+
 
     
 chart.colorScale2 = d3.scaleLinear()
         .domain(chart.data_bins)
         .range(chart.color_range);
 
-   
+
+
    
     // Statebin
     var states = chart.svg.selectAll('.state')

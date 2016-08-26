@@ -582,17 +582,19 @@ function textBox() {
   d3.select('#leftNumber')
     .html(function () {return d3.format(".1f")(app.options.leftyvarValue);});
   d3.select('#leftNumberBottom')
-    .html(function () {return app.options.yvartext+' in counties that are less than '+d3.format(".1f")(app.options.slicer*100)+'% '+app.options.slider+
-    '. This accounts for '+d3.format(",.0f")(app.options.leftPop)+' people, '+d3.format(".1f")(app.options.leftPopPercent*100)+
-    '% of '+app.options.leftName+'s total population.';});
+    .html(function () {return app.options.yvartext+' in counties that are less than '+'<span style="color:white;font-family: Exo, sans-serif;"><strong>'+d3.format(".1f")(app.options.slicer*100)+'% '+'</strong></span>'+app.options.slider+
+    '. This accounts for '+'<span style="color:white; font-family: Exo, sans-serif;"><strong>'+d3.format(",.0f")(app.options.leftPop)+'</strong></span>'+' people, '+'<span style="color:white; font-family: Exo, sans-serif;"><strong>'+d3.format(".1f")(app.options.leftPopPercent*100)+
+    '%'+'</strong></span>'+' of '+app.options.leftName+'s total population.';});
   d3.select('#rightNumberTop')
   .html(function () {return (app.options.rightName);});
   d3.select('#rightNumber')
   .html(function () {return d3.format(".1f")(app.options.rightyvarValue);});
   d3.select('#rightNumberBottom')
-  .html(function () {return app.options.yvartext+' in counties that are greater than '+d3.format(".1f")(app.options.slicer*100)+'% '+app.options.slider+
-    '. This accounts for '+d3.format(",.0f")(app.options.rightPop)+' people, '+d3.format(".1f")(app.options.rightPopPercent*100)+
-    '% of '+app.options.rightName+'s total population.';});
+  .html(function () {return app.options.yvartext+' in counties that are greater than '+'<span style="color:white;font-family: Exo, sans-serif;"><strong>'+d3.format(".1f")(app.options.slicer*100)+'% '+'</strong></span>'+app.options.slider+
+    '. This accounts for '+'<span style="color:white;font-family: Exo, sans-serif;"><strong>'+d3.format(",.0f")(app.options.rightPop)+'</strong></span>'+' people, '+'<span style="color:white;font-family: Exo, sans-serif;"><strong>'+d3.format(".1f")(app.options.rightPopPercent*100)+
+    '%'+'</strong></span>'+' of '+app.options.rightName+'s total population.';});
+  d3.select('#legendEnd')
+  .html(function () {return app.options.yvartext;});
   app.update();
 }
 
@@ -853,6 +855,7 @@ slider.slider.insert("g", ".track-overlay")
   .data(slider.x.ticks(10))
   .enter().append("text")
     .attr("x", x)
+    .attr('display','none')
     .attr("text-anchor", "middle")
     .text(function(d) { return d + "%"; });
 
@@ -978,6 +981,7 @@ chart.colorScale2 = d3.scaleLinear()
       .attr('y',0);  
 
     statesEnter.append('rect')
+      .attr('class','staterect')
       .attr('x', function (d) { return chart.x(d.lon)- 17.5+7; })
       .attr('y', function (d) { return chart.y(d.lat)- 17.5 - 40; })
       .attr('stroke','#CECECE');
@@ -1033,14 +1037,18 @@ chart.colorScale2 = d3.scaleLinear()
         //       '. This accounts for '+d3.format(",.0f")(d.Pop)+' people, '+d3.format(".1f")(d.PopPercent*100)+
         //       '% of '+d.name+'s total population.';});
         };})        
-        .on("click", function () {if (app.options.mouseover===true) {
-          d3.select(this)
+        .on("click", function (d) {if (app.options.mouseover===true) {
+          var id = d.name;
+           d3.select('rect')
+            d3.select(this)     
             .transition().duration(400)
             .attr('width',60)
             .attr('height',60)
-            .attr('stroke','#FFFFFF')
-            .attr('stroke-width','4px');
+            .attr('color','#FFFFFF')
+            .attr('text-weight','200');
             app.options.mouseover=false;
+            console.log(this);
+            chart.update();
          } else {
           d3.selectAll('g')
             .attr('stroke','none');

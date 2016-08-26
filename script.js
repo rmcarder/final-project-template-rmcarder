@@ -42,15 +42,15 @@ var color = d3.scaleLinear()
     //app.maxMaleLifeEx = d3.max(app.county, function(d) { return d.MaleLifeEx2010;} );
     //app.maxuninsured = d3.max(app.county, function(d) { return d.Uninsured2014;} );
     //app.maxobesity = d3.max(app.county, function(d) { return d.obesity;} );
-    app.minuninsured=3
+    app.minuninsured=0
     app.maxuninsured=25
     app.minobesity = 10;
     app.maxobesity = 40;
-    app.minYPLS = 3000;
+    app.minYPLS = 4000;
     app.maxYPLS = 12000;
     app.minDaysPoorHealth=5;
     app.maxDaysPoorHealth=25;
-    app.minMaleLifeEx=65;
+    app.minMaleLifeEx=68;
     app.maxMaleLifeEx=80;
     // = d3.max(app.county, function(d) { return d.DaysPoorHealth;} );
     //app.minMaleLifeEx = d3.min(app.county, function(d) { return d.MaleLifeEx2010;} );
@@ -67,15 +67,16 @@ var color = d3.scaleLinear()
         yvar: 'obesity',
         yvartext: 'Obesity Rate (%)',
         mouseover: true,
-        leftName: ' ',
+        leftName: '-',
         leftPop: ' ',
         leftPopPercent:' ',
         leftyvarValue:' ',
-        rightName: ' ',
+        rightName: '-',
         rightPop: ' ',
         rightPopPercent:' ',
         rightyvarValue:' ',
-     
+        legendMin:'16 ',
+        legendMax:'30',     
         };
 
 
@@ -229,7 +230,7 @@ var color = d3.scaleLinear()
       new Chart('#chart','chart2',app.rightSum,'#leftNumberTop','#leftNumber','#leftNumberBottom','less'),
       new Chart('#chart2','chart',app.leftSum,'#rightNumberTop','#rightNumber','#rightNumberBottom','greater'),
       new Slider('#slider'),
-      new legend()
+      new legend(app.options.legendMin, app.options.legendMax)
     ];
 
  d3.select("#slider-white")
@@ -315,8 +316,10 @@ var color = d3.scaleLinear()
           .classed('active',false);
           app.options.yvar='MaleLifeEx';
           app.options.yvartext= 'Male Life Expectancy (years)';
+          app.options.legendMax=app.maxMaleLifeEx;
+          app.options.legendMin=app.minMaleLifeEx;
           app.update();  
-          textBox();    
+          textBox();   
       });
 
       d3.select("#yvar-obesity")
@@ -333,6 +336,8 @@ var color = d3.scaleLinear()
           .classed('active',false);
           app.options.yvar='obesity';
           app.options.yvartext= 'Obesity Rate (%)';
+          app.options.legendMax=app.maxobesity;
+          app.options.legendMin=app.minobesity;
           app.update();  
           textBox();  
       });
@@ -351,6 +356,8 @@ var color = d3.scaleLinear()
           .classed('active',false);
           app.options.yvar='uninsured';
           app.options.yvartext= 'Rate (%) Without Health Insurance';
+           app.options.legendMax=app.maxuninsured;
+          app.options.legendMin=app.minuninsured;
           app.update();   
           textBox();  
       });
@@ -369,6 +376,8 @@ var color = d3.scaleLinear()
           .classed('active',true);
           app.options.yvar='DaysPoorHealth';
           app.options.yvartext= 'Average Days of Poor Health in 2014';
+          app.options.legendMax=app.maxDaysPoorHealth;
+          app.options.legendMin=app.minDaysPoorHealth;
           app.update();
           textBox();
       });
@@ -387,6 +396,8 @@ var color = d3.scaleLinear()
           .classed('active',false);
           app.options.yvar='YPLS';
           app.options.yvartext= 'Average Years of Potential Life Lost 2014';
+           app.options.legendMax=app.maxYPLS;
+          app.options.legendMin=app.minYPLS;
           app.update(); 
           textBox();    
       });
@@ -395,7 +406,8 @@ var color = d3.scaleLinear()
        //start slider
      // Data merge:
     
-
+console.log(app.options);
+console.log(app.minYPLS);
 
     // app.resize() will be called anytime the page size is changed
   d3.select(window).on('resize', app.resize);
@@ -409,7 +421,7 @@ var color = d3.scaleLinear()
   update: function () {
    app.components.forEach(function (c) { if (c.update) { c.update(); }});
 
-   console.log(app.options.slicer);
+   console.log(app.options);
 
     var leftData = app.county;
     var rightData = app.county;
@@ -560,8 +572,7 @@ for (var i = 0; i < app.leftCentroids.length; i++) {
           };
               app.rightSum = rightCentroids;    
 
- console.log(app.leftSum);
-  console.log(app.rightSum);
+
   }
 }
 
@@ -571,8 +582,7 @@ function textBox() {
   d3.select('#leftNumber')
     .html(function () {return d3.format(".1f")(app.options.leftyvarValue);});
   d3.select('#leftNumberBottom')
-    .html(function () {return app.options.yvartext+' in counties that are '+chart.greaterLess+
-    ' than '+d3.format(".1f")(app.options.slicer*100)+'% '+app.options.slider+
+    .html(function () {return app.options.yvartext+' in counties that are less than '+d3.format(".1f")(app.options.slicer*100)+'% '+app.options.slider+
     '. This accounts for '+d3.format(",.0f")(app.options.leftPop)+' people, '+d3.format(".1f")(app.options.leftPopPercent*100)+
     '% of '+app.options.leftName+'s total population.';});
   d3.select('#rightNumberTop')
@@ -580,28 +590,61 @@ function textBox() {
   d3.select('#rightNumber')
   .html(function () {return d3.format(".1f")(app.options.rightyvarValue);});
   d3.select('#rightNumberBottom')
-  .html(function () {return app.options.yvartext+' in counties that are '+chart.greaterLess+
-    ' than '+d3.format(".1f")(app.options.slicer*100)+'% '+app.options.slider+
+  .html(function () {return app.options.yvartext+' in counties that are greater than '+d3.format(".1f")(app.options.slicer*100)+'% '+app.options.slider+
     '. This accounts for '+d3.format(",.0f")(app.options.rightPop)+' people, '+d3.format(".1f")(app.options.rightPopPercent*100)+
     '% of '+app.options.rightName+'s total population.';});
   app.update();
 }
 
 
-function legend() {
+function legend(min,max) {
 
 
-var margin = {top: 5, right: 5, bottom: 5, left: 5},
+  var margin = {top: 5, right: 5, bottom: 5, left: 5},
     width = 180 - margin.left - margin.right,
     height = 50 - margin.top - margin.bottom;
 
 
-var legend=d3.select('#legend').append('svg')
+  app.legend=d3.select('#legend').append('svg')
     .attr('width',180)
     .attr('height',50)
      .attr('align','center')
+   }
 
-var gradient = legend.append("defs")
+
+legend.prototype = {
+  update: function () {
+    var chart = this;
+
+d3.select('#legend').selectAll('rect').remove();
+d3.select('#legend').selectAll('g').remove();
+    if (app.options.yvar==="MaleLifeEx"){
+
+  var gradient = app.legend.append("defs")
+  .append("linearGradient")
+    .attr("id", "gradient")
+    .attr("x1", "0%")
+    .attr("x2", "100%");
+
+gradient.append("stop")
+    .attr("offset", "0%")
+    .attr("stop-color", "#d73027")
+    .attr("stop-opacity", 1);
+
+gradient.append("stop")
+    .attr("offset", "50%")
+    .attr("stop-color", "#ffffbf")
+    .attr("stop-opacity", 1);
+
+gradient.append("stop")
+    .attr("offset", "100%")
+    .attr("stop-color", "#1a9850")
+    .attr("stop-opacity", 1);
+
+
+} else{
+
+var gradient = app.legend.append("defs")
   .append("linearGradient")
     .attr("id", "gradient")
     .attr("x1", "0%")
@@ -621,58 +664,62 @@ gradient.append("stop")
     .attr("offset", "100%")
     .attr("stop-color", "#d73027")
     .attr("stop-opacity", 1);
+}
 
 
-var gradientLife = legend.append("defs")
-  .append("linearGradient")
-    .attr("id", "gradientLife")
-    .attr("x1", "0%")
-    .attr("x2", "100%");
-
-gradientLife.append("stop")
-    .attr("offset", "0%")
-    .attr("stop-color", "#d73027")
-    .attr("stop-opacity", 1);
-
-gradientLife.append("stop")
-    .attr("offset", "50%")
-    .attr("stop-color", "#ffffbf")
-    .attr("stop-opacity", 1);
-
-gradientLife.append("stop")
-    .attr("offset", "100%")
-    .attr("stop-color", "#1a9850")
-    .attr("stop-opacity", 1);
-
-
-legend.append("rect")
-.attr("transform", "translate(10,0)")
- .attr('align','center')
- .attr('position','relative')
- .attr('margin','0 auto')
+app.legend.append("rect")
+  .attr("transform", "translate(10,0)")
+  .attr('align','center')
+   .attr('position','relative')
+   .attr('margin','0 auto')
     .attr("width", 160)
     .attr("height", 25)
+    .attr('rx',10)
+    .attr('ry',10)
     .attr('align','center')
-    .style("fill", "url(#gradientLife)");
+    .style("fill", "url(#gradient)");
 
-var y = d3.scaleLinear()
-  .range([0, 160]).domain([0, 100]);
+app.y = d3.scaleLinear()
+  .domain([app.options.legendMin,app.options.legendMax])
+  .range([0, 160]);
 
 var yAxis = d3.axisBottom()
-  .scale(y);
+  .scale(app.y)
+  .ticks(5);
 
-legend.append("g")
-.attr("transform", "translate(10,15)")
- .attr('align','center')
-  .attr("class", "yaxis")
+app.legend.append("g")
+  .attr("class", "axis")
+  .attr("transform", "translate(10,15)")
   .attr("transform", "translate(10,30)")
   .call(yAxis)
-  .append("text")
+  .append("text");
 
-
-
-
+  }
 }
+
+
+
+
+
+
+// var statesEnter=states
+//       .enter().append('g')
+//       .attr('class','state')
+//       .attr('x',0)
+//       .attr('y',0);
+
+  
+
+//     statesEnter.append('rect')
+//       .attr('x', function (d) { return chart.x(d.lon)- 17.5+7; })
+//       .attr('y', function (d) { return chart.y(d.lat)- 17.5 - 40; })
+//       .attr('stroke','#CECECE');
+    
+//     states=states.merge(statesEnter);  
+
+
+
+
 
 function Slider(selector) {
   slider=this;

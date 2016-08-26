@@ -889,7 +889,6 @@ chart.greaterLess=greaterLess;
 chart.sum=sum
 chart.selector=selector;
 
-console.log(chart.number);
 
   var margin = {
     left: 0,
@@ -934,8 +933,7 @@ textBox();
 Chart.prototype = {
   update: function () {
     var chart = this;
-
-    // Interrupt ongoing transitions:
+// Interrupt ongoing transitions:
 
 
 //original color scale
@@ -964,15 +962,10 @@ else if (app.options.yvar==='uninsured'){
       chart.data_bins = [app.minuninsured,(app.minuninsured+app.maxuninsured)/2,app.maxuninsured];
       chart.color_range = ["#1a9850","#ffffbf","#d73027"];}
 
-
-
-    
+ 
 chart.colorScale2 = d3.scaleLinear()
         .domain(chart.data_bins)
         .range(chart.color_range);
-
-
-
    
     // Statebin
     var states = chart.svg.selectAll('.state')
@@ -982,9 +975,7 @@ chart.colorScale2 = d3.scaleLinear()
       .enter().append('g')
       .attr('class','state')
       .attr('x',0)
-      .attr('y',0);
-
-  
+      .attr('y',0);  
 
     statesEnter.append('rect')
       .attr('x', function (d) { return chart.x(d.lon)- 17.5+7; })
@@ -1054,6 +1045,8 @@ chart.colorScale2 = d3.scaleLinear()
           d3.selectAll('g')
             .attr('stroke','none');
             app.options.mouseover=true;}});
+
+
 
 
         

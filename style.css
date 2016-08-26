@@ -32,16 +32,6 @@
       font-size: 16px;
       }
   
-    }
-
-    }
-    .axis path, .axis line {
-      fill: none;
-      stroke: #FFFFFF;
-      shape-rendering: crispEdges;
-    }
-
-
 #arrows {
   font-family: 'Arimo', sans-serif;
   height: 80px;
@@ -119,10 +109,29 @@
     width: 50px;
  }
 
-.ticks {
+.tick {
   font: 10px sans-serif;
+  color: #FFFFFF;
 }
 
+.axis text {
+    font-family: 'Exo', sans-serif;
+    font-size: 11px;
+    fill: #FFFFFF;
+    font-weight: 1;
+}
+
+.axis path {
+   fill: none;
+    stroke: #FFFFFF;
+    shape-rendering: crispEdges;
+}
+
+.axis line {
+   fill: none;
+    stroke: #FFFFFF;
+    shape-rendering: crispEdges;
+}
 .track,
 .track-inset,
 .track-overlay {
@@ -263,9 +272,9 @@
   outline:0;
 }
 
-.domain, .tick, .yaxis,#legend, #legendStart{
+ #legendStart{
     font-family: 'Exo', sans-serif;
-
+ 
   color: #FFFFFF;
 }
 
@@ -279,6 +288,10 @@
 
 a{
   color: #F57E20; 
+}
+
+a:hover, a:active{
+  color:#F3FAB9;
 }
 
 body{

@@ -609,7 +609,87 @@ function legend(min,max) {
     .attr('width',180)
     .attr('height',50)
      .attr('align','center')
+
+
+     if (app.options.yvar=="MaleLifeEx"){
+
+  var gradient = app.legend.append("defs")
+  .append("linearGradient")
+    .attr("id", "gradient")
+    .attr("x1", "0%")
+    .attr("x2", "100%");
+
+gradient.append("stop")
+    .attr("offset", "0%")
+    .attr("stop-color", "#d73027")
+    .attr("stop-opacity", 1);
+
+gradient.append("stop")
+    .attr("offset", "50%")
+    .attr("stop-color", "#ffffbf")
+    .attr("stop-opacity", 1);
+
+gradient.append("stop")
+    .attr("offset", "100%")
+    .attr("stop-color", "#1a9850")
+    .attr("stop-opacity", 1);
+
+
+} else{
+
+var gradient = app.legend.append("defs")
+  .append("linearGradient")
+    .attr("id", "gradient")
+    .attr("x1", "0%")
+    .attr("x2", "100%");
+
+gradient.append("stop")
+    .attr("offset", "0%")
+    .attr("stop-color", "#1a9850")
+    .attr("stop-opacity", 1);
+
+gradient.append("stop")
+    .attr("offset", "50%")
+    .attr("stop-color", "#ffffbf")
+    .attr("stop-opacity", 1);
+
+gradient.append("stop")
+    .attr("offset", "100%")
+    .attr("stop-color", "#d73027")
+    .attr("stop-opacity", 1);
+}
+
+
+app.legend.append("rect")
+  .attr("transform", "translate(10,0)")
+  .attr('align','center')
+   .attr('position','relative')
+   .attr('margin','0 auto')
+    .attr("width", 160)
+    .attr("height", 25)
+    .attr('rx',10)
+    .attr('ry',10)
+    .attr('align','center')
+    .style("fill", "url(#gradient)");
+
+app.y = d3.scaleLinear()
+  .domain([app.options.legendMin,app.options.legendMax])
+  .range([0, 160]);
+
+var yAxis = d3.axisBottom()
+  .scale(app.y)
+  .ticks(5);
+
+app.legend.append("g")
+  .attr("class", "axis")
+  .attr("transform", "translate(10,15)")
+  .attr("transform", "translate(10,30)")
+  .call(yAxis)
+  .append("text");
    }
+
+   
+
 
 
 legend.prototype = {
@@ -618,7 +698,8 @@ legend.prototype = {
 
 d3.select('#legend').selectAll('rect').remove();
 d3.select('#legend').selectAll('g').remove();
-    if (app.options.yvar==="MaleLifeEx"){
+   
+if (app.options.yvar=="MaleLifeEx"){
 
   var gradient = app.legend.append("defs")
   .append("linearGradient")

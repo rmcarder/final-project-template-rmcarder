@@ -83,6 +83,12 @@
    font-family: 'Exo', sans-serif;
   
 }
+.staterect {
+  color: #FFFFFF;
+  stroke-width: 1px;
+   font-family: 'Exo', sans-serif;
+  
+}
 
 .statetext {
   color: #FFFFFF;
@@ -272,7 +278,7 @@
   outline:0;
 }
 
- #legendStart{
+ #legendStart, #legendEnd{
     font-family: 'Exo', sans-serif;
  
   color: #FFFFFF;

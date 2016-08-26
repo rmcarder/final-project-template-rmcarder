@@ -67,15 +67,15 @@ var color = d3.scaleLinear()
         yvar: 'obesity',
         yvartext: 'Obesity Rate (%)',
         mouseover: true,
-        leftName: '-',
+        leftName: 'Mouseover a State',
         leftPop: ' ',
         leftPopPercent:' ',
         leftyvarValue:' ',
-        rightName: '-',
+        rightName: 'Mouseover a State',
         rightPop: ' ',
         rightPopPercent:' ',
         rightyvarValue:' ',
-        legendMin:'16 ',
+        legendMin:'16',
         legendMax:'30',     
         };
 
@@ -233,6 +233,23 @@ var color = d3.scaleLinear()
       new legend(app.options.legendMin, app.options.legendMax)
     ];
 
+
+    d3.select('#leftNumberTop')
+    .html(function () {return ('  ');});
+  d3.select('#leftNumber')
+    .html(function () {return (' ');});
+  d3.select('#leftNumberBottom')
+    .html(function () {return (' ');});
+  d3.select('#rightNumberTop')
+  .html(function () {return (' ');});
+  d3.select('#rightNumber')
+  .html(function () {return (' ');});
+  d3.select('#rightNumberBottom')
+  .html(function () {return (' ');});
+  d3.select('#legendEnd')
+  .html(function () {return app.options.yvartext;});
+  app.update();
+
  d3.select("#slider-white")
       .on("click", function(){
           app.options.slider="white";
@@ -355,7 +372,7 @@ var color = d3.scaleLinear()
           d3.select("#yvar-DaysPoorHealth")
           .classed('active',false);
           app.options.yvar='uninsured';
-          app.options.yvartext= 'Rate (%) Without Health Insurance';
+          app.options.yvartext= 'Uninsured Rate (%)';
            app.options.legendMax=app.maxuninsured;
           app.options.legendMin=app.minuninsured;
           app.update();   
@@ -375,7 +392,7 @@ var color = d3.scaleLinear()
           d3.select("#yvar-DaysPoorHealth")
           .classed('active',true);
           app.options.yvar='DaysPoorHealth';
-          app.options.yvartext= 'Average Days of Poor Health in 2014';
+          app.options.yvartext= 'Days of Poor Health (%)';
           app.options.legendMax=app.maxDaysPoorHealth;
           app.options.legendMin=app.minDaysPoorHealth;
           app.update();
@@ -395,7 +412,7 @@ var color = d3.scaleLinear()
           d3.select("#yvar-DaysPoorHealth")
           .classed('active',false);
           app.options.yvar='YPLS';
-          app.options.yvartext= 'Average Years of Potential Life Lost 2014';
+          app.options.yvartext= 'Average Years of Potential Life Lost';
            app.options.legendMax=app.maxYPLS;
           app.options.legendMin=app.minYPLS;
           app.update(); 
@@ -580,7 +597,7 @@ function textBox() {
   d3.select('#leftNumberTop')
     .html(function () {return (app.options.leftName);});
   d3.select('#leftNumber')
-    .html(function () {return d3.format(".1f")(app.options.leftyvarValue);});
+    .html(function () {return d3.format(",.1f")(app.options.leftyvarValue);});
   d3.select('#leftNumberBottom')
     .html(function () {return app.options.yvartext+' in counties that are less than '+'<span style="color:white;font-family: Exo, sans-serif;"><strong>'+d3.format(".1f")(app.options.slicer*100)+'% '+'</strong></span>'+app.options.slider+
     '. This accounts for '+'<span style="color:white; font-family: Exo, sans-serif;"><strong>'+d3.format(",.0f")(app.options.leftPop)+'</strong></span>'+' people, '+'<span style="color:white; font-family: Exo, sans-serif;"><strong>'+d3.format(".1f")(app.options.leftPopPercent*100)+
@@ -663,11 +680,11 @@ gradient.append("stop")
 
 
 app.legend.append("rect")
-  .attr("transform", "translate(10,0)")
+  .attr("transform", "translate(20,0)")
   .attr('align','center')
    .attr('position','relative')
    .attr('margin','0 auto')
-    .attr("width", 160)
+    .attr("width", 140)
     .attr("height", 25)
     .attr('rx',10)
     .attr('ry',10)
@@ -676,7 +693,7 @@ app.legend.append("rect")
 
 app.y = d3.scaleLinear()
   .domain([app.options.legendMin,app.options.legendMax])
-  .range([0, 160]);
+  .range([0, 140]);
 
 var yAxis = d3.axisBottom()
   .scale(app.y)
@@ -684,8 +701,8 @@ var yAxis = d3.axisBottom()
 
 app.legend.append("g")
   .attr("class", "axis")
-  .attr("transform", "translate(10,15)")
-  .attr("transform", "translate(10,30)")
+  .attr("transform", "translate(20,15)")
+  .attr("transform", "translate(20,30)")
   .call(yAxis)
   .append("text");
    }
@@ -751,11 +768,11 @@ gradient.append("stop")
 
 
 app.legend.append("rect")
-  .attr("transform", "translate(10,0)")
+  .attr("transform", "translate(20,0)")
   .attr('align','center')
    .attr('position','relative')
    .attr('margin','0 auto')
-    .attr("width", 160)
+    .attr("width", 140)
     .attr("height", 25)
     .attr('rx',10)
     .attr('ry',10)
@@ -764,7 +781,7 @@ app.legend.append("rect")
 
 app.y = d3.scaleLinear()
   .domain([app.options.legendMin,app.options.legendMax])
-  .range([0, 160]);
+  .range([0, 140]);
 
 var yAxis = d3.axisBottom()
   .scale(app.y)
@@ -772,8 +789,8 @@ var yAxis = d3.axisBottom()
 
 app.legend.append("g")
   .attr("class", "axis")
-  .attr("transform", "translate(10,15)")
-  .attr("transform", "translate(10,30)")
+  .attr("transform", "translate(20,15)")
+  .attr("transform", "translate(20,30)")
   .call(yAxis)
   .append("text");
 

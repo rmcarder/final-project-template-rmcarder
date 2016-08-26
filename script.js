@@ -601,7 +601,7 @@ function textBox() {
   d3.select('#leftNumberBottom')
     .html(function () {return app.options.yvartext+' in counties that are less than '+'<span style="color:white;font-family: Exo, sans-serif;"><strong>'+d3.format(".1f")(app.options.slicer*100)+'% '+'</strong></span>'+app.options.slider+
     '. This accounts for '+'<span style="color:white; font-family: Exo, sans-serif;"><strong>'+d3.format(",.0f")(app.options.leftPop)+'</strong></span>'+' people, '+'<span style="color:white; font-family: Exo, sans-serif;"><strong>'+d3.format(".1f")(app.options.leftPopPercent*100)+
-    '%'+'</strong></span>'+' of '+app.options.leftName+'s total population.';});
+    '%'+'</strong></span>'+' of '+app.options.leftName+'&#39s total population.';});
   d3.select('#rightNumberTop')
   .html(function () {return (app.options.rightName);});
   d3.select('#rightNumber')
@@ -609,7 +609,7 @@ function textBox() {
   d3.select('#rightNumberBottom')
   .html(function () {return app.options.yvartext+' in counties that are greater than '+'<span style="color:white;font-family: Exo, sans-serif;"><strong>'+d3.format(".1f")(app.options.slicer*100)+'% '+'</strong></span>'+app.options.slider+
     '. This accounts for '+'<span style="color:white;font-family: Exo, sans-serif;"><strong>'+d3.format(",.0f")(app.options.rightPop)+'</strong></span>'+' people, '+'<span style="color:white;font-family: Exo, sans-serif;"><strong>'+d3.format(".1f")(app.options.rightPopPercent*100)+
-    '%'+'</strong></span>'+' of '+app.options.rightName+'s total population.';});
+    '%'+'</strong></span>'+' of '+app.options.rightName+'&#39s total population.';});
   d3.select('#legendEnd')
   .html(function () {return app.options.yvartext;});
   app.update();

@@ -19,12 +19,19 @@
 
 #rightNumberTop, #rightNumberBottom{
   font-family: 'Open Sans', sans-serif;
-  background-color: #383838;
   font-family: 'Arimo', sans-serif;
   color: #CECECE;
   float: right;
+ 
 }
 
+ .axislabel {
+      fill: #FFFFFF;
+      color: #FFFFFF;
+      font-family: 'Exo', sans-serif;
+      font-size: 16px;
+      }
+  
 #arrows {
   font-family: 'Arimo', sans-serif;
   height: 80px;
@@ -32,7 +39,6 @@
 }
 #leftNumberTop, #leftNumberBottom{
   font-family: 'Open Sans', sans-serif;
-  background-color: #383838;
   font-family: 'Arimo', sans-serif;
   color: #CECECE;
   float: left;
@@ -103,10 +109,29 @@
     width: 50px;
  }
 
-.ticks {
+.tick {
   font: 10px sans-serif;
+  color: #FFFFFF;
 }
 
+.axis text {
+    font-family: 'Exo', sans-serif;
+    font-size: 11px;
+    fill: #FFFFFF;
+    font-weight: 1;
+}
+
+.axis path {
+   fill: none;
+    stroke: #FFFFFF;
+    shape-rendering: crispEdges;
+}
+
+.axis line {
+   fill: none;
+    stroke: #FFFFFF;
+    shape-rendering: crispEdges;
+}
 .track,
 .track-inset,
 .track-overlay {
@@ -138,17 +163,23 @@
 }
 
 .btn {
-  background: none;
+   position: 50%;
+   outline:none;
+  background: transparent;
   color: #CECECE;
-  border: 2px solid color: #CECECE;;
+  border: 1px solid color: #CECECE;;
   border-radius: 24px;
+   outline:0;
 }
 
 .btn .btn-group-vertical{
-  background: none;
+    position: 50%;
+   outline:none;
+  background: transparent;
   color: #CECECE;
-  border: 2px solid color: #CECECE;;
+  border: 1px solid color: #CECECE;;
   border-radius: 24px;
+   outline:0;
 }
 
 .hidden {
@@ -159,16 +190,17 @@
   border-radius: ;
 }
 .btn:hover {
+    position: 50%;
   background-color: #F57E20;
   color: #FFFFFF;
-  border: 2px solid #545454;
+  border: 1px solid #CECECE;
   border-radius: 24px;
 }
 .btn-group .btn:active{
   position: 50%;
   background: #F57E20;
   color: #FFFFFF;
-  border: 2px solid #FFFFFF;
+  border: 1px solid #FFFFFF;
   border-radius: 24px;
   outline:0;
 }
@@ -177,7 +209,7 @@
   position: 50%;
   background: #F57E20;
   color: #FFFFFF;
-  border: 2px solid #FFFFFF;
+  border: 1px solid #FFFFFF;
   border-radius: 24px;
   outline:0;
 }
@@ -186,39 +218,48 @@
   position: 50%;
   background: #F57E20;
   color: #FFFFFF;
-  border: 2px solid #FFFFFF;
+  border: 1px solid #FFFFFF;
   border-radius: 24px;
-  outline:0;
+  outline:none;
 }
 
+.btn-group-vertical .btn:hover{
+  position: 50%;
+  background: #F57E20;
+  color: #FFFFFF;
+  border: 1px solid #FFFFFF;
+  border-radius: 24px;
+  outline:none;
+}
 .btn-group-vertical .btn:focus{
   position: 50%;
   background: #F57E20;
   color: #FFFFFF;
-  border: 2px solid #FFFFFF;
+  border: 1px solid #FFFFFF;
   border-radius: 24px;
-  outline:0;
+  outline:none;
 }
+
 .btn-group-vertical .btn:visited{
   position: 50%;
   background: #F57E20;
-  color: #FFFFFF;
-  border: 2px solid #FFFFFF;
+  color: none;
+  border: none solid #FFFFFF;
   border-radius: 24px;
-  outline:0;
+  outline:none;
 }
 
 .btn:focus{
   background-color: #F57E20;
   color: #FFFFFF;
-  border: 2px solid #FFFFFF;
+  border: 1px solid #FFFFFF;
   border-radius: 24px;
-  outline: 0
+  outline: 0;
 }
 .btn.active{
   background-color: #F57E20;
   color: #FFFFFF;
-  border: 2px solid #FFFFB2;
+  border: 1px solid #FFFFFF;
   border-radius: 24px;
   outline:0;
 }
@@ -226,9 +267,31 @@
 .btn.focus{
   background-color: #F57E20;
   color: #FFFFFF;
-  border: 2px solid #FFFFB2;
+  border: 1px solid #FFFFFF;
   border-radius: 24px;
   outline:0;
+}
+
+ #legendStart{
+    font-family: 'Exo', sans-serif;
+ 
+  color: #FFFFFF;
+}
+
+#sources{
+  font-family: 'Open Sans', sans-serif;
+   background-color: #383838;
+   font-size: 12px;
+      font-family: 'Arimo', sans-serif;
+      color: #CECECE;
+}
+
+a{
+  color: #F57E20; 
+}
+
+a:hover, a:active{
+  color:#F3FAB9;
 }
 
 body{

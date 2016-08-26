@@ -16,7 +16,7 @@
 <body>
 <div class="header section">
   <div class="container">
-    <h1>US Health Outcomes by Race and Income</h1>
+    <h1>US Health Outcomes by Race</h1>
   </div>
     <h5>Choose a Health Outcome:</h5>
   <div class='row'>  
@@ -40,7 +40,7 @@
        <div class='col-lg-3' id='leftNumber'>-</div> 
         <div class='col-lg-2' id='lessThan'><img width="130px" height="100px" src = 'LessThan.svg'></div> 
       <div class='col-lg-2' id='centerSliderInfo'>
-          <h5>Drag the slider to shift counties that no longer meet the criteria from the right map to the left map:</h5>
+          <h5>Select a demographic criteria, then drag the slider to shift counties between maps:</h5>
          
         </div>
          <div class='col-lg-2' id='greaterThan'><img width="130px" height="100px" src = 'GreaterThan.svg'></div> 
@@ -48,7 +48,7 @@
 </div>
 </div>
 <div class='container'>
- <div class="row">
+ <div class="row" style='height:100px;'>
      <div class='col-lg-3' id='leftNumberBottom'>United States</div> 
      <div class='col-lg-6'>
        <div id='slidernumber'>0%</div>
@@ -67,29 +67,31 @@
 <div class="row">
    <div class="col-lg-5" id='chart'></div>
     
-     <div class="col-lg-2" id='sliderbuttons'>
+     <div class="col-lg-2" id='sliderbuttons' height='300'>
        <div class="btn-group-vertical" role="group" aria-label="Filter">   
           <button type="button" class="btn btn-default vert" id="slider-white">White</button>
           <button type="button" class="btn btn-default vert" id="slider-black">Black</button>
           <button type="button" class="btn btn-default vert" id="slider-hispanic">Hispanic</button>
           <button type="button" class="btn btn-default vert" id="slider-asian">Asian</button>
         </div>
-        <div  id='sources'>2015 Health Data from <a href='http://www.countyhealthrankings.org/rankings/data'>County Health Rankings</a></div>
+<div class='row'><p></p></div>
+<div class='row'>
+        <div id='legendStart'>Legend</div>
+        <div id='legend'></div>
 
-   
-       
-           
-          
-                   
-        </div>
-
-             
+</div></div>             
      
     <div class="col-lg-5" id='chart2'></div>
   </div>
+  <div class='row'>
+   <div  id='sources' style='text-align:center;'><p>2014 Health Data from <a href='http://www.countyhealthrankings.org/rankings/data'>County Health Rankings</a></p>
+                           <p>2014 Insurance Data from <a href='http://www.census.gov/did/www/sahie/'>US Census Small Area Health Insurance Estimates</a></p>
+                           <p>2010 Population and Race Data from <a href='http://www.ers.usda.gov/data-products/food-environment-atlas/data-access-and-documentation-downloads.aspx'>USDA Economic Research Service</a></p>
+                           <p>Acknowledgements to <a href='https://github.com/cmgiven'>Chris Given</a>, <a href='https://github.com/alexcengler'>Alex Engler</a>, and <a href='https://github.com/vivhou'>Vivian Hou</a></p>
+    </div>
+      </div>
   </div>
 </div>
-<div class="col-lg-12" id="Sources"><a href='http://www.countyhealthrankings.org/rankings/data'>County Health Data</div>
 <script type="text/javascript" src="https://d3js.org/d3.v4.min.js"></script>
 <script src="https://d3js.org/d3-color.v1.min.js"></script>
 <script src="https://d3js.org/d3-interpolate.v1.min.js"></script>

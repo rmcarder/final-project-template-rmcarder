@@ -42,15 +42,15 @@ var color = d3.scaleLinear()
     //app.maxMaleLifeEx = d3.max(app.county, function(d) { return d.MaleLifeEx2010;} );
     //app.maxuninsured = d3.max(app.county, function(d) { return d.Uninsured2014;} );
     //app.maxobesity = d3.max(app.county, function(d) { return d.obesity;} );
-    app.minuninsured=3
+    app.minuninsured=0
     app.maxuninsured=25
     app.minobesity = 10;
     app.maxobesity = 40;
-    app.minYPLS = 3000;
+    app.minYPLS = 4000;
     app.maxYPLS = 12000;
     app.minDaysPoorHealth=5;
     app.maxDaysPoorHealth=25;
-    app.minMaleLifeEx=65;
+    app.minMaleLifeEx=68;
     app.maxMaleLifeEx=80;
     // = d3.max(app.county, function(d) { return d.DaysPoorHealth;} );
     //app.minMaleLifeEx = d3.min(app.county, function(d) { return d.MaleLifeEx2010;} );
@@ -67,6 +67,16 @@ var color = d3.scaleLinear()
         yvar: 'obesity',
         yvartext: 'Obesity Rate (%)',
         mouseover: true,
+        leftName: '-',
+        leftPop: ' ',
+        leftPopPercent:' ',
+        leftyvarValue:' ',
+        rightName: '-',
+        rightPop: ' ',
+        rightPopPercent:' ',
+        rightyvarValue:' ',
+        legendMin:'16 ',
+        legendMax:'30',     
         };
 
 
@@ -217,9 +227,10 @@ var color = d3.scaleLinear()
 
     // Here we create each of the components on our page, storing them in an array
     app.components = [
-      new Chart('#chart',app.rightSum,'#leftNumberTop','#leftNumber','#leftNumberBottom','greater'),
-      new Chart('#chart2',app.leftSum,'#rightNumberTop','#rightNumber','#rightNumberBottom','less'),
-      new Slider('#slider')
+      new Chart('#chart','chart2',app.rightSum,'#leftNumberTop','#leftNumber','#leftNumberBottom','less'),
+      new Chart('#chart2','chart',app.leftSum,'#rightNumberTop','#rightNumber','#rightNumberBottom','greater'),
+      new Slider('#slider'),
+      new legend(app.options.legendMin, app.options.legendMax)
     ];
 
  d3.select("#slider-white")
@@ -236,6 +247,7 @@ var color = d3.scaleLinear()
           d3.select('#slidertext')
           .text(function (d) {return app.options.slider;});
           app.update();
+          textBox();
         });
 
    d3.select("#slider-black")
@@ -252,6 +264,7 @@ var color = d3.scaleLinear()
           d3.select('#slidertext')
           .text(function (d) {return app.options.slider;});
           app.update();
+          textBox();
         });
 
    d3.select("#slider-hispanic")
@@ -268,6 +281,7 @@ var color = d3.scaleLinear()
           d3.select('#slidertext')
           .text(function (d) {return app.options.slider;});
           app.update();
+          textBox();
         });
 
      d3.select("#slider-asian")
@@ -284,6 +298,7 @@ var color = d3.scaleLinear()
           d3.select('#slidertext')
           .text(function (d) {return app.options.slider;});
           app.update();
+          textBox();
         });
 
  
@@ -301,7 +316,10 @@ var color = d3.scaleLinear()
           .classed('active',false);
           app.options.yvar='MaleLifeEx';
           app.options.yvartext= 'Male Life Expectancy (years)';
-          app.update();      
+          app.options.legendMax=app.maxMaleLifeEx;
+          app.options.legendMin=app.minMaleLifeEx;
+          app.update();  
+          textBox();   
       });
 
       d3.select("#yvar-obesity")
@@ -318,7 +336,10 @@ var color = d3.scaleLinear()
           .classed('active',false);
           app.options.yvar='obesity';
           app.options.yvartext= 'Obesity Rate (%)';
-          app.update();    
+          app.options.legendMax=app.maxobesity;
+          app.options.legendMin=app.minobesity;
+          app.update();  
+          textBox();  
       });
 
       d3.select("#yvar-uninsured")
@@ -335,7 +356,10 @@ var color = d3.scaleLinear()
           .classed('active',false);
           app.options.yvar='uninsured';
           app.options.yvartext= 'Rate (%) Without Health Insurance';
-          app.update();     
+           app.options.legendMax=app.maxuninsured;
+          app.options.legendMin=app.minuninsured;
+          app.update();   
+          textBox();  
       });
 
       d3.select("#yvar-DaysPoorHealth")
@@ -352,7 +376,10 @@ var color = d3.scaleLinear()
           .classed('active',true);
           app.options.yvar='DaysPoorHealth';
           app.options.yvartext= 'Average Days of Poor Health in 2014';
+          app.options.legendMax=app.maxDaysPoorHealth;
+          app.options.legendMin=app.minDaysPoorHealth;
           app.update();
+          textBox();
       });
 
       d3.select("#yvar-YPLS")
@@ -369,14 +396,18 @@ var color = d3.scaleLinear()
           .classed('active',false);
           app.options.yvar='YPLS';
           app.options.yvartext= 'Average Years of Potential Life Lost 2014';
-          app.update();     
+           app.options.legendMax=app.maxYPLS;
+          app.options.legendMin=app.minYPLS;
+          app.update(); 
+          textBox();    
       });
 
     // Add event listeners and the like here
        //start slider
      // Data merge:
     
-
+console.log(app.options);
+console.log(app.minYPLS);
 
     // app.resize() will be called anytime the page size is changed
   d3.select(window).on('resize', app.resize);
@@ -390,7 +421,7 @@ var color = d3.scaleLinear()
   update: function () {
    app.components.forEach(function (c) { if (c.update) { c.update(); }});
 
-   console.log(app.options.slicer);
+   console.log(app.options);
 
     var leftData = app.county;
     var rightData = app.county;
@@ -541,10 +572,235 @@ for (var i = 0; i < app.leftCentroids.length; i++) {
           };
               app.rightSum = rightCentroids;    
 
- console.log(app.leftSum);
-  console.log(app.rightSum);
+
   }
 }
+
+function textBox() {
+  d3.select('#leftNumberTop')
+    .html(function () {return (app.options.leftName);});
+  d3.select('#leftNumber')
+    .html(function () {return d3.format(".1f")(app.options.leftyvarValue);});
+  d3.select('#leftNumberBottom')
+    .html(function () {return app.options.yvartext+' in counties that are less than '+d3.format(".1f")(app.options.slicer*100)+'% '+app.options.slider+
+    '. This accounts for '+d3.format(",.0f")(app.options.leftPop)+' people, '+d3.format(".1f")(app.options.leftPopPercent*100)+
+    '% of '+app.options.leftName+'s total population.';});
+  d3.select('#rightNumberTop')
+  .html(function () {return (app.options.rightName);});
+  d3.select('#rightNumber')
+  .html(function () {return d3.format(".1f")(app.options.rightyvarValue);});
+  d3.select('#rightNumberBottom')
+  .html(function () {return app.options.yvartext+' in counties that are greater than '+d3.format(".1f")(app.options.slicer*100)+'% '+app.options.slider+
+    '. This accounts for '+d3.format(",.0f")(app.options.rightPop)+' people, '+d3.format(".1f")(app.options.rightPopPercent*100)+
+    '% of '+app.options.rightName+'s total population.';});
+  app.update();
+}
+
+
+function legend(min,max) {
+
+
+  var margin = {top: 5, right: 5, bottom: 5, left: 5},
+    width = 180 - margin.left - margin.right,
+    height = 50 - margin.top - margin.bottom;
+
+
+  app.legend=d3.select('#legend').append('svg')
+    .attr('width',180)
+    .attr('height',50)
+     .attr('align','center')
+
+
+     if (app.options.yvar=="MaleLifeEx"){
+
+  var gradient = app.legend.append("defs")
+  .append("linearGradient")
+    .attr("id", "gradient")
+    .attr("x1", "0%")
+    .attr("x2", "100%");
+
+gradient.append("stop")
+    .attr("offset", "0%")
+    .attr("stop-color", "#d73027")
+    .attr("stop-opacity", 1);
+
+gradient.append("stop")
+    .attr("offset", "50%")
+    .attr("stop-color", "#ffffbf")
+    .attr("stop-opacity", 1);
+
+gradient.append("stop")
+    .attr("offset", "100%")
+    .attr("stop-color", "#1a9850")
+    .attr("stop-opacity", 1);
+
+
+} else{
+
+var gradient = app.legend.append("defs")
+  .append("linearGradient")
+    .attr("id", "gradient")
+    .attr("x1", "0%")
+    .attr("x2", "100%");
+
+gradient.append("stop")
+    .attr("offset", "0%")
+    .attr("stop-color", "#1a9850")
+    .attr("stop-opacity", 1);
+
+gradient.append("stop")
+    .attr("offset", "50%")
+    .attr("stop-color", "#ffffbf")
+    .attr("stop-opacity", 1);
+
+gradient.append("stop")
+    .attr("offset", "100%")
+    .attr("stop-color", "#d73027")
+    .attr("stop-opacity", 1);
+}
+
+
+app.legend.append("rect")
+  .attr("transform", "translate(10,0)")
+  .attr('align','center')
+   .attr('position','relative')
+   .attr('margin','0 auto')
+    .attr("width", 160)
+    .attr("height", 25)
+    .attr('rx',10)
+    .attr('ry',10)
+    .attr('align','center')
+    .style("fill", "url(#gradient)");
+
+app.y = d3.scaleLinear()
+  .domain([app.options.legendMin,app.options.legendMax])
+  .range([0, 160]);
+
+var yAxis = d3.axisBottom()
+  .scale(app.y)
+  .ticks(5);
+
+app.legend.append("g")
+  .attr("class", "axis")
+  .attr("transform", "translate(10,15)")
+  .attr("transform", "translate(10,30)")
+  .call(yAxis)
+  .append("text");
+   }
+
+   
+
+
+
+legend.prototype = {
+  update: function () {
+    var chart = this;
+
+d3.select('#legend').selectAll('rect').remove();
+d3.select('#legend').selectAll('g').remove();
+   
+if (app.options.yvar=="MaleLifeEx"){
+
+  var gradient = app.legend.append("defs")
+  .append("linearGradient")
+    .attr("id", "gradient")
+    .attr("x1", "0%")
+    .attr("x2", "100%");
+
+gradient.append("stop")
+    .attr("offset", "0%")
+    .attr("stop-color", "#d73027")
+    .attr("stop-opacity", 1);
+
+gradient.append("stop")
+    .attr("offset", "50%")
+    .attr("stop-color", "#ffffbf")
+    .attr("stop-opacity", 1);
+
+gradient.append("stop")
+    .attr("offset", "100%")
+    .attr("stop-color", "#1a9850")
+    .attr("stop-opacity", 1);
+
+
+} else{
+
+var gradient = app.legend.append("defs")
+  .append("linearGradient")
+    .attr("id", "gradient")
+    .attr("x1", "0%")
+    .attr("x2", "100%");
+
+gradient.append("stop")
+    .attr("offset", "0%")
+    .attr("stop-color", "#1a9850")
+    .attr("stop-opacity", 1);
+
+gradient.append("stop")
+    .attr("offset", "50%")
+    .attr("stop-color", "#ffffbf")
+    .attr("stop-opacity", 1);
+
+gradient.append("stop")
+    .attr("offset", "100%")
+    .attr("stop-color", "#d73027")
+    .attr("stop-opacity", 1);
+}
+
+
+app.legend.append("rect")
+  .attr("transform", "translate(10,0)")
+  .attr('align','center')
+   .attr('position','relative')
+   .attr('margin','0 auto')
+    .attr("width", 160)
+    .attr("height", 25)
+    .attr('rx',10)
+    .attr('ry',10)
+    .attr('align','center')
+    .style("fill", "url(#gradient)");
+
+app.y = d3.scaleLinear()
+  .domain([app.options.legendMin,app.options.legendMax])
+  .range([0, 160]);
+
+var yAxis = d3.axisBottom()
+  .scale(app.y)
+  .ticks(5);
+
+app.legend.append("g")
+  .attr("class", "axis")
+  .attr("transform", "translate(10,15)")
+  .attr("transform", "translate(10,30)")
+  .call(yAxis)
+  .append("text");
+
+  }
+}
+
+
+
+
+
+
+// var statesEnter=states
+//       .enter().append('g')
+//       .attr('class','state')
+//       .attr('x',0)
+//       .attr('y',0);
+
+  
+
+//     statesEnter.append('rect')
+//       .attr('x', function (d) { return chart.x(d.lon)- 17.5+7; })
+//       .attr('y', function (d) { return chart.y(d.lat)- 17.5 - 40; })
+//       .attr('stroke','#CECECE');
+    
+//     states=states.merge(statesEnter);  
+
+
+
+
 
 function Slider(selector) {
   slider=this;
@@ -583,6 +839,7 @@ slider.slider.append("line")
         .on("start drag", function() { hue(slider.x.invert(d3.event.x));
         app.options.slicer=(slider.x.invert(d3.event.x))/100;
         app.update();
+        textBox();
         d3.select('#slidernumber')
           .text(function (d) {return (d3.format(".0f")(app.options.slicer*100))+'%';});
         
@@ -609,7 +866,19 @@ function hue(h) {
 }
 }
 
-function Chart(selector,sum,numberTop,number,numberBottom,greaterLess) {
+
+
+//.html(function () {return d3.format(".1f")(d[app.options.yvar]);});
+        // d3.select(chart.numberTop)
+        //   .html(function () {return d.name;});
+        // d3.select(chart.numberBottom)
+        //   .html(function () {
+        //       return app.options.yvartext+' in counties that are '+chart.greaterLess+
+        //       ' than '+d3.format(".1f")(app.options.slicer*100)+'% '+app.options.slider+
+        //       '. This accounts for '+d3.format(",.0f")(d.Pop)+' people, '+d3.format(".1f")(d.PopPercent*100)+
+        //       '% of '+d.name+'s total population.';});
+
+function Chart(selector,analog,sum,numberTop,number,numberBottom,greaterLess) {
 
   var chart = this;
 
@@ -617,9 +886,9 @@ chart.number=number;
 chart.numberTop=numberTop;
 chart.numberBottom=numberBottom;
 chart.greaterLess=greaterLess;
-chart.sum=sum;
+chart.sum=sum
+chart.selector=selector;
 
-console.log(chart.number);
 
   var margin = {
     left: 0,
@@ -654,20 +923,17 @@ chart.svg = d3.select(selector)
    chart.sidelength = d3.scaleSqrt()
     .domain([0,1])
     .range([0,35]);
-
-  chart.tooltip = d3.select("body").append("div")   
-    .attr("class", "header")               
-    .style("opacity", 1);
+ 
 
 chart.update();
+textBox();
 }
     // data merge:
  
 Chart.prototype = {
   update: function () {
     var chart = this;
-
-    // Interrupt ongoing transitions:
+// Interrupt ongoing transitions:
 
 
 //original color scale
@@ -682,10 +948,10 @@ Chart.prototype = {
 
 if (app.options.yvar==='MaleLifeEx') {
     chart.data_bins = [app.minMaleLifeEx,(app.minMaleLifeEx+app.maxMaleLifeEx)/2,app.maxMaleLifeEx];
-  chart.color_range = ["#d73027","#ffffbf","#1a9850"];}
+    chart.color_range = ["#d73027","#ffffbf","#1a9850"];}
 else if (app.options.yvar==='obesity'){
       chart.data_bins = [app.minobesity,(app.minobesity+app.maxobesity)/2,app.maxobesity];
-     chart.color_range = ["#1a9850","#ffffbf","#d73027"];}
+      chart.color_range = ["#1a9850","#ffffbf","#d73027"];}
 else if (app.options.yvar==='DaysPoorHealth'){
       chart.data_bins = [app.minDaysPoorHealth,(app.minDaysPoorHealth+app.maxDaysPoorHealth)/2,app.maxDaysPoorHealth];
       chart.color_range = ["#1a9850","#ffffbf","#d73027"];}
@@ -696,12 +962,10 @@ else if (app.options.yvar==='uninsured'){
       chart.data_bins = [app.minuninsured,(app.minuninsured+app.maxuninsured)/2,app.maxuninsured];
       chart.color_range = ["#1a9850","#ffffbf","#d73027"];}
 
-    
+ 
 chart.colorScale2 = d3.scaleLinear()
         .domain(chart.data_bins)
         .range(chart.color_range);
-
-   
    
     // Statebin
     var states = chart.svg.selectAll('.state')
@@ -711,12 +975,10 @@ chart.colorScale2 = d3.scaleLinear()
       .enter().append('g')
       .attr('class','state')
       .attr('x',0)
-      .attr('y',0);
-
-  
+      .attr('y',0);  
 
     statesEnter.append('rect')
-      .attr('x', function (d) { return chart.x(d.lon)- 17.5; })
+      .attr('x', function (d) { return chart.x(d.lon)- 17.5+7; })
       .attr('y', function (d) { return chart.y(d.lat)- 17.5 - 40; })
       .attr('stroke','#CECECE');
     
@@ -729,17 +991,47 @@ chart.colorScale2 = d3.scaleLinear()
       .attr('fill',function (d) { return chart.colorScale2(d[app.options.yvar]); }) ;
 
     states
-        .on("mouseover", function(d) {if (app.options.mouseover===true){  
-        d3.select(chart.number)
-          .html(function () {return d3.format(".1f")(d[app.options.yvar]);});
-        d3.select(chart.numberTop)
-          .html(function () {return d.name;});
-        d3.select(chart.numberBottom)
-          .html(function () {
-              return app.options.yvartext+' in counties that are '+chart.greaterLess+
-              ' than '+d3.format(".1f")(app.options.slicer*100)+'% '+app.options.slider+
-              '. This accounts for '+d3.format(",.0f")(d.Pop)+' people, '+d3.format(".1f")(d.PopPercent*100)+
-              '% of '+d.name+'s total population.';});
+        .on("mouseover", function(d) {if (app.options.mouseover===true){ if (chart.selector=='#chart'){
+          app.options.leftName=d.name;
+          app.options.leftPop=d.Pop;
+          app.options.leftPopPercent=d.PopPercent;
+          app.options.leftyvarValue=d[app.options.yvar];
+            var id = d.name;
+            var matchingState=d3.select('#chart2').selectAll('.state')
+              .filter(function(d) {return d.name==id;});
+              app.options.rightName=matchingState.data()[0].name;
+              app.options.rightPop=matchingState.data()[0].Pop;
+              app.options.rightPopPercent=matchingState.data()[0].PopPercent;
+              app.options.rightyvarValue=matchingState.data()[0][app.options.yvar];
+          console.log(matchingState.data()[0].Pop);
+          console.log(app.options.leftPop);
+          textBox();
+
+        } else {app.options.rightName=d.name;
+          app.options.rightPop=d.Pop;
+          app.options.rightPopPercent=d.PopPercent;
+          app.options.rightyvarValue=d[app.options.yvar];
+            var id = d.name;
+            var matchingState=d3.select('#chart').selectAll('.state')
+              .filter(function(d) {return d.name==id;});
+              app.options.leftName=matchingState.data()[0].name;
+              app.options.leftPop=matchingState.data()[0].Pop;
+              app.options.leftPopPercent=matchingState.data()[0].PopPercent;
+              app.options.leftyvarValue=matchingState.data()[0][app.options.yvar];
+          console.log(matchingState.data()[0].Pop);
+          console.log(app.options.leftPop);}
+          textBox();
+
+        // d3.select(chart.number)
+        //   .html(function () {return d3.format(".1f")(d[app.options.yvar]);});
+        // d3.select(chart.numberTop)
+        //   .html(function () {return d.name;});
+        // d3.select(chart.numberBottom)
+        //   .html(function () {
+        //       return app.options.yvartext+' in counties that are '+chart.greaterLess+
+        //       ' than '+d3.format(".1f")(app.options.slicer*100)+'% '+app.options.slider+
+        //       '. This accounts for '+d3.format(",.0f")(d.Pop)+' people, '+d3.format(".1f")(d.PopPercent*100)+
+        //       '% of '+d.name+'s total population.';});
         };})        
         .on("click", function () {if (app.options.mouseover===true) {
           d3.select(this)
@@ -755,16 +1047,20 @@ chart.colorScale2 = d3.scaleLinear()
             app.options.mouseover=true;}});
 
 
+
+
         
      
 
     statesEnter.append('text')
       .attr('class','statetext')
-      .attr('x', function (d) { return chart.x(d.lon)-9; })
+      .attr('x', function (d) { return chart.x(d.lon)-2; })
       .attr('y', function (d) { return chart.y(d.lat)-33; })
       .attr('dx',0)
       .attr('dy',0)
       .text(function (d) {return d.abbr;});
+
+
 
   
 

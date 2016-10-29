@@ -42,13 +42,13 @@ var color = d3.scaleLinear()
     //app.maxMaleLifeEx = d3.max(app.county, function(d) { return d.MaleLifeEx2010;} );
     //app.maxuninsured = d3.max(app.county, function(d) { return d.Uninsured2014;} );
     //app.maxobesity = d3.max(app.county, function(d) { return d.obesity;} );
-    app.minuninsured=0
+    app.minuninsured=3
     app.maxuninsured=25
-    app.minobesity = 10;
+    app.minobesity = 17;
     app.maxobesity = 40;
-    app.minYPLS = 4000;
+    app.minYPLS = 3000;
     app.maxYPLS = 12000;
-    app.minDaysPoorHealth=5;
+    app.minDaysPoorHealth=8;
     app.maxDaysPoorHealth=25;
     app.minMaleLifeEx=68;
     app.maxMaleLifeEx=80;
@@ -599,17 +599,17 @@ function textBox() {
   d3.select('#leftNumber')
     .html(function () {return d3.format(",.1f")(app.options.leftyvarValue);});
   d3.select('#leftNumberBottom')
-    .html(function () {return app.options.yvartext+' in counties that are less than '+'<span style="color:white;font-family: Exo, sans-serif;"><strong>'+d3.format(".1f")(app.options.slicer*100)+'% '+'</strong></span>'+app.options.slider+
-    '. This accounts for '+'<span style="color:white; font-family: Exo, sans-serif;"><strong>'+d3.format(",.0f")(app.options.leftPop)+'</strong></span>'+' people, '+'<span style="color:white; font-family: Exo, sans-serif;"><strong>'+d3.format(".1f")(app.options.leftPopPercent*100)+
-    '%'+'</strong></span>'+' of '+app.options.leftName+'s total population.';});
+    .html(function () {return app.options.yvartext+' in counties that are less than '+'<span style="color:white;font-family: proxima-nova, sans-serif;"><strong>'+d3.format(".1f")(app.options.slicer*100)+'% '+'</strong></span>'+app.options.slider+
+    '. This accounts for '+'<span style="color:white; font-family: proxima-nova, sans-serif;"><strong>'+d3.format(",.0f")(app.options.leftPop)+'</strong></span>'+' people, '+'<span style="color:white; font-family: proxima-nova, sans-serif;"><strong>'+d3.format(".1f")(app.options.leftPopPercent*100)+
+    '%'+'</strong></span>'+' of '+app.options.leftName+'&#39s total population.';});
   d3.select('#rightNumberTop')
   .html(function () {return (app.options.rightName);});
   d3.select('#rightNumber')
   .html(function () {return d3.format(".1f")(app.options.rightyvarValue);});
   d3.select('#rightNumberBottom')
-  .html(function () {return app.options.yvartext+' in counties that are greater than '+'<span style="color:white;font-family: Exo, sans-serif;"><strong>'+d3.format(".1f")(app.options.slicer*100)+'% '+'</strong></span>'+app.options.slider+
-    '. This accounts for '+'<span style="color:white;font-family: Exo, sans-serif;"><strong>'+d3.format(",.0f")(app.options.rightPop)+'</strong></span>'+' people, '+'<span style="color:white;font-family: Exo, sans-serif;"><strong>'+d3.format(".1f")(app.options.rightPopPercent*100)+
-    '%'+'</strong></span>'+' of '+app.options.rightName+'s total population.';});
+  .html(function () {return app.options.yvartext+' in counties that are greater than '+'<span style="color:white;font-family: proxima-nova, sans-serif;"><strong>'+d3.format(".1f")(app.options.slicer*100)+'% '+'</strong></span>'+app.options.slider+
+    '. This accounts for '+'<span style="color:white;font-family: proxima-nova, sans-serif;"><strong>'+d3.format(",.0f")(app.options.rightPop)+'</strong></span>'+' people, '+'<span style="color:white;font-family: proxima-nova, sans-serif;"><strong>'+d3.format(".1f")(app.options.rightPopPercent*100)+
+    '%'+'</strong></span>'+' of '+app.options.rightName+'&#39s total population.';});
   d3.select('#legendEnd')
   .html(function () {return app.options.yvartext;});
   app.update();
@@ -664,7 +664,27 @@ var gradient = app.legend.append("defs")
 
 gradient.append("stop")
     .attr("offset", "0%")
+    .attr("stop-color", "#006837")
+    .attr("stop-opacity", 1);
+
+gradient.append("stop")
+    .attr("offset", "10%")
     .attr("stop-color", "#1a9850")
+    .attr("stop-opacity", 1);
+
+gradient.append("stop")
+    .attr("offset", "20%")
+    .attr("stop-color", "#66bd63")
+    .attr("stop-opacity", 1);
+
+gradient.append("stop")
+    .attr("offset", "30%")
+    .attr("stop-color", "#a6d96a")
+    .attr("stop-opacity", 1);
+
+gradient.append("stop")
+    .attr("offset", "40%")
+    .attr("stop-color", "#d9ef8b")
     .attr("stop-opacity", 1);
 
 gradient.append("stop")
@@ -673,8 +693,28 @@ gradient.append("stop")
     .attr("stop-opacity", 1);
 
 gradient.append("stop")
-    .attr("offset", "100%")
+    .attr("offset", "60%")
+    .attr("stop-color", "#fee08b")
+    .attr("stop-opacity", 1);
+
+gradient.append("stop")
+    .attr("offset", "70%")
+    .attr("stop-color", "#fdae61")
+    .attr("stop-opacity", 1);
+
+gradient.append("stop")
+    .attr("offset", "80%")
+    .attr("stop-color", "#f46d43")
+    .attr("stop-opacity", 1);
+
+gradient.append("stop")
+    .attr("offset", "90%")
     .attr("stop-color", "#d73027")
+    .attr("stop-opacity", 1);
+
+gradient.append("stop")
+    .attr("offset", "100%")
+    .attr("stop-color", "#a50026")
     .attr("stop-opacity", 1);
 }
 
@@ -685,9 +725,9 @@ app.legend.append("rect")
    .attr('position','relative')
    .attr('margin','0 auto')
     .attr("width", 140)
-    .attr("height", 25)
-    .attr('rx',10)
-    .attr('ry',10)
+    .attr("height", 10)
+    .attr('rx',0)
+    .attr('ry',0)
     .attr('align','center')
     .style("fill", "url(#gradient)");
 
@@ -702,7 +742,7 @@ var yAxis = d3.axisBottom()
 app.legend.append("g")
   .attr("class", "axis")
   .attr("transform", "translate(20,15)")
-  .attr("transform", "translate(20,30)")
+  .attr("transform", "translate(20,20)")
   .call(yAxis)
   .append("text");
    }
@@ -728,7 +768,27 @@ if (app.options.yvar=="MaleLifeEx"){
 
 gradient.append("stop")
     .attr("offset", "0%")
-    .attr("stop-color", "#d73027")
+    .attr("stop-color", "#006837")
+    .attr("stop-opacity", 1);
+
+gradient.append("stop")
+    .attr("offset", "10%")
+    .attr("stop-color", "#1a9850")
+    .attr("stop-opacity", 1);
+
+gradient.append("stop")
+    .attr("offset", "20%")
+    .attr("stop-color", "#66bd63")
+    .attr("stop-opacity", 1);
+
+gradient.append("stop")
+    .attr("offset", "30%")
+    .attr("stop-color", "#a6d96a")
+    .attr("stop-opacity", 1);
+
+gradient.append("stop")
+    .attr("offset", "40%")
+    .attr("stop-color", "#d9ef8b")
     .attr("stop-opacity", 1);
 
 gradient.append("stop")
@@ -737,8 +797,28 @@ gradient.append("stop")
     .attr("stop-opacity", 1);
 
 gradient.append("stop")
+    .attr("offset", "60%")
+    .attr("stop-color", "#fee08b")
+    .attr("stop-opacity", 1);
+
+gradient.append("stop")
+    .attr("offset", "70%")
+    .attr("stop-color", "#fdae61")
+    .attr("stop-opacity", 1);
+
+gradient.append("stop")
+    .attr("offset", "80%")
+    .attr("stop-color", "#f46d43")
+    .attr("stop-opacity", 1);
+
+gradient.append("stop")
+    .attr("offset", "90%")
+    .attr("stop-color", "#d73027")
+    .attr("stop-opacity", 1);
+
+gradient.append("stop")
     .attr("offset", "100%")
-    .attr("stop-color", "#1a9850")
+    .attr("stop-color", "#a50026")
     .attr("stop-opacity", 1);
 
 
@@ -752,7 +832,27 @@ var gradient = app.legend.append("defs")
 
 gradient.append("stop")
     .attr("offset", "0%")
+    .attr("stop-color", "#006837")
+    .attr("stop-opacity", 1);
+
+gradient.append("stop")
+    .attr("offset", "10%")
     .attr("stop-color", "#1a9850")
+    .attr("stop-opacity", 1);
+
+gradient.append("stop")
+    .attr("offset", "20%")
+    .attr("stop-color", "#66bd63")
+    .attr("stop-opacity", 1);
+
+gradient.append("stop")
+    .attr("offset", "30%")
+    .attr("stop-color", "#a6d96a")
+    .attr("stop-opacity", 1);
+
+gradient.append("stop")
+    .attr("offset", "40%")
+    .attr("stop-color", "#d9ef8b")
     .attr("stop-opacity", 1);
 
 gradient.append("stop")
@@ -761,8 +861,28 @@ gradient.append("stop")
     .attr("stop-opacity", 1);
 
 gradient.append("stop")
-    .attr("offset", "100%")
+    .attr("offset", "60%")
+    .attr("stop-color", "#fee08b")
+    .attr("stop-opacity", 1);
+
+gradient.append("stop")
+    .attr("offset", "70%")
+    .attr("stop-color", "#fdae61")
+    .attr("stop-opacity", 1);
+
+gradient.append("stop")
+    .attr("offset", "80%")
+    .attr("stop-color", "#f46d43")
+    .attr("stop-opacity", 1);
+
+gradient.append("stop")
+    .attr("offset", "90%")
     .attr("stop-color", "#d73027")
+    .attr("stop-opacity", 1);
+
+gradient.append("stop")
+    .attr("offset", "100%")
+    .attr("stop-color", "#a50026")
     .attr("stop-opacity", 1);
 }
 
@@ -773,9 +893,9 @@ app.legend.append("rect")
    .attr('position','relative')
    .attr('margin','0 auto')
     .attr("width", 140)
-    .attr("height", 25)
-    .attr('rx',10)
-    .attr('ry',10)
+    .attr("height", 10)
+    .attr('rx',0)
+    .attr('ry',0)
     .attr('align','center')
     .style("fill", "url(#gradient)");
 
@@ -790,7 +910,7 @@ var yAxis = d3.axisBottom()
 app.legend.append("g")
   .attr("class", "axis")
   .attr("transform", "translate(20,15)")
-  .attr("transform", "translate(20,30)")
+  .attr("transform", "translate(20,20)")
   .call(yAxis)
   .append("text");
 
@@ -857,6 +977,7 @@ slider.slider.append("line")
         .on("start.interrupt", function() { slider.slider.interrupt(); })
         .on("start drag", function() { hue(slider.x.invert(d3.event.x));
         app.options.slicer=(slider.x.invert(d3.event.x))/100;
+
         app.update();
         textBox();
         d3.select('#slidernumber')
@@ -964,23 +1085,27 @@ Chart.prototype = {
         //.domain(d3.extent(chart.sum, function (d) { return d[app.options.yvar]; }))
         //.range([d3.interpolateYlOrRd(0.25),d3.interpolateYlOrRd(.75)]);};
 
-
+var binMaleLifeEx=(app.maxMaleLifeEx-app.minMaleLifeEx)/10;
+var binobesity=(app.maxobesity-app.minobesity)/10;
+var binDaysPoorHealth=(app.maxDaysPoorHealth-app.minDaysPoorHealth)/10;
+var binYPLS=(app.maxYPLS-app.minYPLS)/10;
+var binuninsured=(app.maxuninsured-app.minuninsured)/10;
 
 if (app.options.yvar==='MaleLifeEx') {
-    chart.data_bins = [app.minMaleLifeEx,(app.minMaleLifeEx+app.maxMaleLifeEx)/2,app.maxMaleLifeEx];
-    chart.color_range = ["#d73027","#ffffbf","#1a9850"];}
-else if (app.options.yvar==='obesity'){
-      chart.data_bins = [app.minobesity,(app.minobesity+app.maxobesity)/2,app.maxobesity];
-      chart.color_range = ["#1a9850","#ffffbf","#d73027"];}
+    chart.data_bins = [app.minMaleLifeEx,app.maxMaleLifeEx-binMaleLifeEx*9,app.maxMaleLifeEx-binMaleLifeEx*8,app.maxMaleLifeEx-binMaleLifeEx*7,app.maxMaleLifeEx-binMaleLifeEx*6,app.maxMaleLifeEx-binMaleLifeEx*5,app.maxMaleLifeEx-binMaleLifeEx*4,app.maxMaleLifeEx-binMaleLifeEx*3,app.maxMaleLifeEx-binMaleLifeEx*2,app.maxMaleLifeEx-binMaleLifeEx*1,app.maxMaleLifeEx];
+    chart.color_range = ["#a50026","#d73027","#f46d43","#fdae61","#fee08b","#ffffbf","#d9ef8b","#a6d96a","#66bd63","#1a9850","#006837"];}
+if (app.options.yvar==='obesity'){
+      chart.data_bins = [app.minobesity,app.maxobesity-binobesity*9,app.maxobesity-binobesity*8,app.maxobesity-binobesity*7,app.maxobesity-binobesity*6,app.maxobesity-binobesity*5,app.maxobesity-binobesity*4,app.maxobesity-binobesity*3,app.maxobesity-binobesity*2,app.maxobesity-binobesity*1,app.maxobesity];
+      chart.color_range = ["#006837","#1a9850","#66bd63","#a6d96a","#d9ef8b","#ffffbf","#fee08b","#fdae61","#f46d43","#d73027","#a50026"];}
 else if (app.options.yvar==='DaysPoorHealth'){
-      chart.data_bins = [app.minDaysPoorHealth,(app.minDaysPoorHealth+app.maxDaysPoorHealth)/2,app.maxDaysPoorHealth];
-      chart.color_range = ["#1a9850","#ffffbf","#d73027"];}
+      chart.data_bins = [app.minDaysPoorHealth,app.maxDaysPoorHealth-binDaysPoorHealth*9,app.maxDaysPoorHealth-binDaysPoorHealth*8,app.maxDaysPoorHealth-binDaysPoorHealth*7,app.maxDaysPoorHealth-binDaysPoorHealth*6,app.maxDaysPoorHealth-binDaysPoorHealth*5,app.maxDaysPoorHealth-binDaysPoorHealth*4,app.maxDaysPoorHealth-binDaysPoorHealth*3,app.maxDaysPoorHealth-binDaysPoorHealth*2,app.maxDaysPoorHealth-binDaysPoorHealth*1,app.maxDaysPoorHealth];
+      chart.color_range =  ["#006837","#1a9850","#66bd63","#a6d96a","#d9ef8b","#ffffbf","#fee08b","#fdae61","#f46d43","#d73027","#a50026"];}
 else if (app.options.yvar==='YPLS'){
-      chart.data_bins = [app.minYPLS,(app.minYPLS+app.maxYPLS)/2,app.maxYPLS];
-      chart.color_range = ["#1a9850","#ffffbf","#d73027"];}
+      chart.data_bins =  [app.minYPLS,app.maxYPLS-binYPLS*9,app.maxYPLS-binYPLS*8,app.maxYPLS-binYPLS*7,app.maxYPLS-binYPLS*6,app.maxYPLS-binYPLS*5,app.maxYPLS-binYPLS*4,app.maxYPLS-binYPLS*3,app.maxYPLS-binYPLS*2,app.maxYPLS-binYPLS*1,app.maxYPLS];
+      chart.color_range =  ["#006837","#1a9850","#66bd63","#a6d96a","#d9ef8b","#ffffbf","#fee08b","#fdae61","#f46d43","#d73027","#a50026"];}
 else if (app.options.yvar==='uninsured'){
-      chart.data_bins = [app.minuninsured,(app.minuninsured+app.maxuninsured)/2,app.maxuninsured];
-      chart.color_range = ["#1a9850","#ffffbf","#d73027"];}
+      chart.data_bins =  [app.minuninsured,app.maxuninsured-binuninsured*9,app.maxuninsured-binuninsured*8,app.maxuninsured-binuninsured*7,app.maxuninsured-binuninsured*6,app.maxuninsured-binuninsured*5,app.maxuninsured-binuninsured*4,app.maxuninsured-binuninsured*3,app.maxuninsured-binuninsured*2,app.maxuninsured-binuninsured*1,app.maxuninsured];
+      chart.color_range = ["#006837","#1a9850","#66bd63","#a6d96a","#d9ef8b","#ffffbf","#fee08b","#fdae61","#f46d43","#d73027","#a50026"];}
 
  
 chart.colorScale2 = d3.scaleLinear()

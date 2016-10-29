@@ -10,13 +10,15 @@
   <link href='https://fonts.googleapis.com/css?family=Fjalla+One|Exo:400,600|Ropa+Sans' rel='stylesheet' type='text/css'>
   <link href="https://fonts.googleapis.com/css?family=Exo" rel="stylesheet">
   <link href='https://fonts.googleapis.com/css?family=PT+Sans+Narrow|Arimo|Dosis|Lato' rel='stylesheet' type='text/css'>
+  <script src="https://use.typekit.net/lkf2nvl.js"></script>
+  <script>try{Typekit.load({ async: true });}catch(e){}</script>
   <link rel="stylesheet" href="style.css">
 
 </head>
 <body>
 <div class="header section">
   <div class="container">
-    <h1>US Health Outcomes by Race</h1>
+    <h1>Race and Health Outcomes - United States</h1>
   </div>
     <h5>Choose a Health Outcome:</h5>
   <div class='row'>  
@@ -30,34 +32,33 @@
 </div>
 <div class='container'>
  <div class="row">
-     <div class='col-lg-3' id='leftNumberTop'></div> 
+     <div class='col-lg-3' id='leftNumberTop' style='min-height:20px'></div> 
      <div class='col-lg-3' id='rightNumberTop'></div>     
 </div>
 </div>
 
 <div class='container'>
  <div class="row">
-       <div class='col-lg-3' id='leftNumber'></div> 
-        <div class='col-lg-2' id='lessThan'><img width="130px" height="100px" src = 'LessThan.svg'></div> 
-      <div class='col-lg-2' id='centerSliderInfo'>
-          <h5>Select a demographic criteria, then drag the slider to shift counties between maps:</h5>
+       <div class='col-lg-3'>
+          <div id='leftNumber' style='min-width:262.5px'></div>
+          <div id='leftNumberBottom'></div> 
+       </div> 
          
-        </div>
-         <div class='col-lg-2' id='greaterThan'><img width="130px" height="100px" src = 'GreaterThan.svg'></div> 
-       <div class='col-lg-3' id='rightNumber'></div>
-</div>
-</div>
-<div class='container'>
- <div class="row" style='height:100px;'>
-     <div class='col-lg-3' id='leftNumberBottom'></div> 
-     <div class='col-lg-6'>
+       <div class='col-lg-2' id='lessThan'><img width="130px" height="100px" src = 'LessThan.svg'></div>
+     <div class='col-lg-2'>
        <div id='slidernumber'>0%</div>
           <div id='slidertext'>white</div>
-          <div id='slider'></div></div>
-     <div class='col-lg-3' id='rightNumberBottom'></div>     
+          <div id='slider'></div>
+         <h5>Select a demographic criteria, then drag the slider to shift counties between maps:</h5></div>
+        <div class='col-lg-2' id='greaterThan'><img width="130px" height="100px" src = 'GreaterThan.svg'></div> 
+        
+       <div class='col-lg-3'>
+        <div id='rightNumber' style='min-width:262.5px'></div>
+        <div id='rightNumberBottom'></div> 
+      </div>
 </div>
 </div>
-</div>
+
 
 
 <div class="main section">

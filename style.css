@@ -4,7 +4,7 @@
 
 .header {
   background-color: #383838;
-  font-family: 'Arimo', sans-serif;
+  font-family: 'proxima-nova', sans-serif;
   color: #CECECE;
   padding: 1em 0 2em;
   text-align: center;
@@ -13,13 +13,13 @@
 #topSliderText {
   font-family: 'Open Sans', sans-serif;
   background-color: #383838;
-  font-family: 'Arimo', sans-serif;
+  font-family: 'Open Sans', sans-serif;
   color: #CECECE;
 }
 
 #rightNumberTop, #rightNumberBottom{
   font-family: 'Open Sans', sans-serif;
-  font-family: 'Arimo', sans-serif;
+  font-family: 'Open Sans', sans-serif;
   color: #CECECE;
   float: right;
  
@@ -28,18 +28,18 @@
  .axislabel {
       fill: #FFFFFF;
       color: #FFFFFF;
-      font-family: 'Exo', sans-serif;
+      font-family: 'Open Sans', sans-serif;
       font-size: 16px;
       }
   
 #arrows {
-  font-family: 'Arimo', sans-serif;
+  font-family: 'Open Sans', sans-serif;
   height: 80px;
 
 }
 #leftNumberTop, #leftNumberBottom{
   font-family: 'Open Sans', sans-serif;
-  font-family: 'Arimo', sans-serif;
+  font-family: 'Open Sans', sans-serif;
   color: #CECECE;
   float: left;
 }
@@ -47,7 +47,7 @@
 #centerSliderInfo {
   font-family: 'Open Sans', sans-serif;
   background-color: #383838;
-  font-family: 'Arimo', sans-serif;
+  font-family: 'Open Sans', sans-serif;
   color: #CECECE;
   float: center;
   text-align: center;
@@ -59,20 +59,20 @@
 
 #slidernumber {
   font-size: 38px;
-  font-family: 'Exo', sans-serif;
+  font-family: 'Open Sans', sans-serif;
   color: #FFFFFF;
 }
 
 #leftNumber {
   font-size: 50px;
-  font-family: 'Exo', sans-serif;
+  font-family: 'Open Sans', sans-serif;
   color: #FFFFFF;
   float: left;
 }
 
 #rightNumber{
   font-size: 50px;
-  font-family: 'Exo', sans-serif;
+  font-family: 'Open Sans', sans-serif;
   color: #FFFFFF;
   float:right;
 }
@@ -80,13 +80,13 @@
 .state {
 	color: #FFFFFF;
   stroke-width: 1px;
-   font-family: 'Exo', sans-serif;
+   font-family: 'Open Sans', sans-serif;
   
 }
 .staterect {
   color: #FFFFFF;
   stroke-width: 1px;
-   font-family: 'Exo', sans-serif;
+   font-family: 'Open Sans', sans-serif;
   
 }
 
@@ -121,7 +121,7 @@
 }
 
 .axis text {
-    font-family: 'Exo', sans-serif;
+    font-family: 'Open Sans', sans-serif;
     font-size: 11px;
     fill: #FFFFFF;
     font-weight: 1;
@@ -279,7 +279,7 @@
 }
 
  #legendStart, #legendEnd{
-    font-family: 'Exo', sans-serif;
+    font-family: 'Open Sans', sans-serif;
  
   color: #FFFFFF;
 }
@@ -288,7 +288,7 @@
   font-family: 'Open Sans', sans-serif;
    background-color: #383838;
    font-size: 12px;
-      font-family: 'Arimo', sans-serif;
+      font-family: 'Open Sans', sans-serif;
       color: #CECECE;
 }
 
@@ -303,10 +303,27 @@ a:hover, a:active{
 body{
   font-family: 'Open Sans', sans-serif;
    background-color: #383838;
-      font-family: 'Arimo', sans-serif;
+      font-family: 'Open Sans', sans-serif;
       color: #CECECE;
 }
-h1,h2,h3,h4,h5,#slidertext,#topSliderText{
-  font-family: 'Exo', sans-serif;
+h1{
+  font-family: 'futura-pt', sans-serif;
+  font-style: italic;
+  font-weight: 600;
         color: #FFFFFF;
+}
+
+
+h2,h3,h4,{
+   font-family: 'Open Sans', sans-serif;
+   background-color: #383838;
+      font-family: 'Open Sans', sans-serif;
+      color: #CECECE;
+}
+h5{
+font-family: 'Open Sans', sans-serif;
+   background-color: #383838;
+      font-family: 'Open Sans', sans-serif;
+      color: #CECECE;
+
 }

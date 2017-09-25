@@ -76,7 +76,8 @@ var color = d3.scaleLinear()
         rightPopPercent:' ',
         rightyvarValue:' ',
         legendMin:'16',
-        legendMax:'30',     
+        legendMax:'30',
+        state:'',     
         };
 
 
@@ -588,12 +589,15 @@ for (var i = 0; i < app.leftCentroids.length; i++) {
 
           };
               app.rightSum = rightCentroids;    
-
+console.log(app.rightSum);
+console.log(app.rightPopSums);
 
   }
 }
 
-function textBox() {
+function textBox(topLeft, topRight) {
+  topRight=topRight;
+  console.log(app.options.rightyvarValue);
   d3.select('#leftNumberTop')
     .html(function () {return (app.options.leftName);});
   d3.select('#leftNumber')
@@ -605,7 +609,7 @@ function textBox() {
   d3.select('#rightNumberTop')
   .html(function () {return (app.options.rightName);});
   d3.select('#rightNumber')
-  .html(function () {return d3.format(".1f")(app.options.rightyvarValue);});
+   .html(function () {return d3.format(",.1f")(app.options.rightyvarValue);});
   d3.select('#rightNumberBottom')
   .html(function () {return app.options.yvartext+' in counties that are greater than '+'<span style="color:white;font-family: proxima-nova, sans-serif;"><strong>'+d3.format(".1f")(app.options.slicer*100)+'% '+'</strong></span>'+app.options.slider+
     '. This accounts for '+'<span style="color:white;font-family: proxima-nova, sans-serif;"><strong>'+d3.format(",.0f")(app.options.rightPop)+'</strong></span>'+' people, '+'<span style="color:white;font-family: proxima-nova, sans-serif;"><strong>'+d3.format(".1f")(app.options.rightPopPercent*100)+
@@ -982,9 +986,15 @@ slider.slider.append("line")
         textBox();
         d3.select('#slidernumber')
           .text(function (d) {return (d3.format(".0f")(app.options.slicer*100))+'%';});
+
+        app.matchingArray=Object.values(app.leftSum.filter(function (d) {return d.name===app.options.leftName;}));
+app.matchingArray1=app.matchingArray[0];
+console.log(app.matchingArray); 
+console.log(app.matchingArray1);
+console.log(app.options.leftPop); 
         
          
-        console.log(app.options.slicer); }));
+        }));
 
 slider.slider.insert("g", ".track-overlay")
     .attr("class", "ticks")
@@ -1005,6 +1015,9 @@ function hue(h) {
   slider.slider.handle.attr("cx", slider.x(h));
   slider.svg.style("background-color", 'none');          
 }
+
+
+
 }
 
 
@@ -1067,7 +1080,7 @@ chart.svg = d3.select(selector)
  
 
 chart.update();
-textBox();
+textBox(app.options.leftyvarValue,app.options.rightyvarValue);
 }
     // data merge:
  
@@ -1094,7 +1107,7 @@ var binuninsured=(app.maxuninsured-app.minuninsured)/10;
 if (app.options.yvar==='MaleLifeEx') {
     chart.data_bins = [app.minMaleLifeEx,app.maxMaleLifeEx-binMaleLifeEx*9,app.maxMaleLifeEx-binMaleLifeEx*8,app.maxMaleLifeEx-binMaleLifeEx*7,app.maxMaleLifeEx-binMaleLifeEx*6,app.maxMaleLifeEx-binMaleLifeEx*5,app.maxMaleLifeEx-binMaleLifeEx*4,app.maxMaleLifeEx-binMaleLifeEx*3,app.maxMaleLifeEx-binMaleLifeEx*2,app.maxMaleLifeEx-binMaleLifeEx*1,app.maxMaleLifeEx];
     chart.color_range = ["#a50026","#d73027","#f46d43","#fdae61","#fee08b","#ffffbf","#d9ef8b","#a6d96a","#66bd63","#1a9850","#006837"];}
-if (app.options.yvar==='obesity'){
+else if (app.options.yvar==='obesity'){
       chart.data_bins = [app.minobesity,app.maxobesity-binobesity*9,app.maxobesity-binobesity*8,app.maxobesity-binobesity*7,app.maxobesity-binobesity*6,app.maxobesity-binobesity*5,app.maxobesity-binobesity*4,app.maxobesity-binobesity*3,app.maxobesity-binobesity*2,app.maxobesity-binobesity*1,app.maxobesity];
       chart.color_range = ["#006837","#1a9850","#66bd63","#a6d96a","#d9ef8b","#ffffbf","#fee08b","#fdae61","#f46d43","#d73027","#a50026"];}
 else if (app.options.yvar==='DaysPoorHealth'){
@@ -1107,7 +1120,8 @@ else if (app.options.yvar==='uninsured'){
       chart.data_bins =  [app.minuninsured,app.maxuninsured-binuninsured*9,app.maxuninsured-binuninsured*8,app.maxuninsured-binuninsured*7,app.maxuninsured-binuninsured*6,app.maxuninsured-binuninsured*5,app.maxuninsured-binuninsured*4,app.maxuninsured-binuninsured*3,app.maxuninsured-binuninsured*2,app.maxuninsured-binuninsured*1,app.maxuninsured];
       chart.color_range = ["#006837","#1a9850","#66bd63","#a6d96a","#d9ef8b","#ffffbf","#fee08b","#fdae61","#f46d43","#d73027","#a50026"];}
 
- 
+
+
 chart.colorScale2 = d3.scaleLinear()
         .domain(chart.data_bins)
         .range(chart.color_range);
@@ -1124,17 +1138,20 @@ chart.colorScale2 = d3.scaleLinear()
 
     statesEnter.append('rect')
       .attr('class','staterect')
-      .attr('x', function (d) { return chart.x(d.lon)- 17.5+7; })
-      .attr('y', function (d) { return chart.y(d.lat)- 17.5 - 40; })
+      .attr('x', function (d) { return chart.x(d.lon)+7; })
+      .attr('y', function (d) { return chart.y(d.lat) - 40; })
       .attr('stroke','#CECECE');
     
     states=states.merge(statesEnter);  
 
     states.selectAll('rect')
-      .transition().duration(600)    
+      .transition().duration(400)    
       .attr('width', function (d) { return chart.sidelength(d.PopPercent); })
       .attr('height', function (d) { return chart.sidelength(d.PopPercent); })
+      .attr('x', function (d) { return chart.x(d.lon)+7-(chart.sidelength(d.PopPercent)/2); })
+      .attr('y', function (d) { return chart.y(d.lat) - 40- (chart.sidelength(d.PopPercent)/2); })
       .attr('fill',function (d) { return chart.colorScale2(d[app.options.yvar]); }) ;
+
 
     states
         .on("mouseover", function(d) {if (app.options.mouseover===true){ if (chart.selector=='#chart'){
@@ -1178,15 +1195,18 @@ chart.colorScale2 = d3.scaleLinear()
         //       ' than '+d3.format(".1f")(app.options.slicer*100)+'% '+app.options.slider+
         //       '. This accounts for '+d3.format(",.0f")(d.Pop)+' people, '+d3.format(".1f")(d.PopPercent*100)+
         //       '% of '+d.name+'s total population.';});
-        };})        
+        };}) 
+
+
+
         .on("click", function (d) {if (app.options.mouseover===true) {
           var id = d.name;
-           d3.select('rect')
+           d3.select('staterect')
             d3.select(this)     
             .transition().duration(400)
             .attr('width',60)
             .attr('height',60)
-            .attr('color','#FFFFFF')
+            .attr('stroke','#FFFFFF')
             .attr('text-weight','200');
             app.options.mouseover=false;
             console.log(this);
@@ -1195,8 +1215,6 @@ chart.colorScale2 = d3.scaleLinear()
           d3.selectAll('g')
             .attr('stroke','none');
             app.options.mouseover=true;}});
-
-
 
 
         
